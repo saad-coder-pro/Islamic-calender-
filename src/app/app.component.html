@@ -9,13 +9,15 @@
         'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
       " [pastYearsLimit]="115" [futureYearsLimit]="5" [styles]="stylesConfig" (onSubmit)="onSubmit($event)"
       (onDaySelect)="onChange($event)" (onMonthChange)="onMonthChangeTest($event)"
-      (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
+    (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
   </div>
 
   <button (click)="toggleMode()" id="toggle-btn">Toggle Mode</button>
   <div class="event-container">
-    <p *ngIf="(selectedDate | json) != '{}'">
-      {{ selectedDate | json }}
-    </p>
+    @if ((selectedDate | json) != '{}') {
+      <p>
+        {{ selectedDate | json }}
+      </p>
+    }
   </div>
 </div>
