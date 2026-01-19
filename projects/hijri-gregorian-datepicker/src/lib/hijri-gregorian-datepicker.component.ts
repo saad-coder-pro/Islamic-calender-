@@ -14,9 +14,10 @@ import { HijriGregorianDatepickerService } from '../_services/hijri-gregorian-da
 import { TodayDate, DayInfo } from '../interfaces/calendar-model';
 
 @Component({
-  selector: 'hijri-gregorian-datepicker',
-  templateUrl: './hijri-gregorian-datepicker.component.html',
-  styleUrls: ['./hijri-gregorian-datepicker.component.scss'],
+    selector: 'hijri-gregorian-datepicker',
+    templateUrl: './hijri-gregorian-datepicker.component.html',
+    styleUrls: ['./hijri-gregorian-datepicker.component.scss'],
+    standalone: false
 })
 export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Inputs
