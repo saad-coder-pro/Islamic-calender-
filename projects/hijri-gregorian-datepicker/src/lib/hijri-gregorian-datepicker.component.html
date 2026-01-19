@@ -1,49 +1,48 @@
 <div class="calendar-container">
   @if (canChangeMode) {
-    <div class="toggle-section" [dir]="dir" (click)="changeCalendarMode()"
-      [ngStyle]="{ color: styles.primaryColor }">
-      <label class="switch">
-        <input type="checkbox" [disabled]="!canChangeMode" justify="end" [checked]="mode == 'ummAlQura'"
-          [ngStyle]="{ 'accent-color': styles.primaryColor }" />
-      </label>
-      <span> {{ ummAlQuraDateText }} </span>
-    </div>
+  <div class="toggle-section" [dir]="dir" (click)="changeCalendarMode()" [ngStyle]="{ color: styles.primaryColor }">
+    <label class="switch">
+      <input type="checkbox" [disabled]="!canChangeMode" justify="end" [checked]="mode == 'ummAlQura'"
+        [ngStyle]="{ 'accent-color': styles.primaryColor }" />
+    </label>
+    <span> {{ ummAlQuraDateText }} </span>
+  </div>
   }
 
   @if (todaysDateSection) {
-<div class="todays-date-section" [ngStyle]="{
+  <div class="todays-date-section" [ngStyle]="{
       'background-color': styles.backgroundColor,
       color: styles.primaryColor
     }">
     <div class="text-info" [ngClass]="{
         order: dir == 'rtl'
       }">
-        <p>{{ todaysDateText }}</p>
-      </div>
+      <p>{{ todaysDateText }}</p>
+    </div>
     <div class="data" [dir]="dir" [ngStyle]="{
         'background-color': styles.todaysDateBgColor,
         color: styles.todaysDateTextColor
       }">
-        @if (mode == 'ummAlQura') {
-          <p>
-            {{ todaysDate.ummAlQura.split("/")[0] }}
-            {{
-            locale == "ar"
-            ? ummAlQuraMonths[
-            this.parseArabic(todaysDate.ummAlQura.split("/")[1]) - 1
-            ]?.labelAr
-            : ummAlQuraMonths[
-            this.parseArabic(todaysDate.ummAlQura.split("/")[1]) - 1
-            ]?.labelEn
-            }}
-            {{ todaysDate.ummAlQura.split("/")[2] }}
-          </p>
-        }
-        @if (mode == 'greg') {
-          <p>{{ todaysDate.gregorian }}</p>
-        }
-      </div>
+      @if (mode == 'ummAlQura') {
+      <p>
+        {{ todaysDate.ummAlQura.split("/")[0] }}
+        {{
+        locale == "ar"
+        ? ummAlQuraMonths[
+        this.parseArabicToNumber(todaysDate.ummAlQura.split("/")[1]) - 1
+        ]?.labelAr
+        : ummAlQuraMonths[
+        this.parseArabicToNumber(todaysDate.ummAlQura.split("/")[1]) - 1
+        ]?.labelEn
+        }}
+        {{ todaysDate.ummAlQura.split("/")[2] }}
+      </p>
+      }
+      @if (mode == 'greg') {
+      <p>{{ todaysDate.gregorian }}</p>
+      }
     </div>
+  </div>
   }
 
   <div class="period-container">
@@ -51,9 +50,9 @@
       <div class="select-item" [ngClass]="{
           order: dir == 'ltr'
         }" [ngStyle]="{ 'background-color': styles.backgroundColor }">
-        @if (!periodForm.controls['year'].value) {
-          <label>{{
-            yearSelectLabel
+        @if (!periodForm.controls.year.value) {
+        <label>{{
+          yearSelectLabel
           }}</label>
         }
 
@@ -62,10 +61,10 @@
             color: styles.primaryColor,
             'font-family': styles.fontFamily
           }">
-          @for (year of years; track year) {
-            <option [ngValue]="year">
-              {{ locale == "ar" ? parseEnglish(year) : year }}
-            </option>
+          @for (year of years; track trackByYear($index, year)) {
+          <option [ngValue]="year">
+            {{ locale == "ar" ? parseEnglish(year) : year }}
+          </option>
           }
         </select>
       </div>
@@ -73,9 +72,9 @@
       <div class="select-item" [ngClass]="{
           order: dir == 'rtl'
         }" [ngStyle]="{ 'background-color': styles.backgroundColor }">
-        @if (!periodForm.controls['month'].value) {
-          <label>{{
-            monthSelectLabel
+        @if (!periodForm.controls.month.value) {
+        <label>{{
+          monthSelectLabel
           }}</label>
         }
         <select class="{{ 'icon-' + dir }}" formControlName="month" (change)="onPeriodChange('month')" [dir]="dir"
@@ -83,10 +82,10 @@
             color: styles.primaryColor,
             'font-family': styles.fontFamily
           }">
-          @for (month of months; track month) {
-            <option [ngValue]="month.value">
-              {{ locale == "ar" ? month?.labelAr : month?.labelEn }}
-            </option>
+          @for (month of months; track trackByMonth($index, month)) {
+          <option [ngValue]="month.value">
+            {{ locale == "ar" ? month?.labelAr : month?.labelEn }}
+          </option>
           }
         </select>
       </div>
@@ -95,20 +94,18 @@
 
   <div class="calendar-layout" [ngStyle]="{ 'background-color': styles.backgroundColor }">
     <div class="week-days">
-      @for (date of locale == 'ar' ? weekdaysAr : weekdaysEn; track date) {
-        <div class="week-day" [ngStyle]="{ color: styles.dayNameColor }"
-          >
-          {{ date }}
-        </div>
+      @for (date of locale == 'ar' ? weekdaysAr : weekdaysEn; track trackByWeekday($index, date)) {
+      <div class="week-day" [ngStyle]="{ color: styles.dayNameColor }">
+        {{ date }}
+      </div>
       }
     </div>
 
     <div [dir]="dir">
-      @for (week of weeks; track week) {
-        <div class="week">
-          @for (day of week; track day) {
-            <div class="day" (click)="disableDayPicker == false ? onDayClicked(day) : ''"
-          [ngStyle]="{
+      @for (week of weeks; track trackByWeek($index, week)) {
+      <div class="week">
+        @for (day of week; track trackByDay($index, day)) {
+        <div class="day" (click)="disableDayPicker == false ? onDayClicked(day) : ''" [ngStyle]="{
             'background-color': styles.backgroundColor,
             color: styles.dayColor
           }">
@@ -128,44 +125,44 @@
                   ? styles.disabledDayColor
                   : '')
             }">
-                @if (mode == 'greg') {
-                  <span>{{
-                    locale == 'ar'
-                    ? parseEnglish(day?.gD?.split("/")[0] | number) :
-                    day?.gD?.split("/")[0] | number
-                  }}</span>
-                }
-                @if (mode == 'ummAlQura') {
-                  <span id="ummAlQura-day">{{
-                    locale == 'ar'
-                    ? parseEnglish(day?.uD?.split("/")[0] | number)
-                    : day?.uD?.split("/")[0] | number
-                  }}</span>
-                }
-              </div>
-            </div>
-          }
+            @if (mode == 'greg') {
+            <span>{{
+              locale == 'ar'
+              ? parseEnglish(day?.gD?.split("/")[0] | number) :
+              day?.gD?.split("/")[0] | number
+              }}</span>
+            }
+            @if (mode == 'ummAlQura') {
+            <span id="ummAlQura-day">{{
+              locale == 'ar'
+              ? parseEnglish(day?.uD?.split("/")[0] | number)
+              : day?.uD?.split("/")[0] | number
+              }}</span>
+            }
+          </div>
         </div>
+        }
+      </div>
       }
     </div>
   </div>
   @if (futureValidationMessage) {
-    <div class="future-validation" dir="auto">
-      @if (locale == 'ar') {
-        <span>
-          {{ futureValidationMessageAr }}
-        </span>
-      }
-      @if (locale == 'en') {
-        <span>
-          {{ futureValidationMessageEn }}
-        </span>
-      }
-    </div>
+  <div class="future-validation" dir="auto">
+    @if (locale == 'ar') {
+    <span>
+      {{ futureValidationMessageAr }}
+    </span>
+    }
+    @if (locale == 'en') {
+    <span>
+      {{ futureValidationMessageEn }}
+    </span>
+    }
+  </div>
   }
   <div>
     @if (showConfirmButton) {
-<button type="button" class="confirm-btn" [disabled]="
+    <button type="button" class="confirm-btn" [disabled]="
         isRequired &&
         ((!selectedDay && !multiple) ||
           (!multipleSelectedDates.length && multiple))
@@ -174,8 +171,8 @@
         color: styles.confirmBtnTextColor,
         'font-family': styles.fontFamily
       }">
-        {{ submitTextButton }}
-      </button>
+      {{ submitTextButton }}
+    </button>
     }
   </div>
 </div>
