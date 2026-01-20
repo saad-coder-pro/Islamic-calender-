@@ -17,7 +17,7 @@ import { TodayDate, DayInfo } from '../_interfaces/calendar.model';
 import { DateUtilitiesService } from '../_services/date-utilities.service';
 import * as themesConfig from '../themes/themes.json';
 import { 
-  UMMALQURA_MONTHS, 
+  umAlQura_MONTHS, 
   GREGORIAN_MONTHS, 
   WEEKDAYS_EN, 
   WEEKDAYS_AR, 
@@ -56,7 +56,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() locale: string = 'en';
   @Input() submitTextButton: string = 'Confirm';
   @Input() todaysDateText: string = "Today's Date";
-  @Input() ummAlQuraDateText: string = 'Hijri Date';
+  @Input() umAlQuraDateText: string = 'Hijri Date';
   @Input() monthSelectLabel: string = 'Month';
   @Input() yearSelectLabel: string = 'Year';
   @Input() futureValidationMessageEn: string;
@@ -71,9 +71,9 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Output() onMonthChange = new EventEmitter<number | null>();
   @Output() onYearChange = new EventEmitter<number | null>();
   /// Variables
-  readonly ummAlQuraMonths = UMMALQURA_MONTHS;
+  readonly umAlQuraMonths = umAlQura_MONTHS;
   readonly gregMonths = GREGORIAN_MONTHS;
-  ummAlQuraYear!: number;
+  umAlQuraYear!: number;
   gregYear!: number;
   years: number[] = [];
   weeks: (DayInfo | null)[][] = [];
@@ -150,7 +150,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     if (this.mode === CALENDAR_MODES.GREGORIAN) {
       this.initializeGregorianYearsAndMonths();
     } else {
-      this.initializeUmmAlQuraYearsAndMonths();
+      this.initializeumAlQuraYearsAndMonths();
     }
     
     this.setCurrentYearInForm();
@@ -164,17 +164,17 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.months = this.gregMonths;
   }
 
-  private initializeUmmAlQuraYearsAndMonths(): void {
+  private initializeumAlQuraYearsAndMonths(): void {
     const currentYear = this.getCurrentYear();
-    this.ummAlQuraYear = this.futureYearsLimit === 0 ? currentYear : currentYear + this.futureYearsLimit;
-    this.years = this.generateYearsArray(this.ummAlQuraYear);
-    this.months = this.ummAlQuraMonths;
+    this.umAlQuraYear = this.futureYearsLimit === 0 ? currentYear : currentYear + this.futureYearsLimit;
+    this.years = this.generateYearsArray(this.umAlQuraYear);
+    this.months = this.umAlQuraMonths;
   }
 
   private getCurrentYear(): number {
     const dateString = this.mode === CALENDAR_MODES.GREGORIAN 
       ? this.todaysDate.gregorian 
-      : this.todaysDate.ummAlQura;
+      : this.todaysDate.umAlQura;
     return Number(dateString?.split('/')[2]);
   }
 
@@ -201,7 +201,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   private setCurrentMonthInForm(): void {
     const dateString = this.mode === CALENDAR_MODES.GREGORIAN 
       ? this.todaysDate.gregorian 
-      : this.todaysDate.ummAlQura;
+      : this.todaysDate.umAlQura;
     const currentMonth = Number(dateString?.split('/')[1]);
     const monthMatch = this.months.find(month => month.value === currentMonth);
     if (monthMatch) {
@@ -240,14 +240,14 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   getTodaysDateInfo(): void {
     try {
       this.todaysDate.gregorian = this._dateUtilsService.formatDate(new Date());
-      this.todaysDate.ummAlQura = this._dateUtilsService.convertDate(
+      this.todaysDate.umAlQura = this._dateUtilsService.convertDate(
         this.todaysDate.gregorian,
         true
       )?.uD;
       
       const dateToUse = this.mode === CALENDAR_MODES.GREGORIAN
         ? this.todaysDate.gregorian
-        : this.todaysDate.ummAlQura;
+        : this.todaysDate.umAlQura;
         
       if (dateToUse) {
         this.generateMonthData(dateToUse);
@@ -302,7 +302,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     return weeks;
   }
 
-  /// Change calendar mode 'greg' or 'ummAlQura'
+  /// Change calendar mode 'greg' or 'umAlQura'
   changeCalendarMode(): void {
     this.toggleCalendarMode();
     this.initializeYearsAndMonths();
@@ -311,7 +311,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   private toggleCalendarMode(): void {
     this.mode = this.mode === CALENDAR_MODES.GREGORIAN 
-      ? CALENDAR_MODES.UMMALQURA 
+      ? CALENDAR_MODES.umAlQura 
       : CALENDAR_MODES.GREGORIAN;
   }
 
@@ -413,7 +413,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   checkTodaysDate(day: DayInfo): boolean {
     return (
       this.todaysDate?.gregorian === day?.gD ||
-      this.todaysDate?.ummAlQura === day?.uD
+      this.todaysDate?.umAlQura === day?.uD
     );
   }
 

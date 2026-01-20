@@ -39,36 +39,36 @@ export class DateUtilitiesService {
     const endDate = this.parseDate(lD?.gD);
     const daysInMonth: MonthDays = [];
     let currentGregorianDate = new Date(startDate);
-    let currentUmmAlQuraDay = parseInt(fD?.uD?.split('/')[0]);
-    let currentUmmAlQuraMonth = parseInt(fD?.uD?.split('/')[1]);
-    let currentUmmAlQuraYear = parseInt(fD?.uD?.split('/')[2]);
-    let daysInCurrentUmmAlQuraMonth = uC;
+    let currentumAlQuraDay = parseInt(fD?.uD?.split('/')[0]);
+    let currentumAlQuraMonth = parseInt(fD?.uD?.split('/')[1]);
+    let currentumAlQuraYear = parseInt(fD?.uD?.split('/')[2]);
+    let daysInCurrentumAlQuraMonth = uC;
     while (currentGregorianDate <= endDate) {
-      const ummAlQuraDate = `${currentUmmAlQuraDay
+      const umAlQuraDate = `${currentumAlQuraDay
         .toString()
-        .padStart(2, '0')}/${currentUmmAlQuraMonth
+        .padStart(2, '0')}/${currentumAlQuraMonth
         .toString()
-        .padStart(2, '0')}/${currentUmmAlQuraYear}`;
+        .padStart(2, '0')}/${currentumAlQuraYear}`;
       daysInMonth.push({
         gD: this.formatDate(currentGregorianDate),
-        uD: ummAlQuraDate,
+        uD: umAlQuraDate,
         dN: this.getDayShortHand(currentGregorianDate),
         uC: 0,
       });
       currentGregorianDate.setDate(currentGregorianDate.getDate() + 1);
-      currentUmmAlQuraDay += 1;
-      if (currentUmmAlQuraDay > daysInCurrentUmmAlQuraMonth) {
-        currentUmmAlQuraDay = 1;
-        currentUmmAlQuraMonth += 1;
-        if (currentUmmAlQuraMonth > 12) {
-          currentUmmAlQuraMonth = 1;
-          currentUmmAlQuraYear += 1;
+      currentumAlQuraDay += 1;
+      if (currentumAlQuraDay > daysInCurrentumAlQuraMonth) {
+        currentumAlQuraDay = 1;
+        currentumAlQuraMonth += 1;
+        if (currentumAlQuraMonth > 12) {
+          currentumAlQuraMonth = 1;
+          currentumAlQuraYear += 1;
         }
         const nextMonthData =
-          this.calendarData[currentUmmAlQuraYear.toString()]?.[
-            currentUmmAlQuraMonth.toString()
+          this.calendarData[currentumAlQuraYear.toString()]?.[
+            currentumAlQuraMonth.toString()
           ];
-        daysInCurrentUmmAlQuraMonth = nextMonthData ? nextMonthData.fD.uC : 30;
+        daysInCurrentumAlQuraMonth = nextMonthData ? nextMonthData.fD.uC : 30;
       }
     }
     return daysInMonth;
@@ -80,7 +80,7 @@ export class DateUtilitiesService {
     if (isGregorian) {
       return this.convertGregorianDate(dateStr);
     } else {
-      return this.convertUmmAlQuraDate(dateStr);
+      return this.convertumAlQuraDate(dateStr);
     }
   }
 
@@ -122,7 +122,7 @@ export class DateUtilitiesService {
     return null;
   }
 
-  private convertUmmAlQuraDate(dateStr: string): DayInfo | null {
+  private convertumAlQuraDate(dateStr: string): DayInfo | null {
     const [day, month, year] = dateStr.split('/').map(Number);
     if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
 
@@ -258,13 +258,13 @@ export class DateUtilitiesService {
 
       for (const monthIndex in yearData) {
         const monthData = yearData[parseInt(monthIndex)];
-        const ummAlQuraDateParts = monthData?.fD?.uD?.split('/').map(Number);
-        if (!ummAlQuraDateParts) continue;
+        const umAlQuraDateParts = monthData?.fD?.uD?.split('/').map(Number);
+        if (!umAlQuraDateParts) continue;
         
-        const [fDay, fMonth, fYear] = ummAlQuraDateParts;
+        const [fDay, fMonth, fYear] = umAlQuraDateParts;
 
         if (fYear === year && fMonth === month) {
-          return this.generateUmmAlQuraMonthArray(monthData, month, year);
+          return this.generateumAlQuraMonthArray(monthData, month, year);
         }
       }
     }
@@ -272,7 +272,7 @@ export class DateUtilitiesService {
     return null;
   }
 
-  private generateUmmAlQuraMonthArray(monthData: MonthInfo, month: number, year: number): DayInfo[] {
+  private generateumAlQuraMonthArray(monthData: MonthInfo, month: number, year: number): DayInfo[] {
     const totalDays = monthData.fD.uC;
     const monthArray: DayInfo[] = [];
     const umAlQurraStartDate = DateFormattingUtil.buildDateString('01', month, year);

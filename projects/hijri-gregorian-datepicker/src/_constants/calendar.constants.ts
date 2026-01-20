@@ -4,7 +4,7 @@ export interface MonthData {
   value: number;
 }
 
-export const UMMALQURA_MONTHS: MonthData[] = [
+export const umAlQura_MONTHS: MonthData[] = [
   { labelAr: 'محرم', labelEn: 'Muharram', value: 1 },
   { labelAr: 'صفر', labelEn: 'Safar', value: 2 },
   { labelAr: 'ربيع الأول', labelEn: 'Rabi al-Awwal', value: 3 },
@@ -41,14 +41,14 @@ export const CALENDAR_CONSTANTS = {
   DAYS_IN_WEEK: 7,
   MAX_MONTH_VALUE: 12,
   MIN_MONTH_VALUE: 1,
-  DEFAULT_UMMALQURA_DAYS_IN_MONTH: 30,
+  DEFAULT_umAlQura_DAYS_IN_MONTH: 30,
   DATE_PART_COUNT: 3,
   ARABIC_ZERO_UNICODE: 1632,
 } as const;
 
 export const CALENDAR_MODES = {
   GREGORIAN: 'greg',
-  UMMALQURA: 'ummAlQura'
+  umAlQura: 'umAlQura'
 } as const;
 
 export type CalendarMode = typeof CALENDAR_MODES[keyof typeof CALENDAR_MODES];

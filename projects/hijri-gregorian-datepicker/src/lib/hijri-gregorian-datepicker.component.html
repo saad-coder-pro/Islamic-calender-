@@ -1,8 +1,8 @@
 <div class="calendar-container">
   <div class="toggle-section" [dir]="dir" *ngIf="canChangeMode" [ngStyle]="{ color: styles.primaryColor }">
-    <span> {{ ummAlQuraDateText }} </span>
+    <span> {{ umAlQuraDateText }} </span>
     <label class="switch">
-      <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'ummAlQura'"
+      <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'"
         (change)="changeCalendarMode()" #calendarCheckbox />
       <span class="slider"
         [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': styles.backgroundColor}"></span>
@@ -24,19 +24,19 @@
         'background-color': styles.todaysDateBgColor,
         color: styles.todaysDateTextColor
       }">
-      @if (mode == 'ummAlQura') {
+      @if (mode == 'umAlQura') {
       <p>
-        {{ todaysDate.ummAlQura.split("/")[0] }}
+        {{ todaysDate.umAlQura.split("/")[0] }}
         {{
         locale == "ar"
-        ? ummAlQuraMonths[
-        this.parseArabicToNumber(todaysDate.ummAlQura.split("/")[1]) - 1
+        ? umAlQuraMonths[
+        this.parseArabicToNumber(todaysDate.umAlQura.split("/")[1]) - 1
         ]?.labelAr
-        : ummAlQuraMonths[
-        this.parseArabicToNumber(todaysDate.ummAlQura.split("/")[1]) - 1
+        : umAlQuraMonths[
+        this.parseArabicToNumber(todaysDate.umAlQura.split("/")[1]) - 1
         ]?.labelEn
         }}
-        {{ todaysDate.ummAlQura.split("/")[2] }}
+        {{ todaysDate.umAlQura.split("/")[2] }}
       </p>
       }
       @if (mode == 'greg') {
@@ -133,8 +133,8 @@
               day?.gD?.split("/")[0] | number
               }}</span>
             }
-            @if (mode == 'ummAlQura') {
-            <span id="ummAlQura-day">{{
+            @if (mode == 'umAlQura') {
+            <span id="umAlQura-day">{{
               locale == 'ar'
               ? parseEnglish(day?.uD?.split("/")[0] | number)
               : day?.uD?.split("/")[0] | number

@@ -48,6 +48,6 @@ export class AppComponent {
   }
 
   toggleMode() {
-    this.mode = this.mode === CALENDAR_MODES.GREGORIAN ? CALENDAR_MODES.UMMALQURA : CALENDAR_MODES.GREGORIAN;
+    this.mode = this.mode === CALENDAR_MODES.GREGORIAN ? CALENDAR_MODES.umAlQura : CALENDAR_MODES.GREGORIAN;
   }
 }

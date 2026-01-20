@@ -108,7 +108,7 @@ import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepick
   [locale]="'en'"
   [submitTextButton]="'Confirm'"
   [todaysDateText]="'Today\'s Date'"
-  [ummAlQuraDateText]="'التاريخ الهجرى'"
+  [umAlQuraDateText]="'التاريخ الهجرى'"
   [yearSelectLabel]="'Year'"
   [monthSelectLabel]="'Month'"
   [futureValidationMessageEn]="'Selected date cannot be in the future!'"
@@ -162,12 +162,12 @@ Inside your component.ts:
 | <b>`isRequired`</b>                | boolean |                    `true`                     | When `true` the confirm button will be disabled until user selects a date, if `false` the button will be enabled |
 | <b>`showConfirmButton`</b>         | boolean |                    `true`                     | When `true` the confirm button will be displayed, if `false` it will be hidden                                   |
 | <b>`markToday`</b>                 | boolean |                    `true`                     | When `true` today date will be marked(bordered), if `false` it will not be marked                                |
-| <b>`mode`</b>                      | string  |                    `greg`                     | Calendar mode, either `ummAlQura` or `greg`                                                                      |
+| <b>`mode`</b>                      | string  |                    `greg`                     | Calendar mode, either `umAlQura` or `greg`                                                                      |
 | <b>`dir`</b>                       | string  |                     `ltr`                     | Layout direction, either `ltr` or `rtl`                                                                          |
 | <b>`locale`</b>                    | string  |                     `en`                      | The language of the calendar layout, either `ar` or `en`                                                         |
 | <b>`submitTextButton`</b>          | string  |                   `Confirm`                   | Confirm button text value                                                                                        |
 | <b>`todaysDateText`</b>            | string  |               `Todays\'s Date`                | Today's date text in `todaysDateSection`                                                                         |
-| <b>`ummAlQuraDateText`</b>         | string  |               `التاريخ الهجرى`                | Text next to checkbox to toggle date `todaysDateSection`                                                         |
+| <b>`umAlQuraDateText`</b>         | string  |               `التاريخ الهجرى`                | Text next to checkbox to toggle date `todaysDateSection`                                                         |
 | <b>`yearSelectLabel`</b>           | string  |                    `Year`                     | Label of the year select option                                                                                  |
 | <b>`monthSelectLabel`</b>          | string  |                    `Month`                    | Label of the month select option                                                                                 |
 | <b>`futureValidationMessageEn`</b> | string  |   `Selected date cannot be in the future!`    | English future validation message if `futureValidation` is set to `true`                                         |

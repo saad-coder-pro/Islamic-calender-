@@ -21,7 +21,7 @@ export interface DayInfo {
 
 export interface TodayDate {
   gregorian?: string;
-  ummAlQura?: string;
+  umAlQura?: string;
 }
 
 export type MonthDays = DayInfo[];
