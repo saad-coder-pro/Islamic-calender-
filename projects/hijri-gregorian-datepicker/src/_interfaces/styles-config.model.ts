@@ -1,4 +1,4 @@
-export interface stylesConfig {
+export interface StylesConfig {
   backgroundColor?: string;
   primaryColor?: string;
   secondaryColor?: string;

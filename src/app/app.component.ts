@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DayInfo } from 'projects/hijri-gregorian-datepicker/src/_interfaces/calendar.model';
-import { stylesConfig } from 'projects/hijri-gregorian-datepicker/src/_interfaces/styles-config.model';
+import { StylesConfig } from 'projects/hijri-gregorian-datepicker/src/_interfaces/styles-config.model';
+import { CalendarMode, CALENDAR_MODES } from 'projects/hijri-gregorian-datepicker/src/_constants/calendar.constants';
 
 @Component({
     selector: 'app-root',
@@ -11,7 +12,7 @@ import { stylesConfig } from 'projects/hijri-gregorian-datepicker/src/_interface
 export class AppComponent {
   toggle: boolean = false;
   selectedDate: DayInfo;
-  stylesConfig: stylesConfig = {
+  stylesConfig: StylesConfig = {
     backgroundColor: '#000',
     primaryColor: '#116466',
     secondaryColor: '#2c3531',
@@ -24,7 +25,7 @@ export class AppComponent {
     fontFamily: 'Default-Regular',
     borderRadius: '8px',
   };
-  mode = 'greg';
+  mode: CalendarMode = CALENDAR_MODES.GREGORIAN;
   constructor() {}
 
   onSubmit(ev: any) {
@@ -47,6 +48,6 @@ export class AppComponent {
   }
 
   toggleMode() {
-    this.mode = this.mode == 'greg' ? 'ummAlQura' : 'greg';
+    this.mode = this.mode === CALENDAR_MODES.GREGORIAN ? CALENDAR_MODES.UMMALQURA : CALENDAR_MODES.GREGORIAN;
   }
 }
