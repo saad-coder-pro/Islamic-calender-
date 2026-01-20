@@ -1,18 +1,19 @@
 <div class="calendar-container">
-  @if (canChangeMode) {
-  <div class="toggle-section" [dir]="dir" (click)="changeCalendarMode()" [ngStyle]="{ color: styles.primaryColor }">
-    <label class="switch">
-      <input type="checkbox" [disabled]="!canChangeMode" justify="end" [checked]="mode == 'ummAlQura'"
-        [ngStyle]="{ 'accent-color': styles.primaryColor }" />
-    </label>
+  <div class="toggle-section" [dir]="dir" *ngIf="canChangeMode" [ngStyle]="{ color: styles.primaryColor }">
     <span> {{ ummAlQuraDateText }} </span>
+    <label class="switch">
+      <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'ummAlQura'"
+        (change)="changeCalendarMode()" #calendarCheckbox />
+      <span class="slider"
+        [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': styles.backgroundColor}"></span>
+    </label>
   </div>
-  }
-
+  
   @if (todaysDateSection) {
   <div class="todays-date-section" [ngStyle]="{
       'background-color': styles.backgroundColor,
-      color: styles.primaryColor
+      color: styles.primaryColor,
+      'border-radius': styles.borderRadius
     }">
     <div class="text-info" [ngClass]="{
         order: dir == 'rtl'
@@ -92,7 +93,7 @@
     </form>
   </div>
 
-  <div class="calendar-layout" [ngStyle]="{ 'background-color': styles.backgroundColor }">
+  <div class="calendar-layout" [ngStyle]="{ 'background-color': styles.backgroundColor, 'border-radius': styles.borderRadius }">
     <div class="week-days">
       @for (date of locale == 'ar' ? weekdaysAr : weekdaysEn; track trackByWeekday($index, date)) {
       <div class="week-day" [ngStyle]="{ color: styles.dayNameColor }">
@@ -169,7 +170,8 @@
       " (click)="onConfirmClicked()" [ngStyle]="{
         'background-color': styles.secondaryColor,
         color: styles.confirmBtnTextColor,
-        'font-family': styles.fontFamily
+        'font-family': styles.fontFamily,
+        'border-radius': styles.borderRadius
       }">
       {{ submitTextButton }}
     </button>

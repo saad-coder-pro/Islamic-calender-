@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import * as datesDictionary from '../_data/dictionary.json';
-import { Data, DayInfo, MonthDays } from '../interfaces/calendar-model';
+import { Data, DayInfo, MonthDays } from '../_interfaces/calendar-model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HijriGregorianDatepickerService {
+export class DateUtilitiesService {
   public calendarData: Data;
 
   constructor() {
-    this.calendarData = datesDictionary['default'];
+    this.calendarData = (datesDictionary as any)['default']; //prod
+    // this.calendarData = datesDictionary; //debug
   }
 
   parseDate(dateStr: string): Date | null {
@@ -66,12 +67,10 @@ export class HijriGregorianDatepickerService {
         gD: this.formatDate(currentGregorianDate),
         uD: ummAlQuraDate,
         dN: this.getDayShortHand(currentGregorianDate),
-        uC: 0, // Placeholder since we are not using it in the output
+        uC: 0,
       });
-      // Increment the Gregorian date by one day
       currentGregorianDate.setDate(currentGregorianDate.getDate() + 1);
       currentUmmAlQuraDay += 1;
-      // Check if we need to increment the Umm al-Qura month and year
       if (currentUmmAlQuraDay > daysInCurrentUmmAlQuraMonth) {
         currentUmmAlQuraDay = 1;
         currentUmmAlQuraMonth += 1;
@@ -83,52 +82,71 @@ export class HijriGregorianDatepickerService {
           this.calendarData[currentUmmAlQuraYear.toString()]?.[
             currentUmmAlQuraMonth.toString()
           ];
-        daysInCurrentUmmAlQuraMonth = nextMonthData ? nextMonthData.fD.uC : 30; // Default to 30 if data is missing
+        daysInCurrentUmmAlQuraMonth = nextMonthData ? nextMonthData.fD.uC : 30;
       }
     }
     return daysInMonth;
   }
 
   convertDate(dateStr: string, isGregorian: boolean): DayInfo | null {
+    if (!dateStr) return null;
+
     if (isGregorian) {
+      // Preprocess Gregorian date
       const gregorianDate = this.parseDate(dateStr);
+      if (!gregorianDate) return null;
       const formattedDate = this.formatDate(gregorianDate);
+
       for (const yearKey in this.calendarData) {
         for (const monthKey in this.calendarData[yearKey]) {
           const monthData = this.calendarData[yearKey][monthKey];
-          const daysInMonth = this.generateDates(
-            monthData.fD,
-            monthData.lD,
-            monthData.fD?.uC
-          );
-          const dayMatch = daysInMonth.find((d) => d.gD === formattedDate);
 
-          if (dayMatch) {
-            return dayMatch;
+          if (
+            this.isDateInMonthRange(
+              formattedDate,
+              monthData.fD?.gD,
+              monthData.lD?.gD
+            )
+          ) {
+            const daysInMonth = this.generateDates(
+              monthData.fD,
+              monthData.lD,
+              monthData.fD?.uC
+            );
+
+            const dayMatch = daysInMonth.find((d) => d.gD === formattedDate);
+            if (dayMatch) return dayMatch;
           }
         }
       }
     } else {
-      const [day, month, year] = dateStr?.split('/').map(Number);
+      const [day, month, year] = dateStr.split('/').map(Number);
 
-      if (isNaN(day) || isNaN(month) || isNaN(year)) {
-        return null;
-      }
+      if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+
       for (const yearKey in this.calendarData) {
         for (const monthKey in this.calendarData[yearKey]) {
           const monthData = this.calendarData[yearKey][monthKey];
-          const daysInMonth = this.generateDates(
-            monthData.fD,
-            monthData.lD,
-            monthData.fD?.uC
-          );
-          const dayMatch = daysInMonth.find((d) => {
-            const [uDay, uMonth, uYear] = d?.uD?.split('/').map(Number);
-            return uDay === day && uMonth === month && uYear === year;
-          });
 
-          if (dayMatch) {
-            return dayMatch;
+          if (
+            this.isDateInMonthRange(
+              `${day}/${month}/${year}`,
+              monthData.fD?.uD,
+              monthData.lD?.uD
+            )
+          ) {
+            const daysInMonth = this.generateDates(
+              monthData.fD,
+              monthData.lD,
+              monthData.fD?.uC
+            );
+
+            const dayMatch = daysInMonth.find((d) => {
+              const [uDay, uMonth, uYear] = d?.uD?.split('/').map(Number);
+              return uDay === day && uMonth === month && uYear === year;
+            });
+
+            if (dayMatch) return dayMatch;
           }
         }
       }
@@ -136,15 +154,29 @@ export class HijriGregorianDatepickerService {
 
     return null;
   }
+
+  private isDateInMonthRange(
+    dateToCheck: string,
+    monthStartDate: string | undefined,
+    monthEndDate: string | undefined
+  ): boolean {
+    if (!monthStartDate || !monthEndDate) return false;
+
+    const checkDate = this.parseDate(dateToCheck);
+    const startDate = this.parseDate(monthStartDate);
+    const endDate = this.parseDate(monthEndDate);
+
+    if (!checkDate || !startDate || !endDate) return false;
+
+    return checkDate >= startDate && checkDate <= endDate;
+  }
+
   getMonthData(inputDate: string, type: string): DayInfo[] | null {
     const [day, month, year] = inputDate?.split('/').map(Number);
     let isGregorian: boolean;
-    // Determine if the input date is Gregorian or Um Al-Qurra
     if (type == 'greg') {
-      // This is likely a Gregorian date
       isGregorian = true;
     } else {
-      // This is likely an Um Al-Qurra date
       isGregorian = false;
     }
     if (isGregorian) {
@@ -164,7 +196,7 @@ export class HijriGregorianDatepickerService {
     const monthData = yearData[month];
     if (!monthData) return null;
     const monthArray: DayInfo[] = [];
-    const endDate = new Date(year, month, 0); // Last day of the Gregorian month
+    const endDate = new Date(year, month, 0);
     for (let d = 1; d <= endDate.getDate(); d++) {
       const offset = d - 1;
 
@@ -178,7 +210,7 @@ export class HijriGregorianDatepickerService {
           monthData.fD.uC
         ),
         dN: this.getDayName(new Date(year, month - 1, d).getDay()),
-        uC: monthData.fD.uC, // Return the uC (days in Um Al-Qurra month)
+        uC: monthData.fD.uC,
       });
     }
 
@@ -197,11 +229,9 @@ export class HijriGregorianDatepickerService {
         const monthData = yearData[parseInt(monthIndex)];
         const [fDay, fMonth, fYear] = monthData?.fD?.uD?.split('/').map(Number);
 
-        // Check if the input Um Al-Qurra year and month match
         if (fYear === year && fMonth === month) {
-          const totalDays = monthData.fD.uC; // Number of days in the Um Al-Qurra month
+          const totalDays = monthData.fD.uC;
           const monthArray: DayInfo[] = [];
-          // Calculate the difference in days between the first day of the JSON and "01/MM/YYYY"
           const umAlQurraStartDate = `01/${month
             .toString()
             .padStart(2, '0')}/${year}`;
@@ -219,8 +249,6 @@ export class HijriGregorianDatepickerService {
               totalDays
             );
             const gDate = this.calculateGregorianDate(startGregorianDate, i);
-
-            // Determine the day name for the Gregorian date
             const [gDay, gMonth, gYear] = gDate?.split('/').map(Number);
             const dayName = this.getDayName(
               new Date(gYear, gMonth - 1, gDay).getDay()
@@ -264,13 +292,11 @@ export class HijriGregorianDatepickerService {
     let newMonth = month;
     let newYear = year;
 
-    // Adjust for day overflow based on uC (actual days in the Um Al-Qurra month)
     while (newDay > uC) {
       newDay -= uC;
       newMonth += 1;
     }
 
-    // Adjust for month overflow
     while (newMonth > 12) {
       newMonth = 1;
       newYear += 1;
@@ -281,7 +307,6 @@ export class HijriGregorianDatepickerService {
       .padStart(2, '0')}/${newYear}`;
   }
 
-  /// Return day names
   getDayName(dayIndex: number): string {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return days[dayIndex];
@@ -301,6 +326,63 @@ export class HijriGregorianDatepickerService {
       } else {
         return 'Today';
       }
+    }
+  }
+
+  /// Convert english numbers to arabic equivalent
+  parseEnglish(englishNum: any) {
+    if (!englishNum) return englishNum;
+    const numStr = String(englishNum);
+    const arabicNumbers = [
+      '\u0660',
+      '\u0661',
+      '\u0662',
+      '\u0663',
+      '\u0664',
+      '\u0665',
+      '\u0666',
+      '\u0667',
+      '\u0668',
+      '\u0669',
+    ];
+    return numStr.replace(/[0-9]/g, (digit) => {
+      return arabicNumbers[Number(digit)] || digit;
+    });
+  }
+
+  /// Convert arabic numbers to english equivalent
+  parseArabic(arabicNum: any) {
+    return arabicNum.replace(/[٠١٢٣٤٥٦٧٨٩]/g, function (d: string) {
+      return d.charCodeAt(0) - 1632;
+    });
+  }
+
+  ///
+  convertDateNumerals(date: string, targetLang: 'en' | 'ar'): string {
+    const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    const toArabic = (value: string) =>
+      value
+        .split('')
+        .map((char) => (/\d/.test(char) ? arabicNumbers[+char] : char))
+        .join('');
+
+    const toEnglish = (value: string) =>
+      value
+        .split('')
+        .map((char) => {
+          const index = arabicNumbers.indexOf(char);
+          return index > -1 ? englishNumbers[index] : char;
+        })
+        .join('');
+
+    if (targetLang === 'ar') {
+      const [day, month, year] = date.split('/');
+      return `${toArabic(year)}/${toArabic(month)}/${toArabic(day)}`;
+    } else {
+      const [year, month, day] = date.split('/');
+      return `${toEnglish(day)}/${toEnglish(month)}/${toEnglish(year)}`;
     }
   }
 }

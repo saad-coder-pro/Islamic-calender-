@@ -13,8 +13,8 @@ import {
 import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { stylesConfig } from '../interfaces/styles-config-model';
-import { HijriGregorianDatepickerService } from '../_services/hijri-gregorian-datepicker.service';
 import { TodayDate, DayInfo } from '../interfaces/calendar-model';
+import { DateUtilitiesService } from '../public-api';
 
 @Component({
   selector: 'hijri-gregorian-datepicker',
@@ -46,22 +46,12 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() ummAlQuraDateText: string = 'Hijri Date';
   @Input() monthSelectLabel: string = 'Month';
   @Input() yearSelectLabel: string = 'Year';
-  @Input() pastYearsLimit: number = 90;
-  @Input() futureYearsLimit: number = 0;
   @Input() futureValidationMessageEn: string;
   @Input() futureValidationMessageAr: string;
-  @Input() styles?: stylesConfig = {
-    backgroundColor: '#E3F6F5',
-    primaryColor: '#272343',
-    secondaryColor: '#272343',
-    todaysDateBgColor: '#272343',
-    todaysDateTextColor: '#fff',
-    confirmBtnTextColor: '#fff',
-    disabledDayColor: '#C0C0C0',
-    dayColor: '#000',
-    dayNameColor: '#0d7f91',
-    fontFamily: 'Default-Regular',
-  };
+  @Input() theme?: string = '';
+  @Input() pastYearsLimit: number = 90;
+  @Input() futureYearsLimit: number = 0;
+  @Input() styles?: stylesConfig = {};
   /// Outputs
   @Output() onSubmit = new EventEmitter<DayInfo | DayInfo[]>();
   @Output() onDaySelect = new EventEmitter<DayInfo>();
@@ -102,7 +92,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   weeks: DayInfo[][] = [];
   months: { labelAr: string; labelEn: string; value: number }[] = [];
   weekdaysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  weekdaysAr = ['س', 'ج', 'خ', 'أر', 'ث', 'إث', 'أح'];
+  weekdaysAr = ['سبت', 'جمعة', 'خميس', 'أربعاء', 'ثلاثاء', 'اثنين', 'أحد'];
+  // weekdaysAr = ['س', 'ج', 'خ', 'أر', 'ث', 'إث', 'أح'];
   todaysDate: TodayDate = {};
   selectedDay: DayInfo | undefined;
   periodForm: FormGroup<{
@@ -120,11 +111,11 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @HostBinding('style.font-family') fontFamilyStyle!: string;
   constructor(
     public formBuilder: FormBuilder,
-    private _dateUtilsService: HijriGregorianDatepickerService
+    private _dateUtilsService: DateUtilitiesService
   ) { }
 
   ngOnInit(): void {
-    this.fontFamilyStyle = this.styles.fontFamily;
+    this.initTheme();
     this.initializeForm();
     this.getTodaysDateInfo();
     this.initializeYearsAndMonths();
@@ -136,6 +127,19 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     }
   }
 
+  initTheme() {
+    if (this.theme != '') {
+      this.themes = themesConfig;
+      for (const themeItem of this.themes['default']) {
+        if (themeItem.name == this.theme) {
+          this.styles = themeItem.stylesConfig;
+          break;
+        }
+      }
+    }
+    this.fontFamilyStyle = this.styles.fontFamily;
+  }
+
   /// Initialize form control for month and year select
   initializeForm() {
     this.periodForm = this.formBuilder.group({
@@ -144,7 +148,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     });
   }
 
-  /// Initialize years and months for calendar
+  // Initialize years and months for calendar
   initializeYearsAndMonths() {
     this.years = [];
     this.months = [];
@@ -153,7 +157,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
         this.futureYearsLimit == 0
           ? Number(this.todaysDate.gregorian?.split('/')[2])
           : Number(this.todaysDate.gregorian?.split('/')[2]) +
-          this.futureYearsLimit;
+            this.futureYearsLimit;
       for (let i = 0; i < this.gregYear; i++) {
         if (i < this.pastYearsLimit) {
           let val = this.gregYear--;
@@ -168,7 +172,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
         this.futureYearsLimit == 0
           ? Number(this.todaysDate.ummAlQura?.split('/')[2])
           : Number(this.todaysDate.ummAlQura?.split('/')[2]) +
-          this.futureYearsLimit;
+            this.futureYearsLimit;
       for (let i = 0; i < this.ummAlQuraYear; i++) {
         if (i < this.pastYearsLimit) {
           let val = this.ummAlQuraYear--;
@@ -242,11 +246,11 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   generateWeeksArray(daysArray: DayInfo[]): DayInfo[][] {
     const firstDayName = daysArray[0]?.dN;
     const startIndex = this.weekdaysEn.indexOf(firstDayName);
-    const weeks = [[]];
+    const weeks = [[]] as any;
     let currentWeek = 0;
     let currentDayIndex = startIndex;
 
-    daysArray?.forEach((day) => {
+    daysArray?.forEach((day: any) => {
       if (!weeks[currentWeek]) {
         weeks[currentWeek] = [];
       }
@@ -259,7 +263,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
         currentWeek++;
       }
     });
-    weeks.forEach((week) => {
+    weeks.forEach((week: any) => {
       while (week.length < 7) {
         week.push({});
       }
