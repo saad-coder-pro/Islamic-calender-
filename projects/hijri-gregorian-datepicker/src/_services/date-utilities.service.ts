@@ -19,6 +19,7 @@ export class DateUtilitiesService {
     } else {
       this.calendarData = datesDictionary as unknown as Data;
     }
+    
   }
 
   parseDate(dateStr: string): Date | null {
@@ -125,35 +126,31 @@ export class DateUtilitiesService {
     const [day, month, year] = dateStr.split('/').map(Number);
     if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
 
-    // More targeted search based on Umm Al-Qura year
-    const yearsToCheck = Object.keys(this.calendarData)
-      .map(Number)
-      .filter(gregorianYear => Math.abs(gregorianYear - year) <= 2); // Approximate year range
+    // Original working logic - search through all years
+    for (const yearKey in this.calendarData) {
+      for (const monthKey in this.calendarData[yearKey]) {
+        const monthData = this.calendarData[yearKey][monthKey];
 
-    for (const gregorianYear of yearsToCheck) {
-      const yearData = this.calendarData[gregorianYear];
-      if (!yearData) continue;
+        if (
+          this.isDateInMonthRange(
+            `${day}/${month}/${year}`,
+            monthData.fD?.uD,
+            monthData.lD?.uD
+          )
+        ) {
+          const daysInMonth = this.generateDates(
+            monthData.fD,
+            monthData.lD,
+            monthData.fD?.uC
+          );
 
-      for (const monthKey in yearData) {
-        const monthData = yearData[monthKey];
-        const cacheKey = `${gregorianYear}-${monthKey}-umm`;
-        
-        let daysInMonth = this.monthDataCache.get(cacheKey);
-        if (!daysInMonth) {
-          if (this.isDateInMonthRange(`${day}/${month}/${year}`, monthData.fD?.uD, monthData.lD?.uD)) {
-            daysInMonth = this.generateDates(monthData.fD, monthData.lD, monthData.fD?.uC);
-            this.setCachedMonthData(cacheKey, daysInMonth);
-          } else {
-            continue;
-          }
+          const dayMatch = daysInMonth.find((d) => {
+            const [uDay, uMonth, uYear] = d?.uD?.split('/').map(Number);
+            return uDay === day && uMonth === month && uYear === year;
+          });
+
+          if (dayMatch) return dayMatch;
         }
-
-        const dayMatch = daysInMonth.find((d) => {
-          const [uDay, uMonth, uYear] = d?.uD?.split('/').map(Number);
-          return uDay === day && uMonth === month && uYear === year;
-        });
-
-        if (dayMatch) return dayMatch;
       }
     }
 
@@ -255,12 +252,9 @@ export class DateUtilitiesService {
     month: number,
     year: number
   ): DayInfo[] | null {
-    // More efficient search - approximate Gregorian years for the given Umm Al-Qura year
-    const approximateGregorianYears = [year - 1, year, year + 1, year + 2];
-    
-    for (const gregorianYear of approximateGregorianYears) {
-      const yearData = this.calendarData[gregorianYear];
-      if (!yearData) continue;
+    // Original working logic - search through all years in the calendar data
+    for (const gregorianYear in this.calendarData) {
+      const yearData = this.calendarData[parseInt(gregorianYear)];
 
       for (const monthIndex in yearData) {
         const monthData = yearData[parseInt(monthIndex)];
