@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as datesDictionary from '../_data/dictionary.json';
-import { Data, DayInfo, MonthDays } from '../_interfaces/calendar-model';
+import { Data, DayInfo, MonthDays } from '../_interfaces/calendar.model';
 
 @Injectable({
   providedIn: 'root',

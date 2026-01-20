@@ -12,9 +12,10 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { stylesConfig } from '../interfaces/styles-config-model';
-import { TodayDate, DayInfo } from '../interfaces/calendar-model';
-import { DateUtilitiesService } from '../public-api';
+import { stylesConfig } from '../_interfaces/styles-config.model';
+import { TodayDate, DayInfo } from '../_interfaces/calendar.model';
+import { DateUtilitiesService } from '../_services/date-utilities.service';
+import * as themesConfig from '../themes/themes.json';
 
 @Component({
   selector: 'hijri-gregorian-datepicker',
@@ -101,6 +102,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     month: FormControl<number | null>;
   }>;
   multipleSelectedDates: DayInfo[] = [];
+  themes: any;
 
   // TrackBy functions for performance optimization
   trackByYear: TrackByFunction<number> = (index: number, year: number): number => year;
@@ -137,7 +139,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
         }
       }
     }
-    this.fontFamilyStyle = this.styles.fontFamily;
+    this.fontFamilyStyle = this.styles?.fontFamily || 'inherit';
   }
 
   /// Initialize form control for month and year select

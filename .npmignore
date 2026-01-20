@@ -16,5 +16,6 @@ tsconfig.spec.json
 angular.json
 .editorconfig
 
-# Exclude demo assets
-src/assets/imgs/
+# Exclude demo assets (but keep library assets)
+src/assets/
+!projects/

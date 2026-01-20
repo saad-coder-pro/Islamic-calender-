@@ -1,37 +1,22 @@
 <div class="app-container">
   <div class="calendar-container">
-    <hijri-gregorian-datepicker 
-      [canChangeMode]="true" 
-      [todaysDateSection]="true" 
-      [futureValidation]="true"
-      [disableYearPicker]="false" 
-      [disableMonthPicker]="false" 
-      [disableDayPicker]="false" 
-      [multiple]="true"
-      [isRequired]="true" 
-      [showConfirmButton]="true" 
-      [markToday]="true" 
-      [mode]="mode" 
-      [dir]="'ltr'" 
-      [locale]="'en'"
-      [submitTextButton]="'Confirm'" 
-      [todaysDateText]="'Today\'s Date'" 
-      [ummAlQuraDateText]="'Hijri Date'"
-      [yearSelectLabel]="'Year'" 
-      [monthSelectLabel]="'Month'"
-      [futureValidationMessageEn]="'Selected date cannot be in the future!'" 
-      [futureValidationMessageAr]="
+    <hijri-gregorian-datepicker [canChangeMode]="true" [todaysDateSection]="true" [futureValidation]="true"
+      [disableYearPicker]="false" [disableMonthPicker]="false" [disableDayPicker]="false" [multiple]="true"
+      [isRequired]="true" [showConfirmButton]="true" [markToday]="true" [mode]="mode" [dir]="'ltr'" [locale]="'en'"
+      [submitTextButton]="'Confirm'" [todaysDateText]="'Today\'s Date'" [ummAlQuraDateText]="'Hijri Date'"
+      [yearSelectLabel]="'Year'" [monthSelectLabel]="'Month'"
+      [futureValidationMessageEn]="'Selected date cannot be in the future!'" [futureValidationMessageAr]="
         'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
-      " [pastYearsLimit]="115" [futureYearsLimit]="5" [styles]="stylesConfig" (onSubmit)="onSubmit($event)"
+      " [pastYearsLimit]="115" [futureYearsLimit]="5" [theme]="'Ocean Breeze'" [styles]="stylesConfig" (onSubmit)="onSubmit($event)"
       (onDaySelect)="onChange($event)" (onMonthChange)="onMonthChangeTest($event)"
-    (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
+      (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
   </div>
 
   <div class="event-container">
     @if ((selectedDate | json) != '{}') {
-      <p>
-        {{ selectedDate | json }}
-      </p>
+    <p>
+      {{ selectedDate | json }}
+    </p>
     }
   </div>
 </div>
