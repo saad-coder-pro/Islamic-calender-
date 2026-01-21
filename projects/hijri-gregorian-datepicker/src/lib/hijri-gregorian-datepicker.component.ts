@@ -158,15 +158,15 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   private initializeGregorianYearsAndMonths(): void {
     const currentYear = this.getCurrentYear();
-    this.gregYear = this.futureYearsLimit === 0 ? currentYear : currentYear + this.futureYearsLimit;
-    this.years = this.generateYearsArray(this.gregYear);
+    this.gregYear = currentYear;
+    this.years = this.generateYearsArray(currentYear);
     this.months = this.gregMonths;
   }
 
   private initializeumAlQuraYearsAndMonths(): void {
     const currentYear = this.getCurrentYear();
-    this.umAlQuraYear = this.futureYearsLimit === 0 ? currentYear : currentYear + this.futureYearsLimit;
-    this.years = this.generateYearsArray(this.umAlQuraYear);
+    this.umAlQuraYear = currentYear;
+    this.years = this.generateYearsArray(currentYear);
     this.months = this.umAlQuraMonths;
   }
 
@@ -177,16 +177,36 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     return Number(dateString?.split('/')[2]);
   }
 
-  private generateYearsArray(maxYear: number): number[] {
+  private generateYearsArray(currentYear: number): number[] {
     const years: number[] = [];
-    let currentYear = maxYear;
     
-    for (let i = 0; i < this.pastYearsLimit && i < maxYear; i++) {
-      years.push(currentYear);
-      currentYear--;
+    // Define calendar system limits
+    const isGregorian = this.mode === CALENDAR_MODES.GREGORIAN;
+    const minYear = isGregorian ? 1901 : 1318;
+    const maxYear = isGregorian ? 2077 : 1500;
+    
+    // Calculate effective past and future limits based on calendar bounds
+    const maxPastYears = Math.min(this.pastYearsLimit, currentYear - minYear);
+    const maxFutureYears = Math.min(this.futureYearsLimit, maxYear - currentYear);
+    
+    // Add past years (including current year)
+    for (let i = 0; i <= maxPastYears; i++) {
+      const year = currentYear - i;
+      if (year >= minYear) {
+        years.push(year);
+      }
     }
     
-    return years;
+    // Add future years (excluding current year to avoid duplication)
+    for (let i = 1; i <= maxFutureYears; i++) {
+      const year = currentYear + i;
+      if (year <= maxYear) {
+        years.push(year);
+      }
+    }
+    
+    // Sort years in descending order (latest first)
+    return years.sort((a, b) => b - a);
   }
 
   private setCurrentYearInForm(): void {
