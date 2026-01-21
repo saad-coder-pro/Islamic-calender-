@@ -225,7 +225,7 @@ const MAX_DATE = new Date(Date.UTC(2077, 10, 16, 23, 59, 59, 999));
 
 export class UmmAlQuraCalendarUtil {
   
-  static checkDateRange(date: Date): void {
+  private static checkDateRange(date: Date): void {
     const time = date.getTime();
     if (time < MIN_DATE.getTime() || time > MAX_DATE.getTime()) {
       throw new RangeError(
@@ -234,7 +234,7 @@ export class UmmAlQuraCalendarUtil {
     }
   }
 
-  static checkYearRange(year: number): void {
+  private static checkYearRange(year: number): void {
     if (year < MIN_CALENDAR_YEAR || year > MAX_CALENDAR_YEAR) {
       throw new RangeError(
         `Year ${year} is out of range. Supported range: ${MIN_CALENDAR_YEAR} to ${MAX_CALENDAR_YEAR}`
@@ -242,7 +242,7 @@ export class UmmAlQuraCalendarUtil {
     }
   }
 
-  static checkYearMonthRange(year: number, month: number): void {
+  private static checkYearMonthRange(year: number, month: number): void {
     UmmAlQuraCalendarUtil.checkYearRange(year);
     if (month < 1 || month > 12) {
       throw new RangeError(`Month ${month} is out of range. Must be between 1 and 12.`);
@@ -255,23 +255,7 @@ export class UmmAlQuraCalendarUtil {
     return (flags & (1 << (month - 1))) === 0 ? 29 : 30;
   }
 
-  static getDaysInYear(year: number): number {
-    UmmAlQuraCalendarUtil.checkYearRange(year);
-    let days = 0;
-    let flags = HIJRI_YEAR_INFO[year - MIN_CALENDAR_YEAR].hijriMonthsLengthFlags;
-    
-    for (let m = 1; m <= 12; m++) {
-      days += 29 + (flags & 0x1);
-      flags = flags >> 1;
-    }
-    
-    return days;
-  }
 
-  static isLeapYear(year: number): boolean {
-    UmmAlQuraCalendarUtil.checkYearRange(year);
-    return UmmAlQuraCalendarUtil.getDaysInYear(year) === 355;
-  }
 
   static gregorianToHijri(date: Date): HijriDate {
     UmmAlQuraCalendarUtil.checkDateRange(date);
@@ -341,19 +325,4 @@ export class UmmAlQuraCalendarUtil {
     return new Date(yearStart.getTime() + nDays * MS_PER_DAY);
   }
 
-  static get MIN_CALENDAR_YEAR(): number {
-    return MIN_CALENDAR_YEAR;
-  }
-
-  static get MAX_CALENDAR_YEAR(): number {
-    return MAX_CALENDAR_YEAR;
-  }
-
-  static get MIN_DATE(): Date {
-    return MIN_DATE;
-  }
-
-  static get MAX_DATE(): Date {
-    return MAX_DATE;
-  }
 }

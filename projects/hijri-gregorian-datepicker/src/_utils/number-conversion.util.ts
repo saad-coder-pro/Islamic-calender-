@@ -41,14 +41,4 @@ export class NumberConversionUtil {
     return Number(converted);
   }
 
-  // Converts date numerals between Arabic and English
-  static convertDateNumerals(date: string, targetLang: 'en' | 'ar'): string {
-    if (targetLang === 'ar') {
-      const [day, month, year] = date.split('/');
-      return `${this.toArabicNumerals(year)}/${this.toArabicNumerals(month)}/${this.toArabicNumerals(day)}`;
-    } else {
-      const [year, month, day] = date.split('/');
-      return `${this.toEnglishNumerals(day)}/${this.toEnglishNumerals(month)}/${this.toEnglishNumerals(year)}`;
-    }
-  }
 }

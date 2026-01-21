@@ -27,7 +27,6 @@ import {
   CalendarMode 
 } from '../_constants/calendar.constants';
 import { NumberConversionUtil } from '../_utils/number-conversion.util';
-import { DateFormattingUtil } from '../_utils/date-formatting.util';
 
 @Component({
   selector: 'hijri-gregorian-datepicker',
@@ -253,7 +252,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
         this.generateMonthData(dateToUse);
       }
     } catch (error) {
-      console.error('Error initializing today\'s date:', error);
       // Fallback to current date
       this.todaysDate.gregorian = this._dateUtilsService.formatDate(new Date());
     }

@@ -71,7 +71,6 @@ export class DateUtilitiesService {
         return this.convertHijriDate(dateStr);
       }
     } catch (error) {
-      console.error('Date conversion error:', error);
       return null;
     }
   }
@@ -150,7 +149,6 @@ export class DateUtilitiesService {
       
       return monthData;
     } catch (error) {
-      console.error('Error getting month data:', error, { inputDate, type });
       return null;
     }
   }
