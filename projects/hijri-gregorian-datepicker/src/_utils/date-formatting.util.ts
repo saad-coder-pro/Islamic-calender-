@@ -34,21 +34,6 @@ export class DateFormattingUtil {
     return date.toLocaleString('en-US', { weekday: 'short' });
   }
 
-
-  // Gets day name from day index
-  static getDayName(dayIndex: number): string {
-    return WEEKDAYS_EN[dayIndex] || '';
-  }
-
-
-  // Builds a date string from day, month, year
-  static buildDateString(day: number | string, month: number | string, year: number | string): string {
-    const dayStr = String(day).padStart(2, '0');
-    const monthStr = String(month).padStart(2, '0');
-    return `${dayStr}/${monthStr}/${year}`;
-  }
-
-
   // Validates date parts
   private static isValidDateParts(day: number, month: number, year: number): boolean {
     return !isNaN(day) && !isNaN(month) && !isNaN(year) &&

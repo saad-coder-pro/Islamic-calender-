@@ -1,26 +1,16 @@
 import { Injectable } from '@angular/core';
-import * as datesDictionary from '../_data/dictionary.json';
-import { Data, DayInfo, MonthDays, MonthInfo } from '../_interfaces/calendar.model';
+import { DayInfo } from '../_interfaces/calendar.model';
 import { DateFormattingUtil } from '../_utils/date-formatting.util';
-import { NumberConversionUtil } from '../_utils/number-conversion.util';
+import { UmmAlQuraCalendarUtil } from '../_utils/umm-al-qura-calendar.util';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DateUtilitiesService {
-  public calendarData: Data;
   private monthDataCache = new Map<string, DayInfo[]>();
   private readonly MAX_CACHE_SIZE = 100;
 
-  constructor() {
-    // Handle JSON import - check if it has a default property or use direct import
-    if ('default' in datesDictionary) {
-      this.calendarData = (datesDictionary as { default: Data }).default;
-    } else {
-      this.calendarData = datesDictionary as unknown as Data;
-    }
-    
-  }
+  constructor() {}
 
   parseDate(dateStr: string): Date | null {
     return DateFormattingUtil.parseDate(dateStr);
@@ -30,131 +20,96 @@ export class DateUtilitiesService {
     return DateFormattingUtil.formatDate(date);
   }
 
-  getDayShortHand(date: Date): string {
+  private getDayShortHand(date: Date): string {
     return DateFormattingUtil.getDayShortHand(date);
   }
 
-  generateDates(fD: DayInfo, lD: DayInfo, uC: number): MonthDays {
-    const startDate = this.parseDate(fD?.gD);
-    const endDate = this.parseDate(lD?.gD);
-    const daysInMonth: MonthDays = [];
-    let currentGregorianDate = new Date(startDate);
-    let currentumAlQuraDay = parseInt(fD?.uD?.split('/')[0]);
-    let currentumAlQuraMonth = parseInt(fD?.uD?.split('/')[1]);
-    let currentumAlQuraYear = parseInt(fD?.uD?.split('/')[2]);
-    let daysInCurrentumAlQuraMonth = uC;
-    while (currentGregorianDate <= endDate) {
-      const umAlQuraDate = `${currentumAlQuraDay
-        .toString()
-        .padStart(2, '0')}/${currentumAlQuraMonth
-        .toString()
-        .padStart(2, '0')}/${currentumAlQuraYear}`;
-      daysInMonth.push({
-        gD: this.formatDate(currentGregorianDate),
-        uD: umAlQuraDate,
-        dN: this.getDayShortHand(currentGregorianDate),
-        uC: 0,
+  private generateDatesForHijriMonth(hijriYear: number, hijriMonth: number): DayInfo[] {
+    const daysInMonth = UmmAlQuraCalendarUtil.getDaysInMonth(hijriYear, hijriMonth);
+    const monthArray: DayInfo[] = [];
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const gregorianDate = UmmAlQuraCalendarUtil.hijriToGregorian(hijriYear, hijriMonth, day);
+      
+      monthArray.push({
+        gD: this.formatDate(gregorianDate),
+        uD: `${day.toString().padStart(2, '0')}/${hijriMonth.toString().padStart(2, '0')}/${hijriYear}`,
+        dN: this.getDayShortHand(gregorianDate),
+        uC: daysInMonth,
       });
-      currentGregorianDate.setDate(currentGregorianDate.getDate() + 1);
-      currentumAlQuraDay += 1;
-      if (currentumAlQuraDay > daysInCurrentumAlQuraMonth) {
-        currentumAlQuraDay = 1;
-        currentumAlQuraMonth += 1;
-        if (currentumAlQuraMonth > 12) {
-          currentumAlQuraMonth = 1;
-          currentumAlQuraYear += 1;
-        }
-        const nextMonthData =
-          this.calendarData[currentumAlQuraYear.toString()]?.[
-            currentumAlQuraMonth.toString()
-          ];
-        daysInCurrentumAlQuraMonth = nextMonthData ? nextMonthData.fD.uC : 30;
-      }
     }
-    return daysInMonth;
+    
+    return monthArray;
+  }
+
+  private generateDatesForGregorianMonth(gregorianYear: number, gregorianMonth: number): DayInfo[] {
+    const daysInMonth = new Date(gregorianYear, gregorianMonth, 0).getDate();
+    const monthArray: DayInfo[] = [];
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const gregorianDate = new Date(gregorianYear, gregorianMonth - 1, day);
+      const hijriDate = UmmAlQuraCalendarUtil.gregorianToHijri(gregorianDate);
+      
+      monthArray.push({
+        gD: this.formatDate(gregorianDate),
+        uD: `${hijriDate.day.toString().padStart(2, '0')}/${hijriDate.month.toString().padStart(2, '0')}/${hijriDate.year}`,
+        dN: this.getDayShortHand(gregorianDate),
+        uC: UmmAlQuraCalendarUtil.getDaysInMonth(hijriDate.year, hijriDate.month),
+      });
+    }
+    
+    return monthArray;
   }
 
   convertDate(dateStr: string, isGregorian: boolean): DayInfo | null {
     if (!dateStr) return null;
 
-    if (isGregorian) {
-      return this.convertGregorianDate(dateStr);
-    } else {
-      return this.convertumAlQuraDate(dateStr);
+    try {
+      if (isGregorian) {
+        return this.convertGregorianDate(dateStr);
+      } else {
+        return this.convertHijriDate(dateStr);
+      }
+    } catch (error) {
+      console.error('Date conversion error:', error);
+      return null;
     }
   }
 
   private convertGregorianDate(dateStr: string): DayInfo | null {
     const gregorianDate = this.parseDate(dateStr);
     if (!gregorianDate) return null;
-    const formattedDate = this.formatDate(gregorianDate);
 
-    // Extract year and month for more efficient lookup
-    const targetYear = gregorianDate.getFullYear();
-    const targetMonth = gregorianDate.getMonth() + 1;
-
-    // Look for data in target year and adjacent years
-    const yearsToCheck = [targetYear - 1, targetYear, targetYear + 1];
-    
-    for (const year of yearsToCheck) {
-      const yearData = this.calendarData[year];
-      if (!yearData) continue;
-
-      for (const monthKey in yearData) {
-        const monthData = yearData[monthKey];
-        const cacheKey = `${year}-${monthKey}-greg`;
-        
-        let daysInMonth = this.monthDataCache.get(cacheKey);
-        if (!daysInMonth) {
-          if (this.isDateInMonthRange(formattedDate, monthData.fD?.gD, monthData.lD?.gD)) {
-            daysInMonth = this.generateDates(monthData.fD, monthData.lD, monthData.fD?.uC);
-            this.setCachedMonthData(cacheKey, daysInMonth);
-          } else {
-            continue;
-          }
-        }
-
-        const dayMatch = daysInMonth.find((d) => d.gD === formattedDate);
-        if (dayMatch) return dayMatch;
-      }
+    try {
+      const hijriDate = UmmAlQuraCalendarUtil.gregorianToHijri(gregorianDate);
+      
+      return {
+        gD: this.formatDate(gregorianDate),
+        uD: `${hijriDate.day.toString().padStart(2, '0')}/${hijriDate.month.toString().padStart(2, '0')}/${hijriDate.year}`,
+        dN: this.getDayShortHand(gregorianDate),
+        uC: UmmAlQuraCalendarUtil.getDaysInMonth(hijriDate.year, hijriDate.month),
+      };
+    } catch (error) {
+      return null;
     }
-
-    return null;
   }
 
-  private convertumAlQuraDate(dateStr: string): DayInfo | null {
+  private convertHijriDate(dateStr: string): DayInfo | null {
     const [day, month, year] = dateStr.split('/').map(Number);
     if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
 
-    // Original working logic - search through all years
-    for (const yearKey in this.calendarData) {
-      for (const monthKey in this.calendarData[yearKey]) {
-        const monthData = this.calendarData[yearKey][monthKey];
-
-        if (
-          this.isDateInMonthRange(
-            `${day}/${month}/${year}`,
-            monthData.fD?.uD,
-            monthData.lD?.uD
-          )
-        ) {
-          const daysInMonth = this.generateDates(
-            monthData.fD,
-            monthData.lD,
-            monthData.fD?.uC
-          );
-
-          const dayMatch = daysInMonth.find((d) => {
-            const [uDay, uMonth, uYear] = d?.uD?.split('/').map(Number);
-            return uDay === day && uMonth === month && uYear === year;
-          });
-
-          if (dayMatch) return dayMatch;
-        }
-      }
+    try {
+      const gregorianDate = UmmAlQuraCalendarUtil.hijriToGregorian(year, month, day);
+      
+      return {
+        gD: this.formatDate(gregorianDate),
+        uD: dateStr,
+        dN: this.getDayShortHand(gregorianDate),
+        uC: UmmAlQuraCalendarUtil.getDaysInMonth(year, month),
+      };
+    } catch (error) {
+      return null;
     }
-
-    return null;
   }
 
   private setCachedMonthData(key: string, data: DayInfo[]): void {
@@ -164,22 +119,6 @@ export class DateUtilitiesService {
       this.monthDataCache.delete(firstKey);
     }
     this.monthDataCache.set(key, data);
-  }
-
-  private isDateInMonthRange(
-    dateToCheck: string,
-    monthStartDate: string | undefined,
-    monthEndDate: string | undefined
-  ): boolean {
-    if (!monthStartDate || !monthEndDate) return false;
-
-    const checkDate = this.parseDate(dateToCheck);
-    const startDate = this.parseDate(monthStartDate);
-    const endDate = this.parseDate(monthEndDate);
-
-    if (!checkDate || !startDate || !endDate) return false;
-
-    return checkDate >= startDate && checkDate <= endDate;
   }
 
   getMonthData(inputDate: string, type: string): DayInfo[] | null {
@@ -202,8 +141,8 @@ export class DateUtilitiesService {
     
     try {
       const monthData = isGregorian 
-        ? this.getGregorianMonthData(day, month, year)
-        : this.getUmAlQurraMonthData(day, month, year);
+        ? this.generateDatesForGregorianMonth(year, month)
+        : this.generateDatesForHijriMonth(year, month);
       
       if (monthData && monthData.length > 0) {
         this.setCachedMonthData(cacheKey, monthData);
@@ -216,158 +155,7 @@ export class DateUtilitiesService {
     }
   }
 
-  getGregorianMonthData(
-    day: number,
-    month: number,
-    year: number
-  ): DayInfo[] | null {
-    const yearData = this.calendarData[year];
-    if (!yearData) return null;
-    const monthData = yearData[month];
-    if (!monthData) return null;
-    const monthArray: DayInfo[] = [];
-    const endDate = new Date(year, month, 0);
-    for (let d = 1; d <= endDate.getDate(); d++) {
-      const offset = d - 1;
-
-      monthArray.push({
-        gD: `${d.toString().padStart(2, '0')}/${month
-          .toString()
-          .padStart(2, '0')}/${year}`,
-        uD: this.calculateUmAlQurraDate(
-          monthData.fD.uD,
-          offset,
-          monthData.fD.uC
-        ),
-        dN: this.getDayName(new Date(year, month - 1, d).getDay()),
-        uC: monthData.fD.uC,
-      });
-    }
-
-    return monthArray;
-  }
-
-  getUmAlQurraMonthData(
-    day: number,
-    month: number,
-    year: number
-  ): DayInfo[] | null {
-    // Original working logic - search through all years in the calendar data
-    for (const gregorianYear in this.calendarData) {
-      const yearData = this.calendarData[parseInt(gregorianYear)];
-
-      for (const monthIndex in yearData) {
-        const monthData = yearData[parseInt(monthIndex)];
-        const umAlQuraDateParts = monthData?.fD?.uD?.split('/').map(Number);
-        if (!umAlQuraDateParts) continue;
-        
-        const [fDay, fMonth, fYear] = umAlQuraDateParts;
-
-        if (fYear === year && fMonth === month) {
-          return this.generateumAlQuraMonthArray(monthData, month, year);
-        }
-      }
-    }
-
-    return null;
-  }
-
-  private generateumAlQuraMonthArray(monthData: MonthInfo, month: number, year: number): DayInfo[] {
-    const totalDays = monthData.fD.uC;
-    const monthArray: DayInfo[] = [];
-    const umAlQurraStartDate = DateFormattingUtil.buildDateString('01', month, year);
-    const dayDifference = parseInt(monthData.fD.uD.split('/')[0]) - 1;
-
-    const startGregorianDate = this.calculateGregorianDate(
-      monthData.fD.gD,
-      -dayDifference
-    );
-
-    for (let i = 0; i < totalDays; i++) {
-      const uDate = this.calculateUmAlQurraDate(
-        umAlQurraStartDate,
-        i,
-        totalDays
-      );
-      const gDate = this.calculateGregorianDate(startGregorianDate, i);
-      const gregorianParts = gDate?.split('/').map(Number);
-      
-      if (gregorianParts) {
-        const [gDay, gMonth, gYear] = gregorianParts;
-        const dayName = this.getDayName(
-          new Date(gYear, gMonth - 1, gDay).getDay()
-        );
-
-        monthArray.push({
-          gD: gDate,
-          uD: uDate,
-          dN: dayName,
-          uC: totalDays,
-        });
-      }
-    }
-
-    return monthArray;
-  }
-
-  calculateGregorianDate(startGDate: string, offset: number): string {
-    const [day, month, year] = startGDate?.split('/').map(Number);
-    const newDate = new Date(year, month - 1, day + offset);
-
-    return `${newDate.getDate().toString().padStart(2, '0')}/${(
-      newDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}/${newDate.getFullYear()}`;
-  }
-
-  calculateUmAlQurraDate(
-    startUDate: string,
-    offset: number,
-    uC: number
-  ): string {
-    const [day, month, year] = startUDate?.split('/').map(Number);
-
-    let newDay = day + offset;
-    let newMonth = month;
-    let newYear = year;
-
-    while (newDay > uC) {
-      newDay -= uC;
-      newMonth += 1;
-    }
-
-    while (newMonth > 12) {
-      newMonth = 1;
-      newYear += 1;
-    }
-
-    return `${newDay.toString().padStart(2, '0')}/${newMonth
-      .toString()
-      .padStart(2, '0')}/${newYear}`;
-  }
-
-  getDayName(dayIndex: number): string {
-    return DateFormattingUtil.getDayName(dayIndex);
-  }
-
-  /// Check date is it in past or future
   checkPastOrFuture(inputDate: string, targetDate: Date): 'Past' | 'Today' | 'Future' | null {
     return DateFormattingUtil.compareDateToTarget(inputDate, targetDate);
-  }
-
-  /// Convert english numbers to arabic equivalent
-  parseEnglish(englishNum: number | string): string {
-    return NumberConversionUtil.toArabicNumerals(englishNum);
-  }
-
-  /// Convert arabic numbers to english equivalent
-  parseArabic(arabicNum: string): string {
-    return NumberConversionUtil.toEnglishNumerals(arabicNum);
-  }
-
-  /// Convert date numerals between Arabic and English
-  convertDateNumerals(date: string, targetLang: 'en' | 'ar'): string {
-    return NumberConversionUtil.convertDateNumerals(date, targetLang);
   }
 }
