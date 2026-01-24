@@ -8,6 +8,7 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   TrackByFunction,
 } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -63,6 +64,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() theme?: string = '';
   @Input() pastYearsLimit: number = 90;
   @Input() futureYearsLimit: number = 0;
+  @Input() minDate?: string; // Format: 'dd/mm/yyyy'
+  @Input() maxDate?: string; // Format: 'dd/mm/yyyy'
+  @Input() disabledDates?: string[]; // Array of dates in format: 'dd/mm/yyyy'
+  @Input() rangeSelection: boolean = false; // Enable date range selection
   @Input() styles?: StylesConfig = {};
   /// Outputs
   @Output() onSubmit = new EventEmitter<DayInfo | DayInfo[]>();
@@ -77,6 +82,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   years: number[] = [];
   weeks: (DayInfo | null)[][] = [];
   months: MonthData[] = [];
+  selectedRange: { start: DayInfo | null; end: DayInfo | null } = { start: null, end: null };
   readonly weekdaysEn = WEEKDAYS_EN;
   readonly weekdaysAr = WEEKDAYS_AR;
   // weekdaysAr = ['س', 'ج', 'خ', 'أر', 'ث', 'إث', 'أح'];
@@ -98,7 +104,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @HostBinding('style.font-family') fontFamilyStyle!: string;
   constructor(
     public formBuilder: FormBuilder,
-    private _dateUtilsService: DateUtilitiesService
+    private _dateUtilsService: DateUtilitiesService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -340,17 +347,29 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// On day clicked handler
   onDayClicked(day: DayInfo): void {
+    console.log('onDayClicked called with:', day);
+    console.log('rangeSelection mode:', this.rangeSelection);
+    
     if (day && day?.gD) {
-      if (this.futureValidation) {
-        if (this.checkFutureValidation(day)) {
-          this.futureValidationMessage = true;
-        } else {
-          this.futureValidationMessage = false;
-          this.markDaySelected(day);
-        }
+      // Check if date is disabled by any validation rule
+      if (this.isDateDisabled(day)) {
+        console.log('Date is disabled');
+        this.futureValidationMessage = this.futureValidation && this.checkFutureValidation(day);
+        return;
+      }
+      
+      this.futureValidationMessage = false;
+      
+      // Handle different selection modes
+      if (this.rangeSelection) {
+        console.log('Calling handleRangeSelection');
+        this.handleRangeSelection(day);
       } else {
+        console.log('Calling markDaySelected');
         this.markDaySelected(day);
       }
+    } else {
+      console.log('Invalid day or missing gD:', day);
     }
   }
 
@@ -409,11 +428,67 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     });
   }
 
+  /// Get all dates in the selected range (start, between, end)
+  private getAllDatesInRange(): DayInfo[] {
+    if (!this.selectedRange.start || !this.selectedRange.end) {
+      return [];
+    }
+
+    const allDatesInRange: DayInfo[] = [];
+    
+    // Add start date
+    allDatesInRange.push(this.selectedRange.start);
+    
+    // Add all dates between start and end
+    this.weeks.forEach((week: (DayInfo | null)[]) => {
+      week.forEach((day: DayInfo | null) => {
+        if (day && day.isInRange) {
+          allDatesInRange.push(day);
+        }
+      });
+    });
+    
+    // Add end date (if different from start)
+    if (this.selectedRange.start !== this.selectedRange.end) {
+      allDatesInRange.push(this.selectedRange.end);
+    }
+    
+    // Sort dates chronologically
+    allDatesInRange.sort((a, b) => {
+      const dateA = new Date(this.parseDate(a.gD || ''));
+      const dateB = new Date(this.parseDate(b.gD || ''));
+      return dateA.getTime() - dateB.getTime();
+    });
+    
+    return allDatesInRange;
+  }
+
   /// On confirm button clicked
   onConfirmClicked(): void {
-    if (this.multiple) {
+    console.log('onConfirmClicked called');
+    console.log('rangeSelection:', this.rangeSelection);
+    console.log('multiple:', this.multiple);
+    console.log('selectedRange:', this.selectedRange);
+    
+    if (this.rangeSelection && this.selectedRange.start && this.selectedRange.end) {
+      const allDatesInRange = this.getAllDatesInRange();
+      console.log('All dates in range (start, between, end):', allDatesInRange);
+      console.log('Total dates in range:', allDatesInRange.length);
+      
+      // Log each date for clarity
+      allDatesInRange.forEach((date, index) => {
+        const dateType = date.isRangeStart ? 'START' : 
+                        date.isRangeEnd ? 'END' : 
+                        date.isInRange ? 'BETWEEN' : 'UNKNOWN';
+        console.log(`${index + 1}. ${dateType}: ${date.gD} (${date.uD})`);
+      });
+      
+      this.onSubmit.emit(allDatesInRange);
+    } else if (this.multiple) {
+      console.log('Emitting multiple selection');
       this.onSubmit.emit(this.multipleSelectedDates);
     } else {
+      console.log('Emitting single selection');
       this.onSubmit.emit(this.selectedDay);
     }
   }
@@ -433,6 +508,149 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
       this.todaysDate?.gregorian === day?.gD ||
       this.todaysDate?.umAlQura === day?.uD
     );
+  }
+
+  /// Check if date is before minDate
+  checkMinDateValidation(day: DayInfo): boolean {
+    if (!this.minDate) return false;
+    
+    const dayDate = this.mode === CALENDAR_MODES.GREGORIAN ? day?.gD : day?.uD;
+    if (!dayDate) return false;
+    
+    // Convert minDate string to Date object
+    const minDateParts = this.minDate.split('/');
+    const minDateObj = new Date(Number(minDateParts[2]), Number(minDateParts[1]) - 1, Number(minDateParts[0]));
+    
+    return this._dateUtilsService.checkPastOrFuture(dayDate, minDateObj) === 'Past';
+  }
+
+  /// Check if date is after maxDate
+  checkMaxDateValidation(day: DayInfo): boolean {
+    if (!this.maxDate) return false;
+    
+    const dayDate = this.mode === CALENDAR_MODES.GREGORIAN ? day?.gD : day?.uD;
+    if (!dayDate) return false;
+    
+    // Convert maxDate string to Date object
+    const maxDateParts = this.maxDate.split('/');
+    const maxDateObj = new Date(Number(maxDateParts[2]), Number(maxDateParts[1]) - 1, Number(maxDateParts[0]));
+    
+    return this._dateUtilsService.checkPastOrFuture(dayDate, maxDateObj) === 'Future';
+  }
+
+  /// Check if date is in disabled dates array
+  checkDisabledDate(day: DayInfo): boolean {
+    if (!this.disabledDates || this.disabledDates.length === 0) return false;
+    
+    const dayDate = this.mode === CALENDAR_MODES.GREGORIAN ? day?.gD : day?.uD;
+    return this.disabledDates.includes(dayDate || '');
+  }
+
+  /// Check if date should be disabled (combines all validation rules)
+  isDateDisabled(day: DayInfo): boolean {
+    return this.checkMinDateValidation(day) || 
+           this.checkMaxDateValidation(day) || 
+           this.checkDisabledDate(day) ||
+           (this.futureValidation && this.checkFutureValidation(day) === true);
+  }
+
+  /// Handle range selection
+  private handleRangeSelection(dayInfo: DayInfo): void {
+    console.log('handleRangeSelection called with:', dayInfo);
+    console.log('Current selectedRange:', this.selectedRange);
+    
+    if (this.isDateDisabled(dayInfo)) {
+      console.log('Date is disabled, returning');
+      return;
+    }
+    
+    if (!this.selectedRange.start || this.selectedRange.end) {
+      // Start new range
+      console.log('Starting new range');
+      this.clearRangeSelection();
+      this.selectedRange.start = dayInfo;
+      dayInfo.selected = true;
+      dayInfo.isRangeStart = true;
+      console.log('Set range start:', dayInfo);
+    } else {
+      // Complete the range
+      console.log('Completing range');
+      this.selectedRange.end = dayInfo;
+      dayInfo.selected = true;
+      dayInfo.isRangeEnd = true;
+      this.highlightRange();
+      
+      // Log the completed range but don't emit yet (only on confirm)
+      const allDatesInRange = this.getAllDatesInRange();
+      console.log('Range completed with all dates:', allDatesInRange);
+      console.log('Range ready for confirmation. Click Confirm button to submit.');
+    }
+    
+    // Force change detection
+    this.cdr.detectChanges();
+    this.onDaySelect.emit(dayInfo);
+  }
+
+  /// Clear range selection
+  private clearRangeSelection(): void {
+    this.weeks.forEach((week: (DayInfo | null)[]) => {
+      week.forEach((day: DayInfo | null) => {
+        if (day) {
+          day.selected = false;
+          day.isRangeStart = false;
+          day.isRangeEnd = false;
+          day.isInRange = false;
+        }
+      });
+    });
+    this.selectedRange = { start: null, end: null };
+  }
+
+  /// Highlight dates between start and end
+  private highlightRange(): void {
+    if (!this.selectedRange.start || !this.selectedRange.end) return;
+    
+    const startDate = new Date(this.parseDate(this.selectedRange.start.gD || ''));
+    const endDate = new Date(this.parseDate(this.selectedRange.end.gD || ''));
+    
+    // Ensure dates are in correct order
+    const earlierDate = startDate <= endDate ? startDate : endDate;
+    const laterDate = startDate <= endDate ? endDate : startDate;
+    
+    // Update range flags for proper visual feedback
+    if (startDate > endDate) {
+      // Swap the range flags if dates are reversed
+      this.selectedRange.start.isRangeEnd = true;
+      this.selectedRange.start.isRangeStart = false;
+      this.selectedRange.end.isRangeStart = true;
+      this.selectedRange.end.isRangeEnd = false;
+    }
+    
+    this.weeks.forEach((week: (DayInfo | null)[]) => {
+      week.forEach((day: DayInfo | null) => {
+        if (day && day.gD) {
+          const dayDate = new Date(this.parseDate(day.gD));
+          
+          // Check if day is between start and end (exclusive)
+          if (dayDate > earlierDate && dayDate < laterDate) {
+            day.isInRange = true;
+          }
+          
+          // Handle edge case where start and end are the same day
+          if (earlierDate.getTime() === laterDate.getTime() && dayDate.getTime() === earlierDate.getTime()) {
+            day.isRangeStart = true;
+            day.isRangeEnd = true;
+            day.isInRange = false;
+          }
+        }
+      });
+    });
+  }
+
+  /// Helper to parse date string to Date object
+  private parseDate(dateStr: string): string {
+    const parts = dateStr.split('/');
+    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
   }
 
   /// Convert english numbers to arabic equivalent

@@ -112,19 +112,25 @@
           }">
           <div id="greg-day" [ngClass]="{
               'todays-date': checkTodaysDate(day),
-              'selected-date': day?.selected == true
+              'selected-date': day?.selected == true,
+              'range-start': day?.isRangeStart == true,
+              'range-end': day?.isRangeEnd == true,
+              'range-between': day?.isInRange == true
             }" [ngStyle]="{
               border:
                 markToday && checkTodaysDate(day)
                   ? '1px solid ' + styles.secondaryColor
                   : '',
               'background-color':
-                day?.selected == true ? styles.secondaryColor : '',
+                day?.selected == true && !day?.isRangeStart && !day?.isRangeEnd && !day?.isInRange ? styles.secondaryColor : '',
               color:
-                (day?.selected == true ? styles.todaysDateTextColor : '') ||
-                (checkFutureValidation(day) && futureValidation
-                  ? styles.disabledDayColor
-                  : '')
+                (day?.selected == true && !day?.isRangeStart && !day?.isRangeEnd && !day?.isInRange ? styles.todaysDateTextColor : '') ||
+                (isDateDisabled(day) ? styles.disabledDayColor : ''),
+              opacity: isDateDisabled(day) ? '0.5' : '1',
+              'pointer-events': isDateDisabled(day) ? 'none' : 'auto',
+              '--range-color': styles.secondaryColor || '#272343',
+              '--range-text-color': styles.todaysDateTextColor || '#fff',
+              '--range-between-color': styles.secondaryColor || '#272343'
             }">
             @if (mode == 'greg') {
             <span>{{
@@ -165,8 +171,9 @@
     @if (showConfirmButton) {
     <button type="button" class="confirm-btn" [disabled]="
         isRequired &&
-        ((!selectedDay && !multiple) ||
-          (!multipleSelectedDates.length && multiple))
+        ((rangeSelection && (!selectedRange.start || !selectedRange.end)) ||
+         (!rangeSelection && !multiple && !selectedDay) ||
+         (!rangeSelection && multiple && !multipleSelectedDates.length))
       " (click)="onConfirmClicked()" [ngStyle]="{
         'background-color': styles.secondaryColor,
         color: styles.confirmBtnTextColor,

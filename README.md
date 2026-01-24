@@ -56,6 +56,9 @@ Online demo can be found:
 - Can select **Multiple** dates.
 - **Event listeners** for all datepicker events.
 - Can customize future and past years number.
+- **Date range validation** with min/max date support.
+- **Disabled specific dates** for blocking holidays or unavailable dates.
+- **Date range selection** mode for selecting start and end dates.
 - **Responsive** desing for web and mobile.
 
 <br />
@@ -148,6 +151,94 @@ Inside your component.ts:
 
 <br />
 
+## Advanced Features
+
+### Date Range Validation
+
+Restrict user selection to specific date ranges using `minDate` and `maxDate`:
+
+```html
+<hijri-gregorian-datepicker
+  [minDate]="'01/01/2020'"
+  [maxDate]="'31/12/2025'"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+### Disabled Specific Dates
+
+Block specific dates like holidays or maintenance periods:
+
+```html
+<hijri-gregorian-datepicker
+  [disabledDates]="['25/12/2024', '01/01/2025', '15/08/2024']"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+### Date Range Selection
+
+Enable range selection mode for booking periods or reporting ranges:
+
+```html
+<hijri-gregorian-datepicker
+  [rangeSelection]="true"
+  [multiple]="false"
+  [mode]="'greg'"
+  (onSubmit)="onRangeSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+```ts
+// Component method to handle range selection
+onRangeSubmit(dateRange: DayInfo[]) {
+  if (dateRange && dateRange.length === 2) {
+    const startDate = dateRange[0];
+    const endDate = dateRange[1];
+    console.log('Range selected:', startDate.gD, 'to', endDate.gD);
+  }
+}
+```
+
+### Business Use Cases
+
+#### Hotel Booking System
+```html
+<hijri-gregorian-datepicker
+  [rangeSelection]="true"
+  [minDate]="todayDate"
+  [disabledDates]="unavailableDates"
+  [futureValidation]="false"
+  [submitTextButton]="'Book Dates'"
+  (onSubmit)="bookHotel($event)">
+</hijri-gregorian-datepicker>
+```
+
+#### Age Verification
+```html
+<hijri-gregorian-datepicker
+  [maxDate]="eighteenYearsAgo"
+  [futureValidation]="true"
+  [submitTextButton]="'Confirm Age'"
+  (onSubmit)="verifyAge($event)">
+</hijri-gregorian-datepicker>
+```
+
+#### Project Timeline
+```html
+<hijri-gregorian-datepicker
+  [minDate]="projectStartDate"
+  [maxDate]="projectEndDate"
+  [disabledDates]="weekends"
+  [rangeSelection]="true"
+  (onSubmit)="setMilestone($event)">
+</hijri-gregorian-datepicker>
+```
+
+<br />
+
 ## @Inputs()
 
 | Property                           |  Type   |                    Default                    | Description                                                                                                      |
@@ -174,6 +265,10 @@ Inside your component.ts:
 | <b>`futureValidationMessageAr`</b> | string  | `التاريخ المحدد لا يمكن ان يكون في المستقبل!` | Arabic future validation message if `futureValidation` is set to `true`                                          |
 | <b>`pastYearsLimit`</b>            | number  |                     `90`                      | indicates for the past years number you want to allow user to select from                                        |
 | <b>`futureYearsLimit`</b>          | number  |                      `0`                      | indicates for the future years number you want to allow user to select from                                      |
+| <b>`minDate`</b>                   | string  |                   `undefined`                 | Minimum selectable date in 'dd/mm/yyyy' format. Dates before this will be disabled                               |
+| <b>`maxDate`</b>                   | string  |                   `undefined`                 | Maximum selectable date in 'dd/mm/yyyy' format. Dates after this will be disabled                                |
+| <b>`disabledDates`</b>             | string[] |                     `[]`                      | Array of specific dates to disable in 'dd/mm/yyyy' format (e.g., holidays, blackout dates)                      |
+| <b>`rangeSelection`</b>            | boolean |                    `false`                    | When `true` enables date range selection mode. User clicks start date, then end date to select a range            |
 | <b>`styles`</b>                    | object  |                     `{}`                      | Styles for the calendar look and feel                                                                            |
 | <b>`theme`</b>                     | string  |                     `Midnight Blue`           | Different skins and themes for the calendar('Ocean Breeze', 'Lavender Dreams', 'Sunset Glow', 'Midnight Blue', 'Forest Canopy', 'Rosewood Elegance', 'Icy Mint', 'Golden Sand', 'Steel Grey', 'Coral Reef'), and it has priority over styles
 

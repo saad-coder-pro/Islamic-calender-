@@ -208,4 +208,81 @@
     margin-top: 8px;
     font-size: 13px;
   }
+
+  // Range Selection Styles - Match parent day dimensions
+  #greg-day {
+    &.range-start,
+    &.range-end,
+    &.range-between {
+      // Ensure consistent dimensions - inherit from parent .day
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+      // Ensure the same padding/margin as normal days
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    &.range-start {
+      background-color: var(--range-color) !important;
+      color: var(--range-text-color) !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      font-weight: 600 !important;
+    }
+
+    &.range-end {
+      background-color: var(--range-color) !important;
+      color: var(--range-text-color) !important;
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      font-weight: 600 !important;
+    }
+
+    &.range-between {
+      background-color: var(--range-between-color) !important;
+      color: var(--range-text-color) !important;
+      border-radius: 0 !important;
+      font-weight: 500 !important;
+    }
+
+    // Single day range
+    &.range-start.range-end {
+      border-radius: 8px !important;
+    }
+  }
+
+  // Also ensure the parent .day container maintains consistent styling for range dates
+  .day {
+    &:has(#greg-day.range-start),
+    &:has(#greg-day.range-end),
+    &:has(#greg-day.range-between) {
+      display: inline-flex !important;
+      width: 13% !important;
+      height: 6vh !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+  }
+
+  // Range hover effects
+  .calendar-days {
+    .day-container:hover {
+      .range-between,
+      .range-start,
+      .range-end {
+        transform: scale(1.02);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+
+  // Smooth transitions for range selection
+  .day-container {
+    transition: all 0.2s ease-in-out;
+  }
 }
