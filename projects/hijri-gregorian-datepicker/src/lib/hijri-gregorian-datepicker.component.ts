@@ -68,6 +68,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() maxDate?: string; // Format: 'dd/mm/yyyy'
   @Input() disabledDates?: string[]; // Array of dates in format: 'dd/mm/yyyy'
   @Input() rangeSelection: boolean = false; // Enable date range selection
+  @Input() initialDate?: string; // Initial date to open calendar to (format: 'dd/mm/yyyy')
   @Input() styles?: StylesConfig = {};
   /// Outputs
   @Output() onSubmit = new EventEmitter<DayInfo | DayInfo[]>();
@@ -113,11 +114,17 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.initializeForm();
     this.getTodaysDateInfo();
     this.initializeYearsAndMonths();
+    this.updateCalendarWeeks();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes['mode'].isFirstChange()) {
+    if (changes['mode'] && !changes['mode'].isFirstChange()) {
       this.changeCalendarMode();
+    }
+    
+    if (changes['initialDate'] && !changes['initialDate'].isFirstChange()) {
+      this.initializeYearsAndMonths();
+      this.updateCalendarWeeks();
     }
   }
 
@@ -178,10 +185,57 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   }
 
   private getCurrentYear(): number {
-    const dateString = this.mode === CALENDAR_MODES.GREGORIAN 
+    const dateString = this.getEffectiveDate();
+    return Number(dateString?.split('/')[2]);
+  }
+
+  private getEffectiveDate(): string | undefined {
+    // Use initialDate if provided and valid, otherwise use today's date
+    if (this.initialDate && this.isValidInitialDate(this.initialDate)) {
+      if (this.mode === CALENDAR_MODES.GREGORIAN) {
+        return this.initialDate;
+      } else {
+        // Convert initialDate to Hijri for Hijri mode
+        const convertedDate = this._dateUtilsService.convertDate(this.initialDate, true);
+        return convertedDate?.uD;
+      }
+    }
+    
+    // Fallback to today's date
+    return this.mode === CALENDAR_MODES.GREGORIAN 
       ? this.todaysDate.gregorian 
       : this.todaysDate.umAlQura;
-    return Number(dateString?.split('/')[2]);
+  }
+
+  private isValidInitialDate(dateStr: string): boolean {
+    // Check if the date string is in valid format
+    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!dateRegex.test(dateStr)) {
+      return false;
+    }
+
+    // Parse the date to ensure it's a valid date
+    const parsedDate = this._dateUtilsService.parseDate(dateStr);
+    if (!parsedDate) {
+      return false;
+    }
+
+    // Check against minDate and maxDate constraints
+    if (this.minDate) {
+      const minDateParsed = this._dateUtilsService.parseDate(this.minDate);
+      if (minDateParsed && parsedDate < minDateParsed) {
+        return false;
+      }
+    }
+
+    if (this.maxDate) {
+      const maxDateParsed = this._dateUtilsService.parseDate(this.maxDate);
+      if (maxDateParsed && parsedDate > maxDateParsed) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private generateYearsArray(currentYear: number): number[] {
@@ -225,9 +279,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   }
 
   private setCurrentMonthInForm(): void {
-    const dateString = this.mode === CALENDAR_MODES.GREGORIAN 
-      ? this.todaysDate.gregorian 
-      : this.todaysDate.umAlQura;
+    const dateString = this.getEffectiveDate();
     const currentMonth = Number(dateString?.split('/')[1]);
     const monthMatch = this.months.find(month => month.value === currentMonth);
     if (monthMatch) {
@@ -253,6 +305,24 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     const formattedDate = this.buildDateString();
     const days = this._dateUtilsService.getMonthData(formattedDate, this.mode);
     this.weeks = this.generateWeeksArray(days);
+    this.markInitialDateAsSelected();
+  }
+
+  private markInitialDateAsSelected(): void {
+    if (!this.initialDate || this.selectedDay) return; // Don't auto-select if user already selected something
+    
+    // Find the initial date in the current weeks and mark it as selected
+    for (const week of this.weeks) {
+      for (const day of week) {
+        if (day && this.checkInitialDate(day)) {
+          day.selected = true;
+          this.selectedDay = day;
+          this.onDaySelect.emit(day);
+          this.cdr.detectChanges();
+          return;
+        }
+      }
+    }
   }
 
   private buildDateString(): string {
@@ -510,11 +580,32 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     );
   }
 
+  /// Check if passed day should be highlighted (today or initial date)
+  checkHighlightedDate(day: DayInfo): boolean {
+    const isTodaysDate = this.checkTodaysDate(day);
+    const isInitialDate = this.checkInitialDate(day);
+    return isTodaysDate || isInitialDate;
+  }
+
+  /// Check if passed day is the initial date
+  checkInitialDate(day: DayInfo): boolean {
+    if (!this.initialDate) return false;
+    
+    if (this.mode === CALENDAR_MODES.GREGORIAN) {
+      return this.initialDate === day?.gD;
+    } else {
+      // Convert initialDate to Hijri and compare
+      const convertedDate = this._dateUtilsService.convertDate(this.initialDate, true);
+      return convertedDate?.uD === day?.uD;
+    }
+  }
+
   /// Check if date is before minDate
   checkMinDateValidation(day: DayInfo): boolean {
     if (!this.minDate) return false;
     
-    const dayDate = this.mode === CALENDAR_MODES.GREGORIAN ? day?.gD : day?.uD;
+    // Always use Gregorian date for comparison since minDate is Gregorian
+    const dayDate = day?.gD;
     if (!dayDate) return false;
     
     // Convert minDate string to Date object
@@ -528,7 +619,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   checkMaxDateValidation(day: DayInfo): boolean {
     if (!this.maxDate) return false;
     
-    const dayDate = this.mode === CALENDAR_MODES.GREGORIAN ? day?.gD : day?.uD;
+    // Always use Gregorian date for comparison since maxDate is Gregorian
+    const dayDate = day?.gD;
     if (!dayDate) return false;
     
     // Convert maxDate string to Date object
@@ -542,7 +634,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   checkDisabledDate(day: DayInfo): boolean {
     if (!this.disabledDates || this.disabledDates.length === 0) return false;
     
-    const dayDate = this.mode === CALENDAR_MODES.GREGORIAN ? day?.gD : day?.uD;
+    // Always use Gregorian date for comparison since disabledDates are Gregorian
+    const dayDate = day?.gD;
     return this.disabledDates.includes(dayDate || '');
   }
 

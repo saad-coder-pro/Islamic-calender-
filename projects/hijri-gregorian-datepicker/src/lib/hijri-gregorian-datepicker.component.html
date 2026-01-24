@@ -111,14 +111,14 @@
             color: styles.dayColor
           }">
           <div id="greg-day" [ngClass]="{
-              'todays-date': checkTodaysDate(day),
+              'highlighted-date': checkHighlightedDate(day),
               'selected-date': day?.selected == true,
               'range-start': day?.isRangeStart == true,
               'range-end': day?.isRangeEnd == true,
               'range-between': day?.isInRange == true
             }" [ngStyle]="{
               border:
-                markToday && checkTodaysDate(day)
+                markToday && checkHighlightedDate(day)
                   ? '1px solid ' + styles.secondaryColor
                   : '',
               'background-color':

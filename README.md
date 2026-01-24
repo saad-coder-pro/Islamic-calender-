@@ -202,6 +202,27 @@ onRangeSubmit(dateRange: DayInfo[]) {
 }
 ```
 
+### Initial Date Setting
+
+Set a specific date for the calendar to open to:
+
+```html
+<hijri-gregorian-datepicker
+  [initialDate]="'15/03/2025'"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+```ts
+// Component properties for dynamic initial date
+export class MyComponent {
+  appointmentDate = '20/05/2025';
+  
+  // Calendar will open to May 2025 showing the appointment date
+}
+```
+
 ### Business Use Cases
 
 #### Hotel Booking System
@@ -269,6 +290,7 @@ onRangeSubmit(dateRange: DayInfo[]) {
 | <b>`maxDate`</b>                   | string  |                   `undefined`                 | Maximum selectable date in 'dd/mm/yyyy' format. Dates after this will be disabled                                |
 | <b>`disabledDates`</b>             | string[] |                     `[]`                      | Array of specific dates to disable in 'dd/mm/yyyy' format (e.g., holidays, blackout dates)                      |
 | <b>`rangeSelection`</b>            | boolean |                    `false`                    | When `true` enables date range selection mode. User clicks start date, then end date to select a range            |
+| <b>`initialDate`</b>               | string  |                   `undefined`                 | Initial date to open calendar to in 'dd/mm/yyyy' format. Must be within minDate/maxDate range if specified       |
 | <b>`styles`</b>                    | object  |                     `{}`                      | Styles for the calendar look and feel                                                                            |
 | <b>`theme`</b>                     | string  |                     `Midnight Blue`           | Different skins and themes for the calendar('Ocean Breeze', 'Lavender Dreams', 'Sunset Glow', 'Midnight Blue', 'Forest Canopy', 'Rosewood Elegance', 'Icy Mint', 'Golden Sand', 'Steel Grey', 'Coral Reef'), and it has priority over styles
 
