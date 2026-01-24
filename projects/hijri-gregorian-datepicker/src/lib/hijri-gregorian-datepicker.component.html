@@ -154,7 +154,7 @@
     </div>
   </div>
   @if (futureValidationMessage) {
-  <div class="future-validation" dir="auto">
+  <div class="future-past-validation" dir="auto">
     @if (locale == 'ar') {
     <span>
       {{ futureValidationMessageAr }}
@@ -163,6 +163,20 @@
     @if (locale == 'en') {
     <span>
       {{ futureValidationMessageEn }}
+    </span>
+    }
+  </div>
+  }
+  @if (pastDateValidationMessage) {
+  <div class="future-past-validation" dir="auto">
+    @if (locale == 'ar') {
+    <span>
+      {{ pastDateValidationMessageAr }}
+    </span>
+    }
+    @if (locale == 'en') {
+    <span>
+      {{ pastDateValidationMessageEn }}
     </span>
     }
   </div>

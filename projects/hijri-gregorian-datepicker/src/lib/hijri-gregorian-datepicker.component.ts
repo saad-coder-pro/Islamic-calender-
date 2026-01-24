@@ -43,6 +43,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() canChangeMode: boolean = true;
   @Input() todaysDateSection: boolean = true;
   @Input() futureValidation: boolean = true;
+  @Input() pastDateValidation: boolean = false;
   @Input() disableYearPicker: boolean = false;
   @Input() disableMonthPicker: boolean = false;
   @Input() disableDayPicker: boolean = false;
@@ -50,6 +51,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() isRequired: boolean = false;
   @Input() showConfirmButton: boolean = true;
   @Input() futureValidationMessage: boolean = false;
+  @Input() pastDateValidationMessage: boolean = false;
   @Input() arabicLayout: boolean = false;
   @Input() mode: CalendarMode = CALENDAR_MODES.GREGORIAN;
   @Input() dir: string = 'ltr';
@@ -61,6 +63,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() yearSelectLabel: string = 'Year';
   @Input() futureValidationMessageEn: string;
   @Input() futureValidationMessageAr: string;
+  @Input() pastDateValidationMessageEn: string;
+  @Input() pastDateValidationMessageAr: string;
   @Input() theme?: string = '';
   @Input() pastYearsLimit: number = 90;
   @Input() futureYearsLimit: number = 0;
@@ -425,10 +429,12 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
       if (this.isDateDisabled(day)) {
         console.log('Date is disabled');
         this.futureValidationMessage = this.futureValidation && this.checkFutureValidation(day);
+        this.pastDateValidationMessage = this.pastDateValidation && this.checkPastDateValidation(day);
         return;
       }
       
       this.futureValidationMessage = false;
+      this.pastDateValidationMessage = false;
       
       // Handle different selection modes
       if (this.rangeSelection) {
@@ -572,6 +578,15 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     }
   }
 
+  /// Check if date is from past
+  checkPastDateValidation(day: DayInfo): boolean | undefined {
+    if (
+      this._dateUtilsService.checkPastOrFuture(day?.gD, new Date()) === 'Past'
+    ) {
+      return true;
+    }
+  }
+
   /// Check if passed day is today or not
   checkTodaysDate(day: DayInfo): boolean {
     return (
@@ -644,7 +659,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     return this.checkMinDateValidation(day) || 
            this.checkMaxDateValidation(day) || 
            this.checkDisabledDate(day) ||
-           (this.futureValidation && this.checkFutureValidation(day) === true);
+           (this.futureValidation && this.checkFutureValidation(day) === true) ||
+           (this.pastDateValidation && this.checkPastDateValidation(day) === true);
   }
 
   /// Handle range selection

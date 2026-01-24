@@ -57,6 +57,7 @@ Online demo can be found:
 - **Event listeners** for all datepicker events.
 - Can customize future and past years number.
 - **Date range validation** with min/max date support.
+- **Past date validation** to prevent selection of past dates.
 - **Disabled specific dates** for blocking holidays or unavailable dates.
 - **Date range selection** mode for selecting start and end dates.
 - **Responsive** desing for web and mobile.
@@ -99,6 +100,7 @@ import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepick
   [canChangeMode]="true"
   [todaysDateSection]="true"
   [futureValidation]="true"
+  [pastDateValidation]="false"
   [disableYearPicker]="false"
   [disableMonthPicker]="false"
   [disableDayPicker]="false"
@@ -118,6 +120,8 @@ import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepick
   [futureValidationMessageAr]="
     'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
     "
+  [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
+  [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'"
   [pastYearsLimit]="90"
   [futureYearsLimit]="0"
   [theme]="'Midnight Blue'"
@@ -247,6 +251,18 @@ export class MyComponent {
 </hijri-gregorian-datepicker>
 ```
 
+#### Future Event Scheduling
+```html
+<hijri-gregorian-datepicker
+  [pastDateValidation]="true"
+  [futureValidation]="false"
+  [pastDateValidationMessageEn]="'Please select a future date for the event!'"
+  [pastDateValidationMessageAr]="'يرجى اختيار تاريخ مستقبلي للحدث!'"
+  [submitTextButton]="'Schedule Event'"
+  (onSubmit)="scheduleEvent($event)">
+</hijri-gregorian-datepicker>
+```
+
 #### Project Timeline
 ```html
 <hijri-gregorian-datepicker
@@ -267,6 +283,7 @@ export class MyComponent {
 | <b>`canChangeMode`</b>             | boolean |                    `true`                     | When `true` the user can toggle calendar modes, if `false` the user has only one calendar mode                   |
 | <b>`todaysDateSection`</b>         | boolean |                    `true`                     | When `true` the section with current today date will be shown, if `false` it will be hidden                      |
 | <b>`futureValidation`</b>          | boolean |                    `true`                     | When `true` the user cannot choose any future dates, if `false` user can select future dates                     |
+| <b>`pastDateValidation`</b>       | boolean |                    `false`                    | When `true` the user cannot choose any past dates, if `false` user can select past dates                         |
 | <b>`disableYearPicker`</b>         | boolean |                    `false`                    | When `true` the user cannot select different years, if `false` year select will be enabled                       |
 | <b>`disableMonthPicker`</b>        | boolean |                    `false`                    | When `true` the user cannot select different months, if `false` month select will be enabled                     |
 | <b>`disableDayPicker`</b>          | boolean |                    `false`                    | When `true` the user cannot select days, if `false` days select will be enabled                                  |
@@ -284,6 +301,8 @@ export class MyComponent {
 | <b>`monthSelectLabel`</b>          | string  |                    `Month`                    | Label of the month select option                                                                                 |
 | <b>`futureValidationMessageEn`</b> | string  |   `Selected date cannot be in the future!`    | English future validation message if `futureValidation` is set to `true`                                         |
 | <b>`futureValidationMessageAr`</b> | string  | `التاريخ المحدد لا يمكن ان يكون في المستقبل!` | Arabic future validation message if `futureValidation` is set to `true`                                          |
+| <b>`pastDateValidationMessageEn`</b> | string  |   `Selected date cannot be in the past!`      | English past date validation message if `pastDateValidation` is set to `true`                                    |
+| <b>`pastDateValidationMessageAr`</b> | string  | `التاريخ المحدد لا يمكن ان يكون في الماضي!`  | Arabic past date validation message if `pastDateValidation` is set to `true`                                     |
 | <b>`pastYearsLimit`</b>            | number  |                     `90`                      | indicates for the past years number you want to allow user to select from                                        |
 | <b>`futureYearsLimit`</b>          | number  |                      `0`                      | indicates for the future years number you want to allow user to select from                                      |
 | <b>`minDate`</b>                   | string  |                   `undefined`                 | Minimum selectable date in 'dd/mm/yyyy' format. Dates before this will be disabled                               |

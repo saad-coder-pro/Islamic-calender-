@@ -1,20 +1,18 @@
 <div class="app-container">
   <div class="calendar-container">
     <hijri-gregorian-datepicker [canChangeMode]="true" [todaysDateSection]="true" [futureValidation]="true"
-      [disableYearPicker]="false" [disableMonthPicker]="false" [disableDayPicker]="false" [multiple]="false"
-      [isRequired]="true" [showConfirmButton]="true" [markToday]="true" [mode]="mode" [dir]="'ltr'" [locale]="'en'"
+      [pastDateValidation]="true" [pastDateValidationMessage]="true"
+      [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
+      [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'" [disableYearPicker]="false"
+      [disableMonthPicker]="false" [disableDayPicker]="false" [multiple]="false" [isRequired]="true"
+      [showConfirmButton]="true" [markToday]="true" [mode]="mode" [dir]="'ltr'" [locale]="'en'"
       [submitTextButton]="'Confirm'" [todaysDateText]="'Today\'s Date'" [umAlQuraDateText]="'Hijri Date'"
       [yearSelectLabel]="'Year'" [monthSelectLabel]="'Month'"
       [futureValidationMessageEn]="'Selected date cannot be in the future!'" [futureValidationMessageAr]="
         'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
-      " [pastYearsLimit]="134" [futureYearsLimit]="1" 
-      [minDate]="'01/01/2020'" 
-      [maxDate]="'31/12/2026'"
-      [disabledDates]="['25/12/2024', '01/01/2025', '15/08/2024']"
-      [rangeSelection]="false"
-      [initialDate]="'15/03/2025'"
-      [theme]="'Ocean Breeze'" [styles]="stylesConfig"
-      (onSubmit)="onSubmit($event)" (onDaySelect)="onChange($event)" (onMonthChange)="onMonthChangeTest($event)"
+      " [pastYearsLimit]="134" [futureYearsLimit]="1" [rangeSelection]="false" [theme]="'Ocean Breeze'"
+      [styles]="stylesConfig" (onSubmit)="onSubmit($event)" (onDaySelect)="onChange($event)"
+      (onMonthChange)="onMonthChangeTest($event)"
       (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
   </div>
 
