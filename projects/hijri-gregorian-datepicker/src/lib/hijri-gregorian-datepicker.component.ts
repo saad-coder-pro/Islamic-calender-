@@ -119,6 +119,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.getTodaysDateInfo();
     this.initializeYearsAndMonths();
     this.updateCalendarWeeks();
+    
+    // Initialize validation message states
+    this.futureValidationMessage = false;
+    this.pastDateValidationMessage = false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -295,6 +299,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   onPeriodChange(type: 'year' | 'month'): void {
     this.emitPeriodChangeEvent(type);
     this.updateCalendarWeeks();
+    
+    // Reset validation messages when period changes
+    this.futureValidationMessage = false;
+    this.pastDateValidationMessage = false;
   }
 
   private emitPeriodChangeEvent(type: 'year' | 'month'): void {
@@ -406,6 +414,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.toggleCalendarMode();
     this.initializeYearsAndMonths();
     this.refreshCalendarData();
+    
+    // Reset validation messages when calendar mode changes
+    this.futureValidationMessage = false;
+    this.pastDateValidationMessage = false;
   }
 
   private toggleCalendarMode(): void {
