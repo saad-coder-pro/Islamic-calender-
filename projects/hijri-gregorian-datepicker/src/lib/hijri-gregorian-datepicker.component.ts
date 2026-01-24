@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   TrackByFunction,
+  HostListener,
 } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -47,6 +48,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() disableYearPicker: boolean = false;
   @Input() disableMonthPicker: boolean = false;
   @Input() disableDayPicker: boolean = false;
+  @Input() showNavigationArrows: boolean = true;
   @Input() multiple: boolean = false;
   @Input() isRequired: boolean = false;
   @Input() showConfirmButton: boolean = true;
@@ -99,6 +101,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   }>;
   multipleSelectedDates: DayInfo[] = [];
   themes: { default: Array<{ name: string; stylesConfig: StylesConfig }> } | null = null;
+  
+  // Dropdown states
+  showMonthDropdown: boolean = false;
+  showYearDropdown: boolean = false;
 
   // TrackBy functions for performance optimization
   trackByYear: TrackByFunction<number> = (index: number, year: number): number => year;
@@ -107,6 +113,18 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   trackByWeek: TrackByFunction<(DayInfo | null)[]> = (index: number, week: (DayInfo | null)[]): string => `week-${index}`;
   trackByDay: TrackByFunction<DayInfo | null> = (index: number, day: DayInfo | null): string => day?.gD || `empty-${index}`;
   @HostBinding('style.font-family') fontFamilyStyle!: string;
+  
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    const component = target.closest('hijri-gregorian-datepicker');
+    
+    // If click is outside the component, close dropdowns
+    if (!component) {
+      this.closeDropdowns();
+    }
+  }
+  
   constructor(
     public formBuilder: FormBuilder,
     private _dateUtilsService: DateUtilitiesService,
@@ -303,6 +321,9 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     // Reset validation messages when period changes
     this.futureValidationMessage = false;
     this.pastDateValidationMessage = false;
+    
+    // Close dropdowns
+    this.closeDropdowns();
   }
 
   private emitPeriodChangeEvent(type: 'year' | 'month'): void {
@@ -429,6 +450,174 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   private refreshCalendarData(): void {
     const formattedDate = this.buildDateString();
     this.generateMonthData(formattedDate);
+  }
+
+  /// Navigate to previous or next month
+  navigateMonth(direction: 'previous' | 'next'): void {
+    const currentMonth = this.periodForm.controls.month.value;
+    const currentYear = this.periodForm.controls.year.value;
+    
+    if (!currentMonth || !currentYear) return;
+
+    let newMonth = currentMonth;
+    let newYear = currentYear;
+
+    if (direction === 'next') {
+      if (currentMonth === 12) {
+        newMonth = 1;
+        newYear = currentYear + 1;
+      } else {
+        newMonth = currentMonth + 1;
+      }
+    } else {
+      if (currentMonth === 1) {
+        newMonth = 12;
+        newYear = currentYear - 1;
+      } else {
+        newMonth = currentMonth - 1;
+      }
+    }
+
+    // Check if the new year is within calendar system limits
+    const isGregorian = this.mode === CALENDAR_MODES.GREGORIAN;
+    const minYear = isGregorian ? 1901 : 1318;
+    const maxYear = isGregorian ? 2077 : 1500;
+    
+    // Don't navigate beyond calendar system limits
+    if (newYear < minYear || newYear > maxYear) {
+      return;
+    }
+
+    // Check if the new year is within allowed range
+    const yearExists = this.years.includes(newYear);
+    if (!yearExists) {
+      // Update years array if needed
+      this.updateYearsRange(newYear);
+    }
+
+    // Update form controls
+    this.periodForm.controls.year.setValue(newYear);
+    this.periodForm.controls.month.setValue(newMonth);
+
+    // Update calendar display
+    this.updateCalendarWeeks();
+    
+    // Reset validation messages
+    this.futureValidationMessage = false;
+    this.pastDateValidationMessage = false;
+
+    // Close any open dropdowns
+    this.closeDropdowns();
+
+    // Emit events
+    this.onYearChange.emit(newYear);
+    this.onMonthChange.emit(newMonth);
+  }
+
+  /// Update years range if navigation goes beyond current range
+  private updateYearsRange(targetYear: number): void {
+    const isGregorian = this.mode === CALENDAR_MODES.GREGORIAN;
+    const minYear = isGregorian ? 1901 : 1318;
+    const maxYear = isGregorian ? 2077 : 1500;
+    
+    // Only add year if it's within calendar system limits
+    if (targetYear >= minYear && targetYear <= maxYear) {
+      if (!this.years.includes(targetYear)) {
+        this.years.push(targetYear);
+        this.years.sort((a, b) => b - a); // Keep descending order
+      }
+    }
+  }
+
+  /// Check if previous month navigation should be disabled
+  canNavigatePrevious(): boolean {
+    const currentMonth = this.periodForm.controls.month.value;
+    const currentYear = this.periodForm.controls.year.value;
+    
+    if (!currentMonth || !currentYear) return false;
+
+    const isGregorian = this.mode === CALENDAR_MODES.GREGORIAN;
+    const minYear = isGregorian ? 1901 : 1318;
+    
+    // Check if we're at the minimum year and first month
+    if (currentYear === minYear && currentMonth === 1) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  /// Check if next month navigation should be disabled
+  canNavigateNext(): boolean {
+    const currentMonth = this.periodForm.controls.month.value;
+    const currentYear = this.periodForm.controls.year.value;
+    
+    if (!currentMonth || !currentYear) return false;
+
+    const isGregorian = this.mode === CALENDAR_MODES.GREGORIAN;
+    const maxYear = isGregorian ? 2077 : 1500;
+    
+    // Check if we're at the maximum year and last month
+    if (currentYear === maxYear && currentMonth === 12) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  /// Toggle month dropdown visibility
+  toggleMonthDropdown(): void {
+    this.showMonthDropdown = !this.showMonthDropdown;
+    if (this.showMonthDropdown) {
+      this.showYearDropdown = false; // Close year dropdown if open
+    }
+  }
+
+  /// Toggle year dropdown visibility
+  toggleYearDropdown(): void {
+    this.showYearDropdown = !this.showYearDropdown;
+    if (this.showYearDropdown) {
+      this.showMonthDropdown = false; // Close month dropdown if open
+    }
+  }
+
+  /// Select a month from dropdown
+  selectMonth(monthValue: number): void {
+    this.periodForm.controls.month.setValue(monthValue);
+    this.showMonthDropdown = false;
+    this.onPeriodChange('month');
+  }
+
+  /// Select a year from dropdown
+  selectYear(yearValue: number): void {
+    this.periodForm.controls.year.setValue(yearValue);
+    this.showYearDropdown = false;
+    this.onPeriodChange('year');
+  }
+
+  /// Get current month label for display
+  getCurrentMonthLabel(): string {
+    const currentMonth = this.periodForm.controls.month.value;
+    if (!currentMonth) return this.monthSelectLabel;
+    
+    const monthData = this.months.find(month => month.value === currentMonth);
+    if (!monthData) return this.monthSelectLabel;
+    
+    return this.locale === 'ar' ? monthData.labelAr : monthData.labelEn;
+  }
+
+  /// Get current year label for display
+  getCurrentYearLabel(): string {
+    const currentYear = this.periodForm.controls.year.value;
+    if (!currentYear) return this.yearSelectLabel;
+    
+    return this.locale === 'ar' ? this.parseEnglish(currentYear) : currentYear.toString();
+  }
+
+  /// Close dropdowns when clicking outside (called from host listener)
+  closeDropdowns(): void {
+    this.showMonthDropdown = false;
+    this.showYearDropdown = false;
   }
 
   /// On day clicked handler

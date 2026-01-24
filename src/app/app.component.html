@@ -1,7 +1,7 @@
 <div class="app-container">
   <div class="calendar-container">
-    <hijri-gregorian-datepicker [canChangeMode]="true" [todaysDateSection]="true" [futureValidation]="true"
-      [pastDateValidation]="true" [pastDateValidationMessage]="true"
+    <hijri-gregorian-datepicker [canChangeMode]="true" [todaysDateSection]="false" [futureValidation]="false"
+      [pastDateValidation]="false" [pastDateValidationMessage]="true"
       [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
       [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'" [disableYearPicker]="false"
       [disableMonthPicker]="false" [disableDayPicker]="false" [multiple]="false" [isRequired]="true"
@@ -10,7 +10,7 @@
       [yearSelectLabel]="'Year'" [monthSelectLabel]="'Month'"
       [futureValidationMessageEn]="'Selected date cannot be in the future!'" [futureValidationMessageAr]="
         'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
-      " [pastYearsLimit]="134" [futureYearsLimit]="1" [rangeSelection]="false" [theme]="'Ocean Breeze'"
+      " [pastYearsLimit]="134" [futureYearsLimit]="1" [rangeSelection]="false" [theme]="'Steel Grey'"
       [styles]="stylesConfig" (onSubmit)="onSubmit($event)" (onDaySelect)="onChange($event)"
       (onMonthChange)="onMonthChangeTest($event)"
       (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
