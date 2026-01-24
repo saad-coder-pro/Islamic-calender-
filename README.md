@@ -111,7 +111,7 @@ import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepick
   [locale]="'en'"
   [submitTextButton]="'Confirm'"
   [todaysDateText]="'Today\'s Date'"
-  [ummAlQuraDateText]="'التاريخ الهجرى'"
+  [umAlQuraDateText]="'التاريخ الهجرى'"
   [yearSelectLabel]="'Year'"
   [monthSelectLabel]="'Month'"
   [futureValidationMessageEn]="'Selected date cannot be in the future!'"
