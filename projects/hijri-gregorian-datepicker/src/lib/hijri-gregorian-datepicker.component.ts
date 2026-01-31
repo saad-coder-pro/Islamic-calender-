@@ -15,6 +15,7 @@ import {
 import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StylesConfig } from '../_interfaces/styles-config.model';
+import { FadeInAnimationDirective } from './_directives/fade-in-animation.directive';
 import { TodayDate, DayInfo } from '../_interfaces/calendar.model';
 import { DateUtilitiesService } from '../_services/date-utilities.service';
 import * as themesConfig from '../themes/themes.json';
@@ -35,7 +36,7 @@ import { NumberConversionUtil } from '../_utils/number-conversion.util';
   templateUrl: './hijri-gregorian-datepicker.component.html',
   styleUrls: ['./hijri-gregorian-datepicker.component.scss'],
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, FadeInAnimationDirective],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
