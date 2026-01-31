@@ -1,17 +1,16 @@
 <div class="calendar-container">
-  <div class="toggle-section" [dir]="dir" *ngIf="canChangeMode" [ngStyle]="{ color: styles.primaryColor }">
-    <span> {{ umAlQuraDateText }} </span>
-    <label class="switch">
-      <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'" (change)="changeCalendarMode()"
-        #calendarCheckbox />
-      <span class="slider"
-        [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': styles.backgroundColor}"></span>
-    </label>
-  </div>
-
-
-  <div class="calendar-layout"
+  <div class="calendar-layout" 
+    (click)="onCalendarClick($event)"
     [ngStyle]="{ 'background-color': styles.backgroundColor, 'border-radius': styles.borderRadius }">
+    <div class="toggle-section" [dir]="dir" *ngIf="canChangeMode" [ngStyle]="{ color: styles.primaryColor }">
+      <span> {{ umAlQuraDateText }} </span>
+      <label class="switch">
+        <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'" (change)="changeCalendarMode()"
+          #calendarCheckbox />
+        <span class="slider"
+          [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': styles.backgroundColor}"></span>
+      </label>
+    </div>
     @if (todaysDateSection) {
     <div class="todays-date-section" [ngStyle]="{
           'background-color': styles.backgroundColor,

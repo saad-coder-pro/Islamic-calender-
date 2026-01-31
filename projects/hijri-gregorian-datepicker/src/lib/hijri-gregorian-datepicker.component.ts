@@ -117,10 +117,14 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
-    const component = target.closest('hijri-gregorian-datepicker');
     
-    // If click is outside the component, close dropdowns
-    if (!component) {
+    // Check if click is inside the period selector area
+    const periodSelector = target.closest('.unified-period-selector');
+    const monthDropdown = target.closest('.month-dropdown');
+    const yearDropdown = target.closest('.year-dropdown');
+    
+    // If click is outside the period selector and not in dropdowns, close dropdowns
+    if (!periodSelector && !monthDropdown && !yearDropdown) {
       this.closeDropdowns();
     }
   }
@@ -620,10 +624,29 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.showYearDropdown = false;
   }
 
+  /// Handle clicks within the calendar layout
+  onCalendarClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    
+    // Check if click is within the period selector or its dropdowns
+    const periodSelector = target.closest('.unified-period-selector');
+    const monthDropdown = target.closest('.month-dropdown');
+    const yearDropdown = target.closest('.year-dropdown');
+    const periodText = target.closest('.period-text');
+    
+    // If click is not in the period selector area or dropdowns, close dropdowns
+    if (!periodSelector && !monthDropdown && !yearDropdown && !periodText) {
+      this.closeDropdowns();
+    }
+  }
+
   /// On day clicked handler
   onDayClicked(day: DayInfo): void {
     console.log('onDayClicked called with:', day);
     console.log('rangeSelection mode:', this.rangeSelection);
+    
+    // Close any open dropdowns when clicking on a day
+    this.closeDropdowns();
     
     if (day && day?.gD) {
       // Check if date is disabled by any validation rule
