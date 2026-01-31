@@ -23,7 +23,7 @@ export class AppComponent {
     dayColor: '#2c3531',
     dayNameColor: '#116466',
     fontFamily: 'Default-Regular',
-    borderRadius: '8px',
+    borderRadius: '16px',
   };
   mode: CalendarMode = CALENDAR_MODES.GREGORIAN;
   constructor() {}

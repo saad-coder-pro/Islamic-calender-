@@ -1,240 +1,200 @@
 <div class="calendar-container">
-  <div class="calendar-layout" 
+  <div class="calendar-card" 
     (click)="onCalendarClick($event)"
     [ngStyle]="{ 'background-color': styles.backgroundColor, 'border-radius': styles.borderRadius }">
-    <div class="toggle-section" [dir]="dir" *ngIf="canChangeMode" [ngStyle]="{ color: styles.primaryColor }">
-      <span> {{ umAlQuraDateText }} </span>
-      <label class="switch">
-        <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'" (change)="changeCalendarMode()"
-          #calendarCheckbox />
-        <span class="slider"
-          [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': styles.backgroundColor}"></span>
-      </label>
-    </div>
-    @if (todaysDateSection) {
-    <div class="todays-date-section" [ngStyle]="{
-          'background-color': styles.backgroundColor,
-          color: styles.primaryColor,
-          'border-radius': styles.borderRadius
-        }">
-      <div class="text-info" [ngClass]="{
-            order: dir == 'rtl'
-          }">
-        <p>{{ todaysDateText }}</p>
-      </div>
-      <div class="data" [dir]="dir" [ngStyle]="{
-            'background-color': styles.todaysDateBgColor,
-            color: styles.todaysDateTextColor
-          }">
-        @if (mode == 'umAlQura') {
-        <p>
-          {{ todaysDate.umAlQura.split("/")[0] }}
-          {{
-          locale == "ar"
-          ? umAlQuraMonths[
-          this.parseArabicToNumber(todaysDate.umAlQura.split("/")[1]) - 1
-          ]?.labelAr
-          : umAlQuraMonths[
-          this.parseArabicToNumber(todaysDate.umAlQura.split("/")[1]) - 1
-          ]?.labelEn
-          }}
-          {{ todaysDate.umAlQura.split("/")[2] }}
-        </p>
-        }
-        @if (mode == 'greg') {
-        <p>{{ todaysDate.gregorian }}</p>
-        }
-      </div>
-    </div>
-    }
-    <div class="period-container">
-      <div class="unified-period-selector" [ngStyle]="{ 
-             'background-color': styles.backgroundColor,
-             color: styles.primaryColor,
-             'font-family': styles.fontFamily,
-             'border-radius': styles.borderRadius
-           }">
-
-        <!-- Left Navigation Arrow -->
-        @if (showNavigationArrows) {
-        <button class="nav-arrow nav-arrow-left" (click)="navigateMonth('previous')" [disabled]="!canNavigatePrevious()"
-          [ngStyle]="{ 
-                  color: styles.primaryColor,
-                  '--hover-bg-color': styles.secondaryColor + '20',
-                  opacity: canNavigatePrevious() ? 1 : 0.5
-                }" type="button" [attr.aria-label]="'Previous month'">
-          <span [innerHTML]="dir === 'rtl' ? '&#8250;' : '&#8249;'"></span>
-        </button>
-        }
-
-        <!-- Combined Month/Year Display -->
-        <div class="period-display" [dir]="dir">
-          <span class="period-text" (click)="toggleMonthDropdown()" [ngClass]="{ 'active': showMonthDropdown }"
-            [ngStyle]="{ color: styles.primaryColor }">
-            {{ getCurrentMonthLabel() }}
-            <!-- <span class="dropdown-arrow" [innerHTML]="showMonthDropdown ? '&#9650;' : '&#9660;'"></span> -->
+    
+    <!-- Header with title and toggle -->
+    <div class="header-section" [dir]="dir">
+      <div class="title-group">
+        @if (canChangeMode) {
+          <span class="mode-label" [ngStyle]="{ color: styles.primaryColor }">
+            {{ mode === 'umAlQura' ? (locale === 'ar' ? 'تقويم هجري' : umAlQuraDateText) : (locale === 'ar' ? 'تقويم ميلادي' : 'GREGORIAN DATE') }}
           </span>
-
-          <!-- <span class="period-separator">/</span> -->
-
-          <span class="period-text" (click)="toggleYearDropdown()" [ngClass]="{ 'active': showYearDropdown }"
-            [ngStyle]="{ color: styles.primaryColor }">
-            {{ getCurrentYearLabel() }}
-            <!-- <span class="dropdown-arrow" [innerHTML]="showYearDropdown ? '&#9650;' : '&#9660;'"></span> -->
-          </span>
-        </div>
-
-        <!-- Right Navigation Arrow -->
-        @if (showNavigationArrows) {
-        <button class="nav-arrow nav-arrow-right" (click)="navigateMonth('next')" [disabled]="!canNavigateNext()"
-          [ngStyle]="{ 
-                  color: styles.primaryColor,
-                  '--hover-bg-color': styles.secondaryColor + '20',
-                  opacity: canNavigateNext() ? 1 : 0.5
-                }" type="button" [attr.aria-label]="'Next month'">
-          <span [innerHTML]="dir === 'rtl' ? '&#8249;' : '&#8250;'"></span>
-        </button>
         }
-
-        <!-- Month Dropdown -->
-        @if (showMonthDropdown) {
-        <div class="dropdown-panel month-dropdown" [ngStyle]="{ 
-               'background-color': styles.backgroundColor,
-               'border-radius': styles.borderRadius
-             }">
-          @for (month of months; track trackByMonth($index, month)) {
-          <div class="dropdown-item" (click)="selectMonth(month.value)"
-            [ngClass]="{ 'selected': month.value === periodForm.controls.month.value }" [ngStyle]="{ 
-                 color: styles.primaryColor,
-                 'font-family': styles.fontFamily
-               }">
-            {{ locale == "ar" ? month?.labelAr : month?.labelEn }}
-          </div>
-          }
-        </div>
-        }
-
-        <!-- Year Dropdown -->
-        @if (showYearDropdown) {
-        <div class="dropdown-panel year-dropdown" [ngStyle]="{ 
-               'background-color': styles.backgroundColor,
-               'border-radius': styles.borderRadius
-             }">
-          @for (year of years; track trackByYear($index, year)) {
-          <div class="dropdown-item" (click)="selectYear(year)"
-            [ngClass]="{ 'selected': year === periodForm.controls.year.value }" [ngStyle]="{ 
-                 color: styles.primaryColor,
-                 'font-family': styles.fontFamily
-               }">
-            {{ locale == "ar" ? parseEnglish(year) : year }}
-          </div>
-          }
-        </div>
-        }
+        <h2 class="main-title" [ngStyle]="{ color: styles.primaryColor }" (click)="onTitleClick()">
+          {{ getCurrentDisplayText() }}
+        </h2>
       </div>
-    </div>
-    <div class="week-days">
-      @for (date of locale == 'ar' ? weekdaysAr : weekdaysEn; track trackByWeekday($index, date)) {
-      <div class="week-day" [ngStyle]="{ color: styles.dayNameColor }">
-        {{ date }}
-      </div>
+      @if (canChangeMode) {
+        <div class="toggle-section">
+          <span class="toggle-label" [ngStyle]="{ color: styles.primaryColor }">H/G</span>
+          <label class="toggle-switch">
+            <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'" (change)="changeCalendarMode()" #calendarCheckbox />
+            <div class="slider" [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': '#d1d5db'}"></div>
+          </label>
+        </div>
       }
     </div>
 
-    <div [dir]="dir">
-      @for (week of weeks; track trackByWeek($index, week)) {
-      <div class="week">
-        @for (day of week; track trackByDay($index, day)) {
-        <div class="day" (click)="disableDayPicker == false ? onDayClicked(day) : ''" [ngStyle]="{
-            'background-color': styles.backgroundColor,
-            color: styles.dayColor
-          }">
-          <div id="greg-day" [ngClass]="{
-              'highlighted-date': checkHighlightedDate(day),
-              'selected-date': day?.selected == true,
-              'range-start': day?.isRangeStart == true,
-              'range-end': day?.isRangeEnd == true,
-              'range-between': day?.isInRange == true
-            }" [ngStyle]="{
-              border:
-                markToday && checkHighlightedDate(day)
-                  ? '1px solid ' + styles.secondaryColor
-                  : '',
-              'background-color':
-                day?.selected == true && !day?.isRangeStart && !day?.isRangeEnd && !day?.isInRange ? styles.secondaryColor : '',
-              color:
-                (day?.selected == true && !day?.isRangeStart && !day?.isRangeEnd && !day?.isInRange ? styles.todaysDateTextColor : '') ||
-                (isDateDisabled(day) ? styles.disabledDayColor : ''),
-              opacity: isDateDisabled(day) ? '0.5' : '1',
-              'pointer-events': isDateDisabled(day) ? 'none' : 'auto',
-              '--range-color': styles.secondaryColor || '#272343',
-              '--range-text-color': styles.todaysDateTextColor || '#fff',
-              '--range-between-color': styles.secondaryColor || '#272343'
-            }">
-            @if (mode == 'greg') {
-            <span>{{
-              locale == 'ar'
-              ? parseEnglish(day?.gD?.split("/")[0] | number) :
-              day?.gD?.split("/")[0] | number
-              }}</span>
-            }
-            @if (mode == 'umAlQura') {
-            <span id="umAlQura-day">{{
-              locale == 'ar'
-              ? parseEnglish(day?.uD?.split("/")[0] | number)
-              : day?.uD?.split("/")[0] | number
-              }}</span>
-            }
-          </div>
+    <!-- Navigation section -->
+    @if (currentView === 'days') {
+      <div class="navigation-bar">
+        @if (showNavigationArrows) {
+          <button class="nav-button" (click)="navigateMonth('previous')" [disabled]="!canNavigatePrevious()"
+            [ngStyle]="{ color: styles.primaryColor, opacity: canNavigatePrevious() ? 1 : 0.3 }" type="button">
+            <span class="material-icon">chevron_left</span>
+          </button>
+        }
+        
+        <div class="period-controls" [dir]="dir">
+          <button class="period-button" (click)="toggleMonthDropdown()" [ngStyle]="{ color: styles.primaryColor }">
+            {{ getCurrentMonthLabel() }}
+            <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
+          </button>
+          <button class="period-button" (click)="toggleYearDropdown()" [ngStyle]="{ color: styles.primaryColor }">
+            {{ getCurrentYearLabel() }}
+            <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
+          </button>
         </div>
+        
+        @if (showNavigationArrows) {
+          <button class="nav-button" (click)="navigateMonth('next')" [disabled]="!canNavigateNext()"
+            [ngStyle]="{ color: styles.primaryColor, opacity: canNavigateNext() ? 1 : 0.3 }" type="button">
+            <span class="material-icon">chevron_right</span>
+          </button>
         }
       </div>
+    }
+
+    @if (currentView === 'years') {
+      <div class="year-navigation">
+        <button class="nav-button" (click)="navigateYears('previous')" [ngStyle]="{ color: styles.primaryColor }" type="button">
+          <span class="material-icon">chevron_left</span>
+        </button>
+        
+        <div class="year-range-display">
+          <button class="year-range-button" [ngStyle]="{ color: styles.todaysDateTextColor, background:styles.secondaryColor  }">
+            {{ getYearRangeDisplay() }}
+          </button>
+        </div>
+        
+        <button class="nav-button" (click)="navigateYears('next')" [ngStyle]="{ color: styles.primaryColor }" type="button">
+          <span class="material-icon">chevron_right</span>
+        </button>
+      </div>
+    }
+
+    <!-- Content area -->
+    <div class="content-area">
+      
+      <!-- Years Grid -->
+      @if (currentView === 'years') {
+        <div class="years-grid">
+          @for (year of getDisplayYears(); track trackByYear($index, year)) {
+            <button class="year-item" 
+                    (click)="selectYear(year)"
+                    [class.selected]="year === periodForm.controls.year.value"
+                    [ngStyle]="{ 
+                      color: year === periodForm.controls.year.value ? styles.todaysDateTextColor : styles.primaryColor,
+                      'background-color': year === periodForm.controls.year.value ? styles.secondaryColor : 'transparent'
+                    }">
+              {{ locale == "ar" ? parseEnglish(year) : year }}
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Months Grid -->
+      @if (currentView === 'months') {
+        <div class="months-grid">
+          @for (month of months; track trackByMonth($index, month)) {
+            <button class="month-item" 
+                    (click)="selectMonth(month.value)"
+                    [class.selected]="month.value === periodForm.controls.month.value"
+                    [ngStyle]="{ 
+                      color: month.value === periodForm.controls.month.value ? styles.todaysDateTextColor : styles.primaryColor,
+                      'background-color': month.value === periodForm.controls.month.value ? styles.secondaryColor : 'transparent'
+                    }">
+              {{ locale == "ar" ? month?.labelAr : month?.labelEn }}
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Days View -->
+      @if (currentView === 'days') {
+        <!-- Weekdays header -->
+        <div class="weekdays-grid">
+          @for (day of locale == 'ar' ? weekdaysAr : weekdaysEn; track trackByWeekday($index, day)) {
+            <div class="weekday-label" [ngStyle]="{ color: styles.dayNameColor }">
+              {{ day }}
+            </div>
+          }
+        </div>
+
+        <!-- Days grid -->
+        <div class="days-grid" [dir]="dir">
+          @for (week of weeks; track trackByWeek($index, week)) {
+            @for (day of week; track trackByDay($index, day)) {
+              <div class="day-container">
+                @if (day) {
+                  <button class="day-button" 
+                          (click)="disableDayPicker == false ? onDayClicked(day) : ''"
+                          [class.today]="checkHighlightedDate(day)"
+                          [class.selected]="day?.selected == true"
+                          [class.range-start]="day?.isRangeStart == true"
+                          [class.range-end]="day?.isRangeEnd == true"
+                          [class.range-between]="day?.isInRange == true"
+                          [ngStyle]="{
+                            'background-color': day?.selected == true ? styles.secondaryColor : '',
+                            color: (day?.selected == true ? styles.todaysDateTextColor : styles.primaryColor) || (isDateDisabled(day) ? styles.disabledDayColor : ''),
+                            opacity: isDateDisabled(day) ? '0.5' : '1',
+                            'pointer-events': isDateDisabled(day) ? 'none' : 'auto',
+                            'border-color': checkHighlightedDate(day) ? styles.secondaryColor : 'transparent'
+                          }">
+                    @if (mode == 'greg') {
+                      {{ locale == 'ar' ? parseEnglish(day?.gD?.split("/")[0] | number) : day?.gD?.split("/")[0] | number }}
+                    }
+                    @if (mode == 'umAlQura') {
+                      {{ locale == 'ar' ? parseEnglish(day?.uD?.split("/")[0] | number) : day?.uD?.split("/")[0] | number }}
+                    }
+                    @if (checkHighlightedDate(day)) {
+                      <span class="today-dot"></span>
+                    }
+                  </button>
+                }
+              </div>
+            }
+          }
+        </div>
       }
     </div>
   </div>
+  
+  <!-- Validation messages -->
   @if (futureValidationMessage) {
-  <div class="future-past-validation" dir="auto">
+  <div class="validation-message" dir="auto">
     @if (locale == 'ar') {
-    <span>
-      {{ futureValidationMessageAr }}
-    </span>
+    <span>{{ futureValidationMessageAr }}</span>
     }
     @if (locale == 'en') {
-    <span>
-      {{ futureValidationMessageEn }}
-    </span>
+    <span>{{ futureValidationMessageEn }}</span>
     }
   </div>
   }
   @if (pastDateValidationMessage) {
-  <div class="future-past-validation" dir="auto">
+  <div class="validation-message" dir="auto">
     @if (locale == 'ar') {
-    <span>
-      {{ pastDateValidationMessageAr }}
-    </span>
+    <span>{{ pastDateValidationMessageAr }}</span>
     }
     @if (locale == 'en') {
-    <span>
-      {{ pastDateValidationMessageEn }}
-    </span>
+    <span>{{ pastDateValidationMessageEn }}</span>
     }
   </div>
   }
-  <div>
-    @if (showConfirmButton) {
-    <button type="button" class="confirm-btn" [disabled]="
-        isRequired &&
-        ((rangeSelection && (!selectedRange.start || !selectedRange.end)) ||
-         (!rangeSelection && !multiple && !selectedDay) ||
-         (!rangeSelection && multiple && !multipleSelectedDates.length))
-      " (click)="onConfirmClicked()" [ngStyle]="{
-        'background-color': styles.secondaryColor,
-        color: styles.confirmBtnTextColor,
-        'font-family': styles.fontFamily,
-        'border-radius': styles.borderRadius
-      }">
-      {{ submitTextButton }}
-    </button>
-    }
-  </div>
+  
+  <!-- Confirm button -->
+  @if (showConfirmButton) {
+  <button type="button" class="confirm-button" 
+          [disabled]="isRequired && ((rangeSelection && (!selectedRange.start || !selectedRange.end)) || (!rangeSelection && !multiple && !selectedDay) || (!rangeSelection && multiple && !multipleSelectedDates.length))" 
+          (click)="onConfirmClicked()" 
+          [ngStyle]="{
+            'background-color': styles.secondaryColor,
+            color: styles.confirmBtnTextColor,
+            'font-family': styles.fontFamily,
+            'border-radius': styles.borderRadius
+          }">
+    {{ submitTextButton }}
+  </button>
+  }
 </div>

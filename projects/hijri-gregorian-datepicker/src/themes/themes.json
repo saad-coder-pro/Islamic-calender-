@@ -11,7 +11,7 @@
       "disabledDayColor": "#a0a0a0",
       "dayColor": "#003344",
       "dayNameColor": "#007c91",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -26,7 +26,7 @@
       "disabledDayColor": "#bdbdbd",
       "dayColor": "#4a148c",
       "dayNameColor": "#9b5de5",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -41,7 +41,7 @@
       "disabledDayColor": "#a9a9a9",
       "dayColor": "#3e2723",
       "dayNameColor": "#ff6f00",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -56,7 +56,7 @@
       "disabledDayColor": "#8e8e8e",
       "dayColor": "#1c313a",
       "dayNameColor": "#263238",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -71,7 +71,7 @@
       "disabledDayColor": "#9e9e9e",
       "dayColor": "#00251a",
       "dayNameColor": "#004d40",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -86,7 +86,7 @@
       "disabledDayColor": "#bdbdbd",
       "dayColor": "#560027",
       "dayNameColor": "#ad1457",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -101,7 +101,7 @@
       "disabledDayColor": "#a7a7a7",
       "dayColor": "#004d40",
       "dayNameColor": "#00acc1",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -116,7 +116,7 @@
       "disabledDayColor": "#9e9e9e",
       "dayColor": "#5d4037",
       "dayNameColor": "#fbc02d",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -131,7 +131,7 @@
       "disabledDayColor": "#a0a0a0",
       "dayColor": "#263238",
       "dayNameColor": "#607d8b",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   },
   {
@@ -146,7 +146,7 @@
       "disabledDayColor": "#b0b0b0",
       "dayColor": "#4e342e",
       "dayNameColor": "#ff4d4d",
-      "borderRadius": "8px"
+      "borderRadius": "24px"
     }
   }
 ]

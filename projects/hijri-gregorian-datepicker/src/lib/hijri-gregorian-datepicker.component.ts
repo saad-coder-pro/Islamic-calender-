@@ -102,7 +102,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   multipleSelectedDates: DayInfo[] = [];
   themes: { default: Array<{ name: string; stylesConfig: StylesConfig }> } | null = null;
   
-  // Dropdown states
+  // View states
+  currentView: 'years' | 'months' | 'days' = 'days';
   showMonthDropdown: boolean = false;
   showYearDropdown: boolean = false;
 
@@ -116,17 +117,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
-    const target = event.target as HTMLElement;
-    
-    // Check if click is inside the period selector area
-    const periodSelector = target.closest('.unified-period-selector');
-    const monthDropdown = target.closest('.month-dropdown');
-    const yearDropdown = target.closest('.year-dropdown');
-    
-    // If click is outside the period selector and not in dropdowns, close dropdowns
-    if (!periodSelector && !monthDropdown && !yearDropdown) {
-      this.closeDropdowns();
-    }
+    // No longer needed for grid-based navigation
   }
   
   constructor(
@@ -141,6 +132,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.getTodaysDateInfo();
     this.initializeYearsAndMonths();
     this.updateCalendarWeeks();
+    this.initializeView();
     
     // Initialize validation message states
     this.futureValidationMessage = false;
@@ -569,33 +561,27 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     return true;
   }
 
-  /// Toggle month dropdown visibility
+  /// Navigate to month selection view
   toggleMonthDropdown(): void {
-    this.showMonthDropdown = !this.showMonthDropdown;
-    if (this.showMonthDropdown) {
-      this.showYearDropdown = false; // Close year dropdown if open
-    }
+    this.currentView = 'months';
   }
 
-  /// Toggle year dropdown visibility
+  /// Navigate to year selection view
   toggleYearDropdown(): void {
-    this.showYearDropdown = !this.showYearDropdown;
-    if (this.showYearDropdown) {
-      this.showMonthDropdown = false; // Close month dropdown if open
-    }
+    this.currentView = 'years';
   }
 
-  /// Select a month from dropdown
+  /// Select a month from grid
   selectMonth(monthValue: number): void {
     this.periodForm.controls.month.setValue(monthValue);
-    this.showMonthDropdown = false;
+    this.currentView = 'days';
     this.onPeriodChange('month');
   }
 
-  /// Select a year from dropdown
+  /// Select a year from grid
   selectYear(yearValue: number): void {
     this.periodForm.controls.year.setValue(yearValue);
-    this.showYearDropdown = false;
+    this.currentView = 'months';
     this.onPeriodChange('year');
   }
 
@@ -620,8 +606,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// Close dropdowns when clicking outside (called from host listener)
   closeDropdowns(): void {
-    this.showMonthDropdown = false;
-    this.showYearDropdown = false;
+    // No longer needed for grid-based navigation
   }
 
   /// Handle clicks within the calendar layout
@@ -999,5 +984,117 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Convert arabic numbers to english number for arithmetic operations
   parseArabicToNumber(arabicNum: string): number {
     return NumberConversionUtil.arabicToNumber(arabicNum);
+  }
+
+  /// Get current display text for the header
+  getCurrentDisplayText(): string {
+    if (this.currentView === 'years') {
+      return this.getYearRangeDisplay();
+    } else if (this.currentView === 'months') {
+      const currentYear = this.periodForm.controls.year.value;
+      if (currentYear) {
+        return this.locale === 'ar' ? this.parseEnglish(currentYear) : currentYear.toString();
+      }
+      return this.yearSelectLabel;
+    } else {
+      const currentMonth = this.periodForm.controls.month.value;
+      const currentYear = this.periodForm.controls.year.value;
+      
+      if (currentMonth && currentYear) {
+        const monthData = this.months.find(month => month.value === currentMonth);
+        const monthName = monthData ? (this.locale === 'ar' ? monthData.labelAr : monthData.labelEn) : '';
+        const yearStr = this.locale === 'ar' ? this.parseEnglish(currentYear) : currentYear.toString();
+        return `${monthName} ${yearStr}`;
+      }
+      return '';
+    }
+  }
+
+  /// Get year range display for years view
+  getYearRangeDisplay(): string {
+    const displayYears = this.getDisplayYears();
+    if (displayYears.length > 0) {
+      const firstYear = displayYears[0];
+      const lastYear = displayYears[displayYears.length - 1];
+      if (this.locale === 'ar') {
+        return `${this.parseEnglish(firstYear)} - ${this.parseEnglish(lastYear)}`;
+      } else {
+        return `${firstYear} - ${lastYear}`;
+      }
+    }
+    return '';
+  }
+
+  /// Get years to display in the grid
+  getDisplayYears(): number[] {
+    const currentYear = this.periodForm.controls.year.value || new Date().getFullYear();
+    const startYear = Math.floor(currentYear / 12) * 12;
+    const years = [];
+    
+    // Calculate min and max years based on pastYearsLimit and futureYearsLimit
+    const today = new Date();
+    const currentCalendarYear = today.getFullYear();
+    const minYear = currentCalendarYear - this.pastYearsLimit;
+    const maxYear = currentCalendarYear + this.futureYearsLimit;
+    
+    for (let i = 0; i < 12; i++) {
+      const year = startYear + i;
+      if (year >= minYear && year <= maxYear) {
+        years.push(year);
+      }
+    }
+    
+    return years;
+  }
+
+  /// Check if a year is the current year
+  isCurrentYear(year: number): boolean {
+    const today = new Date();
+    return year === today.getFullYear();
+  }
+
+  /// Check if a month is the current month
+  isCurrentMonth(month: number): boolean {
+    const today = new Date();
+    const currentYear = this.periodForm.controls.year.value;
+    return month === today.getMonth() + 1 && currentYear === today.getFullYear();
+  }
+
+  /// Initialize the view based on component state
+  private initializeView(): void {
+    // Always start with days view to match the original design
+    this.currentView = 'days';
+  }
+
+  /// Handle title click to navigate between views
+  onTitleClick(): void {
+    if (this.currentView === 'days') {
+      this.currentView = 'months';
+    } else if (this.currentView === 'months') {
+      this.currentView = 'years';
+    }
+  }
+
+  /// Navigate years in year view
+  navigateYears(direction: 'previous' | 'next'): void {
+    const currentYear = this.periodForm.controls.year.value || new Date().getFullYear();
+    const currentStartYear = Math.floor(currentYear / 12) * 12;
+    const newStartYear = direction === 'next' ? currentStartYear + 12 : currentStartYear - 12;
+    
+    // Calculate min and max years based on pastYearsLimit and futureYearsLimit
+    const today = new Date();
+    const currentCalendarYear = today.getFullYear();
+    const minYear = currentCalendarYear - this.pastYearsLimit;
+    const maxYear = currentCalendarYear + this.futureYearsLimit;
+    
+    // Check if the new range would be within allowed limits
+    const newRangeMinYear = newStartYear;
+    const newRangeMaxYear = newStartYear + 11;
+    
+    // Only navigate if the new range has at least some years within the allowed limits
+    if ((newRangeMinYear <= maxYear && newRangeMaxYear >= minYear)) {
+      this.periodForm.controls.year.setValue(newStartYear);
+      this.updateYearsRange(newStartYear);
+    }
   }
 }
