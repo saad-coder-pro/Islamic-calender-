@@ -58,8 +58,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() dir: string = 'ltr';
   @Input() locale: string = 'en';
   @Input() submitTextButton: string = 'Confirm';
-  @Input() todaysDateText: string = "Today's Date";
-  @Input() umAlQuraDateText: string = 'Hijri Date';
   @Input() futureValidationMessageEn: string;
   @Input() futureValidationMessageAr: string;
   @Input() pastDateValidationMessageEn: string;
@@ -1021,6 +1019,18 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     }
   }
 
+  /// Get current year in the active calendar system
+  private getCurrentCalendarYear(): number {
+    if (this.mode === CALENDAR_MODES.GREGORIAN) {
+      return new Date().getFullYear();
+    } else {
+      // Get current Hijri year
+      const todaysGregorian = this._dateUtilsService.formatDate(new Date());
+      const todaysHijri = this._dateUtilsService.convertDate(todaysGregorian, true);
+      return todaysHijri ? Number(todaysHijri.uD?.split('/')[2]) : new Date().getFullYear();
+    }
+  }
+
   /// Get year range display for years view
   getYearRangeDisplay(): string {
     const displayYears = this.getDisplayYears();
@@ -1038,19 +1048,27 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// Get years to display in the grid
   getDisplayYears(): number[] {
-    const currentYear = this.periodForm.controls.year.value || new Date().getFullYear();
+    const currentYear = this.periodForm.controls.year.value || this.getCurrentCalendarYear();
     const startYear = Math.floor(currentYear / 12) * 12;
     const years = [];
     
-    // Calculate min and max years based on pastYearsLimit and futureYearsLimit
-    const today = new Date();
-    const currentCalendarYear = today.getFullYear();
+    // Get current calendar year and calculate limits based on calendar system
+    const currentCalendarYear = this.getCurrentCalendarYear();
     const minYear = currentCalendarYear - this.pastYearsLimit;
     const maxYear = currentCalendarYear + this.futureYearsLimit;
     
+    // Apply calendar system constraints
+    const isGregorian = this.mode === CALENDAR_MODES.GREGORIAN;
+    const systemMinYear = isGregorian ? 1901 : 1318;
+    const systemMaxYear = isGregorian ? 2077 : 1500;
+    
+    // Use the more restrictive bounds
+    const effectiveMinYear = Math.max(minYear, systemMinYear);
+    const effectiveMaxYear = Math.min(maxYear, systemMaxYear);
+    
     for (let i = 0; i < 12; i++) {
       const year = startYear + i;
-      if (year >= minYear && year <= maxYear) {
+      if (year >= effectiveMinYear && year <= effectiveMaxYear) {
         years.push(year);
       }
     }
@@ -1088,22 +1106,30 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// Navigate years in year view
   navigateYears(direction: 'previous' | 'next'): void {
-    const currentYear = this.periodForm.controls.year.value || new Date().getFullYear();
+    const currentYear = this.periodForm.controls.year.value || this.getCurrentCalendarYear();
     const currentStartYear = Math.floor(currentYear / 12) * 12;
     const newStartYear = direction === 'next' ? currentStartYear + 12 : currentStartYear - 12;
     
-    // Calculate min and max years based on pastYearsLimit and futureYearsLimit
-    const today = new Date();
-    const currentCalendarYear = today.getFullYear();
+    // Get current calendar year and calculate limits based on calendar system
+    const currentCalendarYear = this.getCurrentCalendarYear();
     const minYear = currentCalendarYear - this.pastYearsLimit;
     const maxYear = currentCalendarYear + this.futureYearsLimit;
+    
+    // Apply calendar system constraints
+    const isGregorian = this.mode === CALENDAR_MODES.GREGORIAN;
+    const systemMinYear = isGregorian ? 1901 : 1318;
+    const systemMaxYear = isGregorian ? 2077 : 1500;
+    
+    // Use the more restrictive bounds
+    const effectiveMinYear = Math.max(minYear, systemMinYear);
+    const effectiveMaxYear = Math.min(maxYear, systemMaxYear);
     
     // Check if the new range would be within allowed limits
     const newRangeMinYear = newStartYear;
     const newRangeMaxYear = newStartYear + 11;
     
     // Only navigate if the new range has at least some years within the allowed limits
-    if ((newRangeMinYear <= maxYear && newRangeMaxYear >= minYear)) {
+    if ((newRangeMinYear <= effectiveMaxYear && newRangeMaxYear >= effectiveMinYear)) {
       this.periodForm.controls.year.setValue(newStartYear);
       this.updateYearsRange(newStartYear);
     }

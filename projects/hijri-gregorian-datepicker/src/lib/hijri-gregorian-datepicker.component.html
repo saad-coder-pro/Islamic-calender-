@@ -8,7 +8,7 @@
       <div class="title-group">
         @if (canChangeMode) {
           <span class="mode-label" [ngStyle]="{ color: styles.primaryColor }">
-            {{ mode === 'umAlQura' ? (locale === 'ar' ? 'تقويم هجري' : umAlQuraDateText) : (locale === 'ar' ? 'تقويم ميلادي' : 'GREGORIAN DATE') }}
+            {{ locale === 'ar' ? (locale === 'ar' ? 'تقويم هجري' : 'HIJRI DATE') : (locale === 'ar' ? 'تقويم ميلادي' : 'GREGORIAN DATE') }}
           </span>
         }
         <h2 class="main-title" [ngStyle]="{ color: styles.primaryColor }" (click)="onTitleClick()">
@@ -18,7 +18,7 @@
       @if (canChangeMode) {
         <div class="toggle-section">
           <span class="toggle-label" [ngStyle]="{ color: styles.primaryColor }">
-            {{ mode === 'umAlQura' ? (locale === 'ar' ? 'ميلادي' : 'Gregorian') : (locale === 'ar' ? 'هجري' : 'Hijri') }}
+            {{ locale === 'ar' ? 'هـ/م' : 'H/G' }}
           </span>
           <label class="toggle-switch">
             <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'" (change)="changeCalendarMode()" #calendarCheckbox />
