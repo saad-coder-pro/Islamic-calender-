@@ -17,7 +17,9 @@
       </div>
       @if (canChangeMode) {
         <div class="toggle-section">
-          <span class="toggle-label" [ngStyle]="{ color: styles.primaryColor }">H/G</span>
+          <span class="toggle-label" [ngStyle]="{ color: styles.primaryColor }">
+            {{ mode === 'umAlQura' ? (locale === 'ar' ? 'ميلادي' : 'Gregorian') : (locale === 'ar' ? 'هجري' : 'Hijri') }}
+          </span>
           <label class="toggle-switch">
             <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'" (change)="changeCalendarMode()" #calendarCheckbox />
             <div class="slider" [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': '#d1d5db'}"></div>
