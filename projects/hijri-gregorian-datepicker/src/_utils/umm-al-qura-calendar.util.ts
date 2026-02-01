@@ -260,11 +260,12 @@ export class UmmAlQuraCalendarUtil {
   static gregorianToHijri(date: Date): HijriDate {
     UmmAlQuraCalendarUtil.checkDateRange(date);
     
-    const time = Date.UTC(
+    // Use local time instead of UTC to maintain consistency with date parsing
+    const time = new Date(
       date.getFullYear(),
       date.getMonth(),
       date.getDate()
-    );
+    ).getTime();
     
     const minTime = MIN_DATE.getTime();
     
