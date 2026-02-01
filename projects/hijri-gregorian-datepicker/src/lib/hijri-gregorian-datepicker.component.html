@@ -28,10 +28,10 @@
 
     <!-- Navigation section -->
     @if (currentView === 'days') {
-      <div class="navigation-bar">
+      <div class="navigation-bar" [class.no-arrows]="!showNavigationArrows">
         @if (showNavigationArrows) {
           <button class="nav-button" 
-                  fadeInAnimation
+                  [fadeInAnimation]="enableAnimations"
                   [animationType]="'scale'"
                   [animationDelay]="100"
                   (click)="navigateMonth('previous')" 
@@ -44,7 +44,7 @@
         
         <div class="period-controls" [dir]="dir">
           <button class="period-button" 
-                  fadeInAnimation
+                  [fadeInAnimation]="enableAnimations"
                   [animationType]="'slideUp'"
                   [animationDelay]="150"
                   (click)="toggleMonthDropdown()" 
@@ -53,7 +53,7 @@
             <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
           </button>
           <button class="period-button" 
-                  fadeInAnimation
+                  [fadeInAnimation]="enableAnimations"
                   [animationType]="'slideUp'"
                   [animationDelay]="200"
                   (click)="toggleYearDropdown()" 
@@ -65,7 +65,7 @@
         
         @if (showNavigationArrows) {
           <button class="nav-button" 
-                  fadeInAnimation
+                  [fadeInAnimation]="enableAnimations"
                   [animationType]="'scale'"
                   [animationDelay]="100"
                   (click)="navigateMonth('next')" 
@@ -81,7 +81,7 @@
     @if (currentView === 'years') {
       <div class="year-navigation">
         <button class="nav-button" 
-                fadeInAnimation
+                [fadeInAnimation]="enableAnimations"
                 [animationType]="'scale'"
                 [animationDelay]="100"
                 (click)="navigateYears('previous')" 
@@ -92,7 +92,7 @@
         
         <div class="year-range-display">
           <button class="year-range-button" 
-                  fadeInAnimation
+                  [fadeInAnimation]="enableAnimations"
                   [animationType]="'slideUp'"
                   [animationDelay]="150"
                   [ngStyle]="{ color: styles.todaysDateTextColor, background:styles.secondaryColor  }">
@@ -101,7 +101,7 @@
         </div>
         
         <button class="nav-button" 
-                fadeInAnimation
+                [fadeInAnimation]="enableAnimations"
                 [animationType]="'scale'"
                 [animationDelay]="100"
                 (click)="navigateYears('next')" 
@@ -120,7 +120,7 @@
         <div class="years-grid">
           @for (year of getDisplayYears(); track trackByYear($index, year)) {
             <button class="year-item" 
-                    fadeInAnimation
+                    [fadeInAnimation]="enableAnimations"
                     [animationType]="'slideUp'"
                     [staggerDelay]="$index * 50"
                     [animationDelay]="100"
@@ -141,7 +141,7 @@
         <div class="months-grid">
           @for (month of months; track trackByMonth($index, month)) {
             <button class="month-item" 
-                    fadeInAnimation
+                    [fadeInAnimation]="enableAnimations"
                     [animationType]="'scale'"
                     [staggerDelay]="$index * 80"
                     [animationDelay]="150"
@@ -163,7 +163,7 @@
         <div class="weekdays-grid">
           @for (day of locale == 'ar' ? weekdaysAr : weekdaysEn; track trackByWeekday($index, day)) {
             <div class="weekday-label" 
-                 fadeInAnimation
+                 [fadeInAnimation]="enableAnimations"
                  [animationType]="'slideLeft'"
                  [staggerDelay]="$index * 30"
                  [animationDelay]="50"
@@ -180,7 +180,7 @@
               <div class="day-container">
                 @if (day) {
                   <button class="day-button" 
-                          fadeInAnimation
+                          [fadeInAnimation]="enableAnimations"
                           [animationType]="'fade'"
                           [staggerDelay]="$index * 25"
                           [animationDelay]="200"
@@ -217,7 +217,7 @@
   </div>
   
   <!-- Validation messages -->
-  @if (futureValidationMessage) {
+  @if (showFutureValidationMessage()) {
   <div class="validation-message" dir="auto">
     @if (locale == 'ar') {
     <span>{{ futureValidationMessageAr }}</span>
@@ -227,7 +227,7 @@
     }
   </div>
   }
-  @if (pastDateValidationMessage) {
+  @if (showPastDateValidationMessage()) {
   <div class="validation-message" dir="auto">
     @if (locale == 'ar') {
     <span>{{ pastDateValidationMessageAr }}</span>

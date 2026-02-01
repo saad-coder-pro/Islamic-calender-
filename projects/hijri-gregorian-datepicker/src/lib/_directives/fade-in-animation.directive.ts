@@ -5,6 +5,7 @@ import { Directive, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
   standalone: true
 })
 export class FadeInAnimationDirective implements OnInit, OnDestroy {
+  @Input() fadeInAnimation: boolean = true; // Controls whether animations should run
   @Input() animationDelay: number = 0;
   @Input() animationType: 'fade' | 'slideUp' | 'scale' | 'slideLeft' = 'fade';
   @Input() staggerDelay: number = 0;
@@ -12,12 +13,13 @@ export class FadeInAnimationDirective implements OnInit, OnDestroy {
   constructor(private el: ElementRef) {}
 
   ngOnInit() {
-    this.setupInitialState();
-    this.startAnimation();
+    if (this.fadeInAnimation) {
+      this.setupInitialState();
+      this.startAnimation();
+    }
   }
 
   ngOnDestroy() {
-    // Clean up any ongoing animations
     if (this.el.nativeElement) {
       this.el.nativeElement.style.transition = '';
     }
@@ -25,9 +27,7 @@ export class FadeInAnimationDirective implements OnInit, OnDestroy {
 
   private setupInitialState() {
     const element = this.el.nativeElement;
-    
-    // Set initial state based on animation type
-    switch (this.animationType) {
+        switch (this.animationType) {
       case 'fade':
         element.style.opacity = '0';
         break;
@@ -45,7 +45,6 @@ export class FadeInAnimationDirective implements OnInit, OnDestroy {
         break;
     }
     
-    // Set transition properties
     element.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
   }
 
@@ -54,11 +53,10 @@ export class FadeInAnimationDirective implements OnInit, OnDestroy {
     const totalDelay = this.animationDelay + this.staggerDelay;
     
     setTimeout(() => {
-      // Animate to final state
+
       element.style.opacity = '1';
       element.style.transform = 'translateY(0) translateX(0) scale(1)';
       
-      // Clean up transition after animation completes
       setTimeout(() => {
         element.style.transition = '';
       }, 300);

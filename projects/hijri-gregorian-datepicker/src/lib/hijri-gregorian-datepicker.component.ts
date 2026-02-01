@@ -50,20 +50,16 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() disableMonthPicker: boolean = false;
   @Input() disableDayPicker: boolean = false;
   @Input() showNavigationArrows: boolean = true;
+  @Input() enableAnimations: boolean = true;
   @Input() multiple: boolean = false;
   @Input() isRequired: boolean = false;
   @Input() showConfirmButton: boolean = true;
-  @Input() futureValidationMessage: boolean = false;
-  @Input() pastDateValidationMessage: boolean = false;
-  @Input() arabicLayout: boolean = false;
   @Input() mode: CalendarMode = CALENDAR_MODES.GREGORIAN;
   @Input() dir: string = 'ltr';
   @Input() locale: string = 'en';
   @Input() submitTextButton: string = 'Confirm';
   @Input() todaysDateText: string = "Today's Date";
   @Input() umAlQuraDateText: string = 'Hijri Date';
-  @Input() monthSelectLabel: string = 'Month';
-  @Input() yearSelectLabel: string = 'Year';
   @Input() futureValidationMessageEn: string;
   @Input() futureValidationMessageAr: string;
   @Input() pastDateValidationMessageEn: string;
@@ -108,6 +104,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   showMonthDropdown: boolean = false;
   showYearDropdown: boolean = false;
 
+  // Validation states
+  private futureValidationActive: boolean = false;
+  private pastDateValidationActive: boolean = false;
+
   // TrackBy functions for performance optimization
   trackByYear: TrackByFunction<number> = (index: number, year: number): number => year;
   trackByMonth: TrackByFunction<MonthData> = (index: number, month: MonthData): number => month.value;
@@ -127,6 +127,16 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) { }
 
+  /// Check if future validation message should be displayed
+  showFutureValidationMessage(): boolean {
+    return this.futureValidationActive;
+  }
+
+  /// Check if past date validation message should be displayed  
+  showPastDateValidationMessage(): boolean {
+    return this.pastDateValidationActive;
+  }
+
   ngOnInit(): void {
     this.initTheme();
     this.initializeForm();
@@ -136,8 +146,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.initializeView();
     
     // Initialize validation message states
-    this.futureValidationMessage = false;
-    this.pastDateValidationMessage = false;
+    this.futureValidationActive = false;
+    this.pastDateValidationActive = false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -316,8 +326,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.updateCalendarWeeks();
     
     // Reset validation messages when period changes
-    this.futureValidationMessage = false;
-    this.pastDateValidationMessage = false;
+    this.futureValidationActive = false;
+    this.pastDateValidationActive = false;
     
     // Close dropdowns
     this.closeDropdowns();
@@ -434,8 +444,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.refreshCalendarData();
     
     // Reset validation messages when calendar mode changes
-    this.futureValidationMessage = false;
-    this.pastDateValidationMessage = false;
+    this.futureValidationActive = false;
+    this.pastDateValidationActive = false;
   }
 
   private toggleCalendarMode(): void {
@@ -500,8 +510,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.updateCalendarWeeks();
     
     // Reset validation messages
-    this.futureValidationMessage = false;
-    this.pastDateValidationMessage = false;
+    this.futureValidationActive = false;
+    this.pastDateValidationActive = false;
 
     // Close any open dropdowns
     this.closeDropdowns();
@@ -589,10 +599,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Get current month label for display
   getCurrentMonthLabel(): string {
     const currentMonth = this.periodForm.controls.month.value;
-    if (!currentMonth) return this.monthSelectLabel;
+    if (!currentMonth) return this.locale === 'ar' ? 'الشهر' : 'Month';
     
     const monthData = this.months.find(month => month.value === currentMonth);
-    if (!monthData) return this.monthSelectLabel;
+    if (!monthData) return this.locale === 'ar' ? 'الشهر' : 'Month';
     
     return this.locale === 'ar' ? monthData.labelAr : monthData.labelEn;
   }
@@ -600,7 +610,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Get current year label for display
   getCurrentYearLabel(): string {
     const currentYear = this.periodForm.controls.year.value;
-    if (!currentYear) return this.yearSelectLabel;
+    if (!currentYear) return this.locale === 'ar' ? 'السنة' : 'Year';
     
     return this.locale === 'ar' ? this.parseEnglish(currentYear) : currentYear.toString();
   }
@@ -638,13 +648,13 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
       // Check if date is disabled by any validation rule
       if (this.isDateDisabled(day)) {
         console.log('Date is disabled');
-        this.futureValidationMessage = this.futureValidation && this.checkFutureValidation(day);
-        this.pastDateValidationMessage = this.pastDateValidation && this.checkPastDateValidation(day);
+        this.futureValidationActive = this.futureValidation && this.checkFutureValidation(day);
+        this.pastDateValidationActive = this.pastDateValidation && this.checkPastDateValidation(day);
         return;
       }
       
-      this.futureValidationMessage = false;
-      this.pastDateValidationMessage = false;
+      this.futureValidationActive = false;
+      this.pastDateValidationActive = false;
       
       // Handle different selection modes
       if (this.rangeSelection) {
@@ -996,7 +1006,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
       if (currentYear) {
         return this.locale === 'ar' ? this.parseEnglish(currentYear) : currentYear.toString();
       }
-      return this.yearSelectLabel;
+      return this.locale === 'ar' ? 'السنة' : 'Year';
     } else {
       const currentMonth = this.periodForm.controls.month.value;
       const currentYear = this.periodForm.controls.year.value;
