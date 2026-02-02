@@ -7,17 +7,17 @@
     <div class="header-section" [dir]="dir">
       <div class="title-group">
         @if (canChangeMode) {
-          <span class="mode-label" [ngStyle]="{ color: styles.primaryColor }">
+          <span class="mode-label" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
             {{ locale === 'ar' ? (locale === 'ar' ? 'تقويم هجري' : 'HIJRI DATE') : (locale === 'ar' ? 'تقويم ميلادي' : 'GREGORIAN DATE') }}
           </span>
         }
-        <h2 class="main-title" [ngStyle]="{ color: styles.primaryColor }" (click)="onTitleClick()">
+        <h2 class="main-title" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }" (click)="onTitleClick()">
           {{ getCurrentDisplayText() }}
         </h2>
       </div>
       @if (canChangeMode) {
         <div class="toggle-section">
-          <span class="toggle-label" [ngStyle]="{ color: styles.primaryColor }">
+          <span class="toggle-label" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
             {{ locale === 'ar' ? 'هـ/م' : 'H/G' }}
           </span>
           <label class="toggle-switch">
@@ -50,7 +50,7 @@
                   [animationType]="'slideUp'"
                   [animationDelay]="150"
                   (click)="toggleMonthDropdown()" 
-                  [ngStyle]="{ color: styles.primaryColor }">
+                  [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
             {{ getCurrentMonthLabel() }}
             <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
           </button>
@@ -59,7 +59,7 @@
                   [animationType]="'slideUp'"
                   [animationDelay]="200"
                   (click)="toggleYearDropdown()" 
-                  [ngStyle]="{ color: styles.primaryColor }">
+                  [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
             {{ getCurrentYearLabel() }}
             <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
           </button>
@@ -97,7 +97,7 @@
                   [fadeInAnimation]="enableAnimations"
                   [animationType]="'slideUp'"
                   [animationDelay]="150"
-                  [ngStyle]="{ color: styles.todaysDateTextColor, background:styles.secondaryColor  }">
+                  [ngStyle]="{ color: styles.todaysDateTextColor, background:styles.secondaryColor, 'font-family': styles.fontFamily }">
             {{ getYearRangeDisplay() }}
           </button>
         </div>
@@ -130,7 +130,8 @@
                     [class.selected]="year === periodForm.controls.year.value"
                     [ngStyle]="{ 
                       color: year === periodForm.controls.year.value ? styles.todaysDateTextColor : styles.primaryColor,
-                      'background-color': year === periodForm.controls.year.value ? styles.secondaryColor : 'transparent'
+                      'background-color': year === periodForm.controls.year.value ? styles.secondaryColor : 'transparent',
+                      'font-family': styles.fontFamily
                     }">
               {{ locale == "ar" ? parseEnglish(year) : year }}
             </button>
@@ -151,7 +152,8 @@
                     [class.selected]="month.value === periodForm.controls.month.value"
                     [ngStyle]="{ 
                       color: month.value === periodForm.controls.month.value ? styles.todaysDateTextColor : styles.primaryColor,
-                      'background-color': month.value === periodForm.controls.month.value ? styles.secondaryColor : 'transparent'
+                      'background-color': month.value === periodForm.controls.month.value ? styles.secondaryColor : 'transparent',
+                      'font-family': styles.fontFamily
                     }">
               {{ locale == "ar" ? month?.labelAr : month?.labelEn }}
             </button>
@@ -169,7 +171,7 @@
                  [animationType]="'slideLeft'"
                  [staggerDelay]="$index * 30"
                  [animationDelay]="50"
-                 [ngStyle]="{ color: styles.dayNameColor }">
+                 [ngStyle]="{ color: styles.dayNameColor, 'font-family': styles.fontFamily }">
               {{ day }}
             </div>
           }
@@ -197,7 +199,8 @@
                             color: (day?.selected == true ? styles.todaysDateTextColor : styles.primaryColor) || (isDateDisabled(day) ? styles.disabledDayColor : ''),
                             opacity: isDateDisabled(day) ? '0.5' : '1',
                             'pointer-events': isDateDisabled(day) ? 'none' : 'auto',
-                            'border-color': checkHighlightedDate(day) ? styles.secondaryColor : 'transparent'
+                            'border-color': checkHighlightedDate(day) ? styles.secondaryColor : 'transparent',
+                            'font-family': styles.fontFamily
                           }">
                     @if (mode == 'greg') {
                       {{ locale == 'ar' ? parseEnglish(day?.gD?.split("/")[0] | number) : day?.gD?.split("/")[0] | number }}
@@ -220,7 +223,7 @@
   
   <!-- Validation messages -->
   @if (showFutureValidationMessage()) {
-  <div class="validation-message" dir="auto">
+  <div class="validation-message" dir="auto" [ngStyle]="{ 'font-family': styles.fontFamily }">
     @if (locale == 'ar') {
     <span>{{ futureValidationMessageAr }}</span>
     }
@@ -230,7 +233,7 @@
   </div>
   }
   @if (showPastDateValidationMessage()) {
-  <div class="validation-message" dir="auto">
+  <div class="validation-message" dir="auto" [ngStyle]="{ 'font-family': styles.fontFamily }">
     @if (locale == 'ar') {
     <span>{{ pastDateValidationMessageAr }}</span>
     }

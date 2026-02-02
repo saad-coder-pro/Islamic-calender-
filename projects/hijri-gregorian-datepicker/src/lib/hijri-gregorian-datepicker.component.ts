@@ -4,7 +4,6 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  HostBinding,
   OnChanges,
   SimpleChanges,
   ChangeDetectionStrategy,
@@ -77,15 +76,12 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Variables
   readonly umAlQuraMonths = umAlQura_MONTHS;
   readonly gregMonths = GREGORIAN_MONTHS;
-  umAlQuraYear!: number;
-  gregYear!: number;
   years: number[] = [];
   weeks: (DayInfo | null)[][] = [];
   months: MonthData[] = [];
   selectedRange: { start: DayInfo | null; end: DayInfo | null } = { start: null, end: null };
   readonly weekdaysEn = WEEKDAYS_EN;
   readonly weekdaysAr = WEEKDAYS_AR;
-  // weekdaysAr = ['س', 'ج', 'خ', 'أر', 'ث', 'إث', 'أح'];
   todaysDate: TodayDate = {};
   selectedDay: DayInfo | undefined;
   periodForm: FormGroup<{
@@ -97,8 +93,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   
   // View states
   currentView: 'years' | 'months' | 'days' = 'days';
-  showMonthDropdown: boolean = false;
-  showYearDropdown: boolean = false;
 
   // Validation states
   private futureValidationActive: boolean = false;
@@ -110,7 +104,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   trackByWeekday: TrackByFunction<string> = (index: number, day: string): string => day;
   trackByWeek: TrackByFunction<(DayInfo | null)[]> = (index: number, week: (DayInfo | null)[]): string => `week-${index}`;
   trackByDay: TrackByFunction<DayInfo | null> = (index: number, day: DayInfo | null): string => day?.gD || `empty-${index}`;
-  @HostBinding('style.font-family') fontFamilyStyle!: string;
     
   constructor(
     public formBuilder: FormBuilder,
@@ -135,7 +128,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.initializeYearsAndMonths();
     this.updateCalendarWeeks();
     this.initializeView();
-    
     // Initialize validation message states
     this.futureValidationActive = false;
     this.pastDateValidationActive = false;
@@ -168,12 +160,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
         }
       }
     }
-    this.fontFamilyStyle = this.styles?.fontFamily || 'inherit';
-  }
-
-  // Helper method to get font family safely
-  getFontFamily(): string | undefined {
-    return this.styles?.fontFamily && this.styles.fontFamily.trim() !== '' ? this.styles.fontFamily : undefined;
   }
 
   /// Initialize form control for month and year select
@@ -201,14 +187,12 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   private initializeGregorianYearsAndMonths(): void {
     const currentYear = this.getCurrentYear();
-    this.gregYear = currentYear;
     this.years = this.generateYearsArray(currentYear);
     this.months = this.gregMonths;
   }
 
   private initializeumAlQuraYearsAndMonths(): void {
     const currentYear = this.getCurrentYear();
-    this.umAlQuraYear = currentYear;
     this.years = this.generateYearsArray(currentYear);
     this.months = this.umAlQuraMonths;
   }
@@ -324,9 +308,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     // Reset validation messages when period changes
     this.futureValidationActive = false;
     this.pastDateValidationActive = false;
-    
-    // Close dropdowns
-    this.closeDropdowns();
   }
 
   private emitPeriodChangeEvent(type: 'year' | 'month'): void {
@@ -418,7 +399,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     } catch (error) {
       // Fallback to current date
       this.todaysDate.gregorian = this._dateUtilsService.formatDate(new Date());
-      console.error('Error getting today\'s date info:', error);
     }
   }
 
@@ -545,9 +525,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     this.futureValidationActive = false;
     this.pastDateValidationActive = false;
 
-    // Close any open dropdowns
-    this.closeDropdowns();
-
     // Emit events
     this.onYearChange.emit(newYear);
     this.onMonthChange.emit(newMonth);
@@ -647,10 +624,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     return this.locale === 'ar' ? this.parseEnglish(currentYear) : currentYear.toString();
   }
 
-  /// Close dropdowns when clicking outside (called from host listener)
-  closeDropdowns(): void {
-    // No longer needed for grid-based navigation
-  }
 
   /// Handle clicks within the calendar layout
   onCalendarClick(event: Event): void {
@@ -664,22 +637,16 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     
     // If click is not in the period selector area or dropdowns, close dropdowns
     if (!periodSelector && !monthDropdown && !yearDropdown && !periodText) {
-      this.closeDropdowns();
+      // No longer needed for grid-based navigation
     }
   }
 
   /// On day clicked handler
   onDayClicked(day: DayInfo): void {
-    console.log('onDayClicked called with:', day);
-    console.log('rangeSelection mode:', this.rangeSelection);
-    
-    // Close any open dropdowns when clicking on a day
-    this.closeDropdowns();
     
     if (day && day?.gD) {
       // Check if date is disabled by any validation rule
       if (this.isDateDisabled(day)) {
-        console.log('Date is disabled');
         this.futureValidationActive = this.futureValidation && this.checkFutureValidation(day);
         this.pastDateValidationActive = this.pastDateValidation && this.checkPastDateValidation(day);
         return;
@@ -690,14 +657,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
       
       // Handle different selection modes
       if (this.rangeSelection) {
-        console.log('Calling handleRangeSelection');
         this.handleRangeSelection(day);
       } else {
-        console.log('Calling markDaySelected');
         this.markDaySelected(day);
       }
-    } else {
-      console.log('Invalid day or missing gD:', day);
     }
   }
 
@@ -793,30 +756,13 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// On confirm button clicked
   onConfirmClicked(): void {
-    console.log('onConfirmClicked called');
-    console.log('rangeSelection:', this.rangeSelection);
-    console.log('multiple:', this.multiple);
-    console.log('selectedRange:', this.selectedRange);
     
     if (this.rangeSelection && this.selectedRange.start && this.selectedRange.end) {
       const allDatesInRange = this.getAllDatesInRange();
-      console.log('All dates in range (start, between, end):', allDatesInRange);
-      console.log('Total dates in range:', allDatesInRange.length);
-      
-      // Log each date for clarity
-      allDatesInRange.forEach((date, index) => {
-        const dateType = date.isRangeStart ? 'START' : 
-                        date.isRangeEnd ? 'END' : 
-                        date.isInRange ? 'BETWEEN' : 'UNKNOWN';
-        console.log(`${index + 1}. ${dateType}: ${date.gD} (${date.uD})`);
-      });
-      
       this.onSubmit.emit(allDatesInRange);
     } else if (this.multiple) {
-      console.log('Emitting multiple selection');
       this.onSubmit.emit(this.multipleSelectedDates);
     } else {
-      console.log('Emitting single selection');
       this.onSubmit.emit(this.selectedDay);
     }
   }
@@ -918,34 +864,23 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// Handle range selection
   private handleRangeSelection(dayInfo: DayInfo): void {
-    console.log('handleRangeSelection called with:', dayInfo);
-    console.log('Current selectedRange:', this.selectedRange);
     
     if (this.isDateDisabled(dayInfo)) {
-      console.log('Date is disabled, returning');
       return;
     }
     
     if (!this.selectedRange.start || this.selectedRange.end) {
       // Start new range
-      console.log('Starting new range');
       this.clearRangeSelection();
       this.selectedRange.start = dayInfo;
       dayInfo.selected = true;
       dayInfo.isRangeStart = true;
-      console.log('Set range start:', dayInfo);
     } else {
       // Complete the range
-      console.log('Completing range');
       this.selectedRange.end = dayInfo;
       dayInfo.selected = true;
       dayInfo.isRangeEnd = true;
       this.highlightRange();
-      
-      // Log the completed range but don't emit yet (only on confirm)
-      const allDatesInRange = this.getAllDatesInRange();
-      console.log('Range completed with all dates:', allDatesInRange);
-      console.log('Range ready for confirmation. Click Confirm button to submit.');
     }
     
     // Force change detection
@@ -1123,18 +1058,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     return years;
   }
 
-  /// Check if a year is the current year
-  isCurrentYear(year: number): boolean {
-    const today = new Date();
-    return year === today.getFullYear();
-  }
-
-  /// Check if a month is the current month
-  isCurrentMonth(month: number): boolean {
-    const today = new Date();
-    const currentYear = this.periodForm.controls.year.value;
-    return month === today.getMonth() + 1 && currentYear === today.getFullYear();
-  }
 
   /// Initialize the view based on component state
   private initializeView(): void {
