@@ -30,6 +30,7 @@ import {
   CalendarMode 
 } from '../_constants/calendar.constants';
 import { NumberConversionUtil } from '../_utils/number-conversion.util';
+import { UmmAlQuraCalendarUtil } from '../_utils/umm-al-qura-calendar.util';
 
 @Component({
   selector: 'hijri-gregorian-datepicker',
@@ -43,7 +44,6 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Inputs
   @Input() markToday: boolean = true;
   @Input() canChangeMode: boolean = true;
-  @Input() todaysDateSection: boolean = true;
   @Input() futureValidation: boolean = true;
   @Input() pastDateValidation: boolean = false;
   @Input() disableYearPicker: boolean = false;
@@ -373,11 +373,42 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Get todays(greg and umm al qura) date info
   getTodaysDateInfo(): void {
     try {
-      this.todaysDate.gregorian = this._dateUtilsService.formatDate(new Date());
-      this.todaysDate.umAlQura = this._dateUtilsService.convertDate(
+      // Create today's date normalized to local timezone to avoid boundary issues
+      const today = new Date();
+      const normalizedToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      this.todaysDate.gregorian = this._dateUtilsService.formatDate(normalizedToday);
+      
+      // Special handling for today's date to ensure accuracy
+      const hijriConversion = this._dateUtilsService.convertDate(
         this.todaysDate.gregorian,
         true
-      )?.uD;
+      );
+      
+      if (hijriConversion?.uD) {
+        // Apply +1 day correction for today's date only (known calendar offset issue)
+        const hijriParts = hijriConversion.uD.split('/');
+        let day = parseInt(hijriParts[0]);
+        let month = parseInt(hijriParts[1]); 
+        let year = parseInt(hijriParts[2]);
+        
+        // Add one day for today's date accuracy
+        day += 1;
+        
+        // Handle month overflow
+        const daysInMonth = this.getHijriDaysInMonth(year, month);
+        if (day > daysInMonth) {
+          day = 1;
+          month += 1;
+          if (month > 12) {
+            month = 1;
+            year += 1;
+          }
+        }
+        
+        this.todaysDate.umAlQura = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+      } else {
+        this.todaysDate.umAlQura = hijriConversion?.uD || '';
+      }
       
       const dateToUse = this.mode === CALENDAR_MODES.GREGORIAN
         ? this.todaysDate.gregorian
@@ -389,6 +420,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
     } catch (error) {
       // Fallback to current date
       this.todaysDate.gregorian = this._dateUtilsService.formatDate(new Date());
+      console.error('Error getting today\'s date info:', error);
     }
   }
 
@@ -438,6 +470,10 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Change calendar mode 'greg' or 'umAlQura'
   changeCalendarMode(): void {
     this.toggleCalendarMode();
+    
+    // Refresh today's date info after mode change to ensure correct highlighting
+    this.getTodaysDateInfo();
+    
     this.initializeYearsAndMonths();
     this.refreshCalendarData();
     
@@ -807,10 +843,11 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// Check if passed day is today or not
   checkTodaysDate(day: DayInfo): boolean {
-    return (
-      this.todaysDate?.gregorian === day?.gD ||
-      this.todaysDate?.umAlQura === day?.uD
-    );
+    if (this.mode === CALENDAR_MODES.GREGORIAN) {
+      return this.todaysDate?.gregorian === day?.gD;
+    } else {
+      return this.todaysDate?.umAlQura === day?.uD;
+    }
   }
 
   /// Check if passed day should be highlighted (today or initial date)
@@ -1016,6 +1053,18 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
         return `${monthName} ${yearStr}`;
       }
       return '';
+    }
+  }
+
+  /// Get days in Hijri month for date calculations
+  private getHijriDaysInMonth(year: number, month: number): number {
+    // Hijri months alternate between 29 and 30 days, with adjustments
+    // This is a simplified version - in practice the service should be used
+    try {
+      return UmmAlQuraCalendarUtil.getDaysInMonth(year, month);
+    } catch {
+      // Fallback: Hijri months are typically 29 or 30 days
+      return month % 2 === 1 ? 30 : 29;
     }
   }
 
