@@ -10,4 +10,5 @@ export interface StylesConfig {
   dayColor?: string;
   fontFamily?: string;
   borderRadius?: string;
+  sliderToggleBackground?: string;
 }

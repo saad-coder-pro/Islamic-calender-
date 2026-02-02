@@ -315,19 +315,20 @@ export class MyComponent {
 
 ## Styles
 
-| Property                     |  Type  |      Default      | Description                                                          |
-| ---------------------------- | :----: | :---------------: | -------------------------------------------------------------------- |
-| <b>`backgroundColor`</b>     | string |     `#E3F6F5`     | Background of the calendar                                           |
-| <b>`primaryColor`</b>        | string |     `#272343`     | Color of the today's date, year and month texts                      |
-| <b>`secondaryColor`</b>      | string |     `#272343`     | Background of submit button and selected days in calendar            |
-| <b>`todaysDateBgColor`</b>   | string |     `#272343`     | Background of "today's date" date section                            |
-| <b>`todaysDateTextColor`</b> | string |      `#fff`       | Color of "today's date" date section text                            |
-| <b>`confirmBtnTextColor`</b> | string |      `#fff`       | Color of "Confirm" button text                                       |
-| <b>`disabledDayColor`</b>    | string |     `#C0C0C0`     | Disabled days text color                                             |
-| <b>`dayNameColor`</b>        | string |     `#0d7f91`     | Day names text color                                                 |
-| <b>`dayColor`</b>            | string |      `#000`       | Enabled days text color                                              |
-| <b>`fontFamily`</b>          | string | `Default-Regular` | Font family of the font used globally and pre defined within project |
-| <b>`borderRadius`</b>        | string |       `8px`       | Border radius of the each div and button in the calendar layout      |
+| Property                      |  Type  |      Default      | Description                                                          |
+| ----------------------------- | :----: | :---------------: | -------------------------------------------------------------------- |
+| <b>`backgroundColor`</b>      | string |     `#E3F6F5`     | Background of the calendar                                           |
+| <b>`primaryColor`</b>         | string |     `#272343`     | Color of the today's date, year and month texts                      |
+| <b>`secondaryColor`</b>       | string |     `#272343`     | Background of submit button and selected days in calendar            |
+| <b>`todaysDateBgColor`</b>    | string |     `#272343`     | Background of "today's date" date section                            |
+| <b>`todaysDateTextColor`</b>  | string |      `#fff`       | Color of "today's date" date section text                            |
+| <b>`confirmBtnTextColor`</b>  | string |      `#fff`       | Color of "Confirm" button text                                       |
+| <b>`disabledDayColor`</b>     | string |     `#C0C0C0`     | Color for disabled dates (with 50% opacity automatically applied)    |
+| <b>`dayNameColor`</b>         | string |     `#0d7f91`     | Day names text color                                                 |
+| <b>`dayColor`</b>             | string |      `#000`       | Enabled days text color                                              |
+| <b>`fontFamily`</b>           | string | `Default-Regular` | Font family of the font used globally and pre defined within project |
+| <b>`borderRadius`</b>         | string |       `8px`       | Border radius of the each div and button in the calendar layout      |
+| <b>`sliderToggleBackground`</b> | string |     `#d1d5db`     | Background color of the calendar mode toggle slider when inactive    |
 
 
 <br />

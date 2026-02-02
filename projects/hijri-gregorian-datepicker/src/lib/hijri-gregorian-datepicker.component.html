@@ -22,7 +22,7 @@
           </span>
           <label class="toggle-switch">
             <input type="checkbox" [disabled]="!canChangeMode" [checked]="mode === 'umAlQura'" (change)="changeCalendarMode()" #calendarCheckbox />
-            <div class="slider" [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': '#d1d5db'}"></div>
+            <div class="slider" [ngStyle]="calendarCheckbox.checked ? { 'background-color': styles.primaryColor } : {'background-color': styles.sliderToggleBackground || '#d1d5db'}"></div>
           </label>
         </div>
       }
