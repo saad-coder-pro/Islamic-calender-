@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   TrackByFunction,
-  HostListener,
 } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -112,12 +111,7 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   trackByWeek: TrackByFunction<(DayInfo | null)[]> = (index: number, week: (DayInfo | null)[]): string => `week-${index}`;
   trackByDay: TrackByFunction<DayInfo | null> = (index: number, day: DayInfo | null): string => day?.gD || `empty-${index}`;
   @HostBinding('style.font-family') fontFamilyStyle!: string;
-  
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    // No longer needed for grid-based navigation
-  }
-  
+    
   constructor(
     public formBuilder: FormBuilder,
     private _dateUtilsService: DateUtilitiesService,

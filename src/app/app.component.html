@@ -4,11 +4,11 @@
       [pastDateValidation]="false" [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
       [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'" [disableYearPicker]="false"
       [disableMonthPicker]="false" [disableDayPicker]="false" [multiple]="false" [isRequired]="true"
-      [showConfirmButton]="true"  [mode]="mode" [dir]="'rtl'" [locale]="'ar'"
+      [showConfirmButton]="true"  [mode]="mode" [dir]="'ltr'" [locale]="'en'"
       [submitTextButton]="'Confirm'" [initialDate]="'23/07/1997'"
       [futureValidationMessageEn]="'Selected date cannot be in the future!'" [futureValidationMessageAr]="
         'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
-      " [pastYearsLimit]="120" [futureYearsLimit]="1" [rangeSelection]="false" 
+      " [pastYearsLimit]="120" [futureYearsLimit]="1" [rangeSelection]="false" [theme]="'Midnight Blue'"
       [enableAnimations]="true" [showNavigationArrows]="true" [styles]="stylesConfig" (onSubmit)="onSubmit($event)"
       (onDaySelect)="onChange($event)" (onMonthChange)="onMonthChangeTest($event)"
       (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
