@@ -25,7 +25,7 @@ export class AppComponent {
     fontFamily: 'Default-Regular',
     borderRadius: '16px',
   };
-  mode: CalendarMode = CALENDAR_MODES.umAlQura;
+  mode: CalendarMode = CALENDAR_MODES.GREGORIAN;
   constructor() {}
 
   onSubmit(ev: any) {

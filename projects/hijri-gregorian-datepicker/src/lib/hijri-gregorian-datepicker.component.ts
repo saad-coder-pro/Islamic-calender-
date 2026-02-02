@@ -42,7 +42,6 @@ import { UmmAlQuraCalendarUtil } from '../_utils/umm-al-qura-calendar.util';
 })
 export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Inputs
-  @Input() markToday: boolean = true;
   @Input() canChangeMode: boolean = true;
   @Input() futureValidation: boolean = true;
   @Input() pastDateValidation: boolean = false;
@@ -176,6 +175,11 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
       }
     }
     this.fontFamilyStyle = this.styles?.fontFamily || 'inherit';
+  }
+
+  // Helper method to get font family safely
+  getFontFamily(): string | undefined {
+    return this.styles?.fontFamily && this.styles.fontFamily.trim() !== '' ? this.styles.fontFamily : undefined;
   }
 
   /// Initialize form control for month and year select
