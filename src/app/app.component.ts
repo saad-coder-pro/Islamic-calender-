@@ -12,6 +12,7 @@ import { CalendarMode, CALENDAR_MODES } from 'projects/hijri-gregorian-datepicke
 export class AppComponent {
   toggle: boolean = false;
   selectedDate: DayInfo;
+  disabledDates: string[] = [];
   stylesConfig: StylesConfig = {
     backgroundColor: '#000',
     primaryColor: '#116466',
@@ -19,14 +20,39 @@ export class AppComponent {
     todaysDateBgColor: '#116466',
     todaysDateTextColor: '#e3f4f4',
     confirmBtnTextColor: '#e3f4f4',
-    disabledDayColor: '#a6a6a6',
+    disabledDayColor: '#FF0000',
     dayColor: '#2c3531',
     dayNameColor: '#116466',
     fontFamily: 'Default-Regular',
     borderRadius: '16px',
   };
   mode: CalendarMode = CALENDAR_MODES.GREGORIAN;
-  constructor() {}
+  
+  constructor() {
+    this.generateDisabledDates();
+  }
+
+  generateDisabledDates(): void {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    // Format dates as 'dd/mm/yyyy'
+    const formatDate = (date: Date): string => {
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear().toString();
+      return `${day}/${month}/${year}`;
+    };
+
+    this.disabledDates = [
+      formatDate(today),
+      formatDate(yesterday), 
+      formatDate(tomorrow)
+    ];
+  }
 
   onSubmit(ev: any) {
     console.log('On Submit ', ev);

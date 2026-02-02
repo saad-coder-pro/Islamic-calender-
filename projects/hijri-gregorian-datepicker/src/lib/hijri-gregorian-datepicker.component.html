@@ -196,7 +196,7 @@
                           [class.range-between]="day?.isInRange == true"
                           [ngStyle]="{
                             'background-color': day?.selected == true ? styles.secondaryColor : '',
-                            color: (day?.selected == true ? styles.todaysDateTextColor : styles.primaryColor) || (isDateDisabled(day) ? styles.disabledDayColor : ''),
+                            color: isDateDisabled(day) ? styles.disabledDayColor : (day?.selected == true ? styles.todaysDateTextColor : styles.primaryColor),
                             opacity: isDateDisabled(day) ? '0.5' : '1',
                             'pointer-events': isDateDisabled(day) ? 'none' : 'auto',
                             'border-color': checkHighlightedDate(day) ? styles.secondaryColor : 'transparent',

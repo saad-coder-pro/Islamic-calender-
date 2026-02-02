@@ -3,12 +3,12 @@
     <hijri-gregorian-datepicker [canChangeMode]="true" [futureValidation]="false"
       [pastDateValidation]="false" [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
       [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'" [disableYearPicker]="false"
-      [disableMonthPicker]="false" [disableDayPicker]="false" [multiple]="false" [isRequired]="true"
+      [disableMonthPicker]="false" [disableDayPicker]="false" [multiple]="true" [isRequired]="true"
       [showConfirmButton]="true"  [mode]="mode" [dir]="'ltr'" [locale]="'en'"
-      [submitTextButton]="'Confirm'" 
+      [submitTextButton]="'Confirm'"
       [futureValidationMessageEn]="'Selected date cannot be in the future!'" [futureValidationMessageAr]="
         'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
-      " [pastYearsLimit]="120" [futureYearsLimit]="1" [rangeSelection]="false" [theme]="'Midnight Blue'"
+      " [pastYearsLimit]="120" [futureYearsLimit]="1" [rangeSelection]="false" 
       [enableAnimations]="true" [showNavigationArrows]="true" [styles]="stylesConfig" (onSubmit)="onSubmit($event)"
       (onDaySelect)="onChange($event)" (onMonthChange)="onMonthChangeTest($event)"
       (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>

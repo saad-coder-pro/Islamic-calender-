@@ -48,14 +48,12 @@
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #64748b;
           margin-bottom: 4px;
         }
 
         .main-title {
           font-size: 24px;
           font-weight: 600;
-          color: #3d5156;
           margin: 0;
           transition: color 0.2s ease;
 
@@ -73,7 +71,6 @@
         .toggle-label {
           font-size: 12px;
           font-weight: 500;
-          color: #64748b;
         }
 
         .toggle-switch {
@@ -135,7 +132,6 @@
         border: none;
         border-radius: 50%;
         transition: all 0.2s ease;
-        color: #64748b;
 
         &:disabled {
           cursor: not-allowed;
@@ -158,7 +154,6 @@
           border-radius: 8px;
           font-size: 14px;
           font-weight: 600;
-          color: #3d5156;
           transition: all 0.2s ease;
           display: flex;
           align-items: center;
@@ -208,8 +203,6 @@
           padding: 16px 8px;
           border-radius: 12px;
           font-size: 14px;
-          font-weight: 500;
-          color: #64748b;
           transition: all 0.2s ease;
           min-height: 56px;
           display: flex;
@@ -218,10 +211,7 @@
 
           &.selected {
             font-weight: 700;
-            background-color: #475569;
-            color: white;
             box-shadow: 0 10px 15px -3px rgba(71, 85, 105, 0.3);
-            transform: scale(1.05);
           }
         }
       }
@@ -238,7 +228,6 @@
           border-radius: 12px;
           font-size: 15px;
           font-weight: 500;
-          color: #3d5156;
           transition: all 0.2s ease;
           min-height: 56px;
           display: flex;
@@ -247,7 +236,6 @@
 
           &.selected {
             font-weight: 600;
-            transform: scale(1.05);
           }
         }
       }
@@ -262,7 +250,6 @@
           text-align: center;
           font-size: 12px;
           font-weight: 700;
-          color: #64748b;
           padding: 8px 0;
         }
       }
@@ -279,30 +266,23 @@
             width: 100%;
             height: 100%;
             background: none;
-            border: none;
-            border-radius: 12px;
             font-size: 14px;
-            font-weight: 500;
-            color: #3d5156;
+            border-radius: 12px;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            border: 2px solid transparent;
 
             &.selected {
               font-weight: 700;
-              color: white;
               border-radius: 12px;
               box-shadow: 0 10px 25px -5px rgba(61, 81, 86, 0.3);
-              transform: scale(1.1);
             }
 
             &.today {
               font-weight: 700;
               border: 2px solid rgba(61, 81, 86, 0.3);
-              position: relative;
+              // position: relative;
 
               .today-dot {
                 position: absolute;
@@ -320,7 +300,6 @@
             &.range-end,
             &.range-between {
               background-color: #3d5156 !important;
-              color: white !important;
               font-weight: 600 !important;
 
               &.range-start {
@@ -354,11 +333,9 @@
   .confirm-button {
     width: 100%;
     background: #3d5156;
-    color: white;
     font-weight: 600;
     padding: 16px;
     border: none;
-    border-radius: 16px;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
     font-size: 16px;
