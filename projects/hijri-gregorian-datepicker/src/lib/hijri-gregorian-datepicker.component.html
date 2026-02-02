@@ -8,7 +8,7 @@
       <div class="title-group">
         @if (canChangeMode) {
           <span class="mode-label" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
-            {{ locale === 'ar' ? (locale === 'ar' ? 'تقويم هجري' : 'HIJRI DATE') : (locale === 'ar' ? 'تقويم ميلادي' : 'GREGORIAN DATE') }}
+            {{ mode === 'umAlQura' ? (locale === 'ar' ? 'تقويم هجري' : 'HIJRI DATE') : (locale === 'ar' ? 'تقويم ميلادي' : 'GREGORIAN DATE') }}
           </span>
         }
         <h2 class="main-title" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }" (click)="onTitleClick()">
@@ -188,7 +188,7 @@
                           [animationType]="'fade'"
                           [staggerDelay]="$index * 25"
                           [animationDelay]="200"
-                          (click)="disableDayPicker == false ? onDayClicked(day) : ''"
+                          (click)="!disableDayPicker ? onDayClicked(day) : ''"
                           [class.today]="checkHighlightedDate(day)"
                           [class.selected]="day?.selected == true"
                           [class.range-start]="day?.isRangeStart == true"
