@@ -1,25 +1,265 @@
-<div class="app-container">
-  <div class="calendar-container">
-    <hijri-gregorian-datepicker [canChangeMode]="true" [futureValidation]="false"
-    [hideMonthPicker]="true" [hideYearPicker]="true"
-      [pastDateValidation]="false" [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
-      [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'" [hideYearPicker]="true"
-      [hideMonthPicker]="true" [disableDayPicker]="false" [multiple]="false" [isRequired]="true"
-      [showConfirmButton]="true"  [mode]="mode" [dir]="'ltr'" [locale]="'en'"
-      [submitTextButton]="'Confirm'"
-      [futureValidationMessageEn]="'Selected date cannot be in the future!'" [futureValidationMessageAr]="
-        'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
-      " [pastYearsLimit]="120" [futureYearsLimit]="1" [rangeSelection]="false"  [theme]="'Midnight Blue'"
-      [enableAnimations]="true" [showNavigationArrows]="true" [styles]="stylesConfig" (onSubmit)="onSubmit($event)"
-      (onDaySelect)="onChange($event)" (onMonthChange)="onMonthChangeTest($event)"
-      (onYearChange)="onYearChangeTest($event)"></hijri-gregorian-datepicker>
-  </div>
+<div class="demo-container">
+  <header class="demo-header">
+    <h1>Angular Hijri Gregorian Datepicker Demo</h1>
+    <p>Explore all the available themes and features</p>
+  </header>
 
-  <div class="event-container">
-    @if ((selectedDate | json) != '{}') {
-    <p>
-      {{ selectedDate | json }}
-    </p>
-    }
-  </div>
+  <!-- Theme Showcase Section -->
+  <section class="theme-showcase">
+    <div class="theme-controls">
+      <h2>Theme Showcase</h2>
+      <div class="theme-buttons">
+        <button 
+          *ngFor="let theme of themes; let i = index" 
+          [class.active]="i === currentThemeIndex"
+          (click)="selectTheme(i)"
+          class="theme-button">
+          {{ theme.name }}
+        </button>
+      </div>
+      <div class="navigation-buttons">
+        <button (click)="previousTheme()" class="nav-btn">← Previous</button>
+        <span class="theme-name">{{ currentThemeName }}</span>
+        <button (click)="nextTheme()" class="nav-btn">Next →</button>
+      </div>
+    </div>
+
+    <div class="calendar-container">
+      <hijri-gregorian-datepicker 
+        [canChangeMode]="true" 
+        [futureValidation]="false"
+        [hideMonthPicker]="false" 
+        [hideYearPicker]="false"
+        [pastDateValidation]="false" 
+        [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
+        [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'" 
+        [disableDayPicker]="false" 
+        [multiple]="false" 
+        [isRequired]="true"
+        [showConfirmButton]="true"  
+        [mode]="mode" 
+        [dir]="'ltr'" 
+        [locale]="'en'"
+        [submitTextButton]="'Confirm'"
+        [futureValidationMessageEn]="'Selected date cannot be in the future!'" 
+        [futureValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في المستقبل!'"
+        [pastYearsLimit]="120" 
+        [futureYearsLimit]="1" 
+        [rangeSelection]="false"  
+        [styles]="currentTheme?.stylesConfig"
+        [enableAnimations]="true" 
+        [showNavigationArrows]="true" 
+        [disabledDates]="disabledDates" 
+        (onSubmit)="onSubmit($event)"
+        (onDaySelect)="onChange($event)" 
+        (onMonthChange)="onMonthChangeTest($event)"
+        (onYearChange)="onYearChangeTest($event)">
+      </hijri-gregorian-datepicker>
+    </div>
+
+    <div class="selected-date-display" *ngIf="selectedDate">
+      <h3>Selected Date:</h3>
+      <pre>{{ selectedDate | json }}</pre>
+    </div>
+  </section>
+
+  <!-- Input Demo Section -->
+  <section class="input-demo-section">
+    <div class="input-demo-controls">
+      <h2>Input Click Demo</h2>
+      <p>Click the input field to open the calendar</p>
+      
+      <div class="input-container">
+        <input 
+          type="text" 
+          [value]="inputValue" 
+          (click)="toggleInputDemo()" 
+          placeholder="Click to select date..."
+          readonly
+          class="date-input">
+        <span class="input-icon">📅</span>
+      </div>
+
+      <div class="calendar-overlay" *ngIf="showInputDemo" (click)="showInputDemo = false">
+        <div class="calendar-popup" (click)="$event.stopPropagation()">
+          <div class="popup-header">
+            <h3>Select Date</h3>
+            <button (click)="showInputDemo = false" class="close-btn">×</button>
+          </div>
+          <hijri-gregorian-datepicker 
+            [canChangeMode]="true" 
+            [futureValidation]="false"
+            [hideMonthPicker]="false" 
+            [hideYearPicker]="false"
+            [pastDateValidation]="false"
+            [disableDayPicker]="false" 
+            [multiple]="false" 
+            [isRequired]="true"
+            [showConfirmButton]="true"  
+            [mode]="CALENDAR_MODES.GREGORIAN" 
+            [dir]="'ltr'" 
+            [locale]="'en'"
+            [submitTextButton]="'Select Date'"
+            [pastYearsLimit]="120" 
+            [futureYearsLimit]="10" 
+            [rangeSelection]="false"  
+            [theme]="'Ocean Breeze'"
+            [enableAnimations]="true" 
+            [showNavigationArrows]="true" 
+            (onSubmit)="onInputDateSubmit($event)">
+          </hijri-gregorian-datepicker>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Demo Section -->
+  <section class="features-demo">
+    <h2>Additional Features</h2>
+    
+    <div class="feature-grid">
+      <!-- Range Selection Demo -->
+      <div class="feature-card">
+        <h3>Range Selection</h3>
+        <hijri-gregorian-datepicker 
+          [canChangeMode]="false" 
+          [futureValidation]="false"
+          [hideMonthPicker]="false" 
+          [hideYearPicker]="false"
+          [pastDateValidation]="false"
+          [disableDayPicker]="false" 
+          [multiple]="false" 
+          [isRequired]="false"
+          [showConfirmButton]="true"  
+          [mode]="CALENDAR_MODES.GREGORIAN" 
+          [dir]="'ltr'" 
+          [locale]="'en'"
+          [submitTextButton]="'Select Range'"
+          [pastYearsLimit]="5" 
+          [futureYearsLimit]="5" 
+          [rangeSelection]="true"  
+          [theme]="'Lavender Dreams'"
+          [enableAnimations]="true" 
+          [showNavigationArrows]="true" 
+          (onSubmit)="onSubmit($event)">
+        </hijri-gregorian-datepicker>
+      </div>
+
+      <!-- Arabic Locale Demo -->
+      <div class="feature-card">
+        <h3>Arabic Locale (RTL)</h3>
+        <hijri-gregorian-datepicker 
+          [canChangeMode]="true" 
+          [futureValidation]="false"
+          [hideMonthPicker]="false" 
+          [hideYearPicker]="false"
+          [pastDateValidation]="false"
+          [disableDayPicker]="false" 
+          [multiple]="false" 
+          [isRequired]="false"
+          [showConfirmButton]="true"  
+          [mode]="CALENDAR_MODES.umAlQura" 
+          [dir]="'rtl'" 
+          [locale]="'ar'"
+          [submitTextButton]="'تأكيد'"
+          [pastYearsLimit]="10" 
+          [futureYearsLimit]="10" 
+          [rangeSelection]="false"  
+          [theme]="'Forest Canopy'"
+          [enableAnimations]="true" 
+          [showNavigationArrows]="true" 
+          (onSubmit)="onSubmit($event)">
+        </hijri-gregorian-datepicker>
+      </div>
+
+      <!-- Multiple Selection Demo -->
+      <div class="feature-card">
+        <h3>Multiple Selection</h3>
+        <hijri-gregorian-datepicker 
+          [canChangeMode]="false" 
+          [futureValidation]="false"
+          [hideMonthPicker]="false" 
+          [hideYearPicker]="false"
+          [pastDateValidation]="false"
+          [disableDayPicker]="false" 
+          [multiple]="true" 
+          [isRequired]="false"
+          [showConfirmButton]="true"  
+          [mode]="CALENDAR_MODES.GREGORIAN" 
+          [dir]="'ltr'" 
+          [locale]="'en'"
+          [submitTextButton]="'Select Multiple'"
+          [pastYearsLimit]="2" 
+          [futureYearsLimit]="2" 
+          [rangeSelection]="false"  
+          [theme]="'Sunset Glow'"
+          [enableAnimations]="true" 
+          [showNavigationArrows]="true" 
+          (onSubmit)="onSubmit($event)">
+        </hijri-gregorian-datepicker>
+      </div>
+
+      <!-- Disabled Dates Demo -->
+      <div class="feature-card">
+        <h3>Disabled Dates</h3>
+        <hijri-gregorian-datepicker 
+          [canChangeMode]="false" 
+          [futureValidation]="false"
+          [hideMonthPicker]="false" 
+          [hideYearPicker]="false"
+          [pastDateValidation]="false"
+          [disableDayPicker]="false" 
+          [multiple]="false" 
+          [isRequired]="false"
+          [showConfirmButton]="true"  
+          [mode]="CALENDAR_MODES.GREGORIAN" 
+          [dir]="'ltr'" 
+          [locale]="'en'"
+          [submitTextButton]="'Confirm'"
+          [pastYearsLimit]="1" 
+          [futureYearsLimit]="1" 
+          [rangeSelection]="false"  
+          [theme]="'Coral Reef'"
+          [enableAnimations]="true" 
+          [showNavigationArrows]="true" 
+          [disabledDates]="disabledDates"
+          (onSubmit)="onSubmit($event)">
+        </hijri-gregorian-datepicker>
+      </div>
+    </div>
+  </section>
+
+  <!-- Information Section -->
+  <footer class="demo-footer">
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Available Themes</h3>
+        <ul>
+          <li *ngFor="let theme of themes">{{ theme.name }}</li>
+        </ul>
+      </div>
+      
+      <div class="info-card">
+        <h3>Key Features</h3>
+        <ul>
+          <li>Hijri & Gregorian calendar support</li>
+          <li>10 built-in themes</li>
+          <li>Custom styling support</li>
+          <li>Range selection mode</li>
+          <li>Multiple date selection</li>
+          <li>RTL & LTR support</li>
+          <li>Arabic & English locales</li>
+          <li>Date validation</li>
+          <li>Disabled dates support</li>
+          <li>Smooth animations</li>
+        </ul>
+      </div>
+      
+      <div class="info-card">
+        <h3>Usage</h3>
+        <p>This component can be easily integrated into any Angular application. Check the documentation for detailed implementation guide.</p>
+        <p>Perfect for booking systems, event schedulers, forms, and any application requiring date selection.</p>
+      </div>
+    </div>
+  </footer>
 </div>

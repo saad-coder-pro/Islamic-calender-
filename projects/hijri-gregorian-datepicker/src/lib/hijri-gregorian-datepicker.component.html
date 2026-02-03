@@ -7,11 +7,11 @@
     <div class="header-section" [dir]="dir">
       <div class="title-group">
         @if (canChangeMode) {
-          <span class="mode-label" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
+          <span class="mode-label" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily, 'text-align': locale === 'ar' ? 'right' : 'left' }">
             {{ mode === 'umAlQura' ? (locale === 'ar' ? 'تقويم هجري' : 'HIJRI DATE') : (locale === 'ar' ? 'تقويم ميلادي' : 'GREGORIAN DATE') }}
           </span>
         }
-        <h2 class="main-title" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }" (click)="onTitleClick()">
+        <h2 class="main-title" [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily, 'text-align': locale === 'ar' ? 'right' : 'left' }" (click)="onTitleClick()">
           {{ getCurrentDisplayText() }}
         </h2>
       </div>
