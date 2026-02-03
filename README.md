@@ -103,6 +103,7 @@ import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepick
   [hideYearPicker]="false"
   [hideMonthPicker]="false"
   [disableDayPicker]="false"
+  [showNavigationArrows]="true"
   [multiple]="true"
   [isRequired]="false"
   [showConfirmButton]="true"
@@ -281,6 +282,7 @@ export class MyComponent {
 | <b>`hideYearPicker`</b>            | boolean |                    `false`                    | When `true` the year picker button will be hidden, if `false` year picker will be visible                        |
 | <b>`hideMonthPicker`</b>           | boolean |                    `false`                    | When `true` the month picker button will be hidden, if `false` month picker will be visible                      |
 | <b>`disableDayPicker`</b>          | boolean |                    `false`                    | When `true` the user cannot select days, if `false` days select will be enabled                                  |
+| <b>`showNavigationArrows`</b>      | boolean |                    `true`                     | When `true` the navigation arrows (previous/next month buttons) will be displayed, if `false` they will be hidden |
 | <b>`multiple`</b>                  | boolean |                    `false`                    | When `true` the user can select multiple days, if `false` only one date can be selected                          |
 | <b>`isRequired`</b>                | boolean |                    `true`                     | When `true` the confirm button will be disabled until user selects a date, if `false` the button will be enabled |
 | <b>`showConfirmButton`</b>         | boolean |                    `true`                     | When `true` the confirm button will be displayed, if `false` it will be hidden                                   |
