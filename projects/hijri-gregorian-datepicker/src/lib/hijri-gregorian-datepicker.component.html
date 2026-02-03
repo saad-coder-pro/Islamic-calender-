@@ -45,24 +45,34 @@
         }
         
         <div class="period-controls" [dir]="dir">
-          <button class="period-button" 
-                  [fadeInAnimation]="enableAnimations"
-                  [animationType]="'slideUp'"
-                  [animationDelay]="150"
-                  (click)="toggleMonthDropdown()" 
-                  [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
-            {{ getCurrentMonthLabel() }}
-            <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
-          </button>
-          <button class="period-button" 
-                  [fadeInAnimation]="enableAnimations"
-                  [animationType]="'slideUp'"
-                  [animationDelay]="200"
-                  (click)="toggleYearDropdown()" 
-                  [ngStyle]="{ color: styles.primaryColor, 'font-family': styles.fontFamily }">
-            {{ getCurrentYearLabel() }}
-            <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
-          </button>
+          @if (!hideMonthPicker) {
+            <button class="period-button" 
+                    [fadeInAnimation]="enableAnimations"
+                    [animationType]="'slideUp'"
+                    [animationDelay]="150"
+                    (click)="toggleMonthDropdown()" 
+                    [ngStyle]="{ 
+                      color: styles.primaryColor, 
+                      'font-family': styles.fontFamily
+                    }">
+              {{ getCurrentMonthLabel() }}
+              <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
+            </button>
+          }
+          @if (!hideYearPicker) {
+            <button class="period-button" 
+                    [fadeInAnimation]="enableAnimations"
+                    [animationType]="'slideUp'"
+                    [animationDelay]="200"
+                    (click)="toggleYearDropdown()" 
+                    [ngStyle]="{ 
+                      color: styles.primaryColor, 
+                      'font-family': styles.fontFamily
+                    }">
+              {{ getCurrentYearLabel() }}
+              <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
+            </button>
+          }
         </div>
         
         @if (showNavigationArrows) {

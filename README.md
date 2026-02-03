@@ -100,8 +100,8 @@ import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepick
   [canChangeMode]="true"
   [futureValidation]="true"
   [pastDateValidation]="false"
-  [disableYearPicker]="false"
-  [disableMonthPicker]="false"
+  [hideYearPicker]="false"
+  [hideMonthPicker]="false"
   [disableDayPicker]="false"
   [multiple]="true"
   [isRequired]="false"
@@ -278,8 +278,8 @@ export class MyComponent {
 | <b>`canChangeMode`</b>             | boolean |                    `true`                     | When `true` the user can toggle calendar modes, if `false` the user has only one calendar mode                   |
 | <b>`futureValidation`</b>          | boolean |                    `true`                     | When `true` the user cannot choose any future dates, if `false` user can select future dates                     |
 | <b>`pastDateValidation`</b>       | boolean |                    `false`                    | When `true` the user cannot choose any past dates, if `false` user can select past dates                         |
-| <b>`disableYearPicker`</b>         | boolean |                    `false`                    | When `true` the user cannot select different years, if `false` year select will be enabled                       |
-| <b>`disableMonthPicker`</b>        | boolean |                    `false`                    | When `true` the user cannot select different months, if `false` month select will be enabled                     |
+| <b>`hideYearPicker`</b>            | boolean |                    `false`                    | When `true` the year picker button will be hidden, if `false` year picker will be visible                        |
+| <b>`hideMonthPicker`</b>           | boolean |                    `false`                    | When `true` the month picker button will be hidden, if `false` month picker will be visible                      |
 | <b>`disableDayPicker`</b>          | boolean |                    `false`                    | When `true` the user cannot select days, if `false` days select will be enabled                                  |
 | <b>`multiple`</b>                  | boolean |                    `false`                    | When `true` the user can select multiple days, if `false` only one date can be selected                          |
 | <b>`isRequired`</b>                | boolean |                    `true`                     | When `true` the confirm button will be disabled until user selects a date, if `false` the button will be enabled |

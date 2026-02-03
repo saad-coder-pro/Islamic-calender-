@@ -43,8 +43,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   @Input() canChangeMode: boolean = true;
   @Input() futureValidation: boolean = true;
   @Input() pastDateValidation: boolean = false;
-  @Input() disableYearPicker: boolean = false;
-  @Input() disableMonthPicker: boolean = false;
+  @Input() hideYearPicker: boolean = false;
+  @Input() hideMonthPicker: boolean = false;
   @Input() disableDayPicker: boolean = false;
   @Input() showNavigationArrows: boolean = true;
   @Input() enableAnimations: boolean = true;
@@ -165,8 +165,8 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
   /// Initialize form control for month and year select
   initializeForm(): void {
     this.periodForm = this.formBuilder.group({
-      year: new FormControl<number | null>({ value: null, disabled: this.disableYearPicker }),
-      month: new FormControl<number | null>({ value: null, disabled: this.disableMonthPicker }),
+      year: new FormControl<number | null>({ value: null, disabled: this.hideYearPicker }),
+      month: new FormControl<number | null>({ value: null, disabled: this.hideMonthPicker }),
     });
   }
 
