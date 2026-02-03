@@ -98,24 +98,20 @@ import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepick
 ```html
 <hijri-gregorian-datepicker
   [canChangeMode]="true"
-  [todaysDateSection]="true"
   [futureValidation]="true"
   [pastDateValidation]="false"
-  [disableYearPicker]="false"
-  [disableMonthPicker]="false"
+  [hideYearPicker]="false"
+  [hideMonthPicker]="false"
   [disableDayPicker]="false"
+  [showNavigationArrows]="true"
   [multiple]="true"
   [isRequired]="false"
   [showConfirmButton]="true"
-  [markToday]="true"
+  [enableAnimations]="true"
   [mode]="'greg'"
   [dir]="'ltr'"
   [locale]="'en'"
   [submitTextButton]="'Confirm'"
-  [todaysDateText]="'Today\'s Date'"
-  [umAlQuraDateText]="'التاريخ الهجرى'"
-  [yearSelectLabel]="'Year'"
-  [monthSelectLabel]="'Month'"
   [futureValidationMessageEn]="'Selected date cannot be in the future!'"
   [futureValidationMessageAr]="
     'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
@@ -281,24 +277,20 @@ export class MyComponent {
 | Property                           |  Type   |                    Default                    | Description                                                                                                      |
 | ---------------------------------- | :-----: | :-------------------------------------------: | ---------------------------------------------------------------------------------------------------------------- |
 | <b>`canChangeMode`</b>             | boolean |                    `true`                     | When `true` the user can toggle calendar modes, if `false` the user has only one calendar mode                   |
-| <b>`todaysDateSection`</b>         | boolean |                    `true`                     | When `true` the section with current today date will be shown, if `false` it will be hidden                      |
 | <b>`futureValidation`</b>          | boolean |                    `true`                     | When `true` the user cannot choose any future dates, if `false` user can select future dates                     |
 | <b>`pastDateValidation`</b>       | boolean |                    `false`                    | When `true` the user cannot choose any past dates, if `false` user can select past dates                         |
-| <b>`disableYearPicker`</b>         | boolean |                    `false`                    | When `true` the user cannot select different years, if `false` year select will be enabled                       |
-| <b>`disableMonthPicker`</b>        | boolean |                    `false`                    | When `true` the user cannot select different months, if `false` month select will be enabled                     |
+| <b>`hideYearPicker`</b>            | boolean |                    `false`                    | When `true` the year picker button will be hidden, if `false` year picker will be visible                        |
+| <b>`hideMonthPicker`</b>           | boolean |                    `false`                    | When `true` the month picker button will be hidden, if `false` month picker will be visible                      |
 | <b>`disableDayPicker`</b>          | boolean |                    `false`                    | When `true` the user cannot select days, if `false` days select will be enabled                                  |
+| <b>`showNavigationArrows`</b>      | boolean |                    `true`                     | When `true` the navigation arrows (previous/next month buttons) will be displayed, if `false` they will be hidden |
 | <b>`multiple`</b>                  | boolean |                    `false`                    | When `true` the user can select multiple days, if `false` only one date can be selected                          |
 | <b>`isRequired`</b>                | boolean |                    `true`                     | When `true` the confirm button will be disabled until user selects a date, if `false` the button will be enabled |
 | <b>`showConfirmButton`</b>         | boolean |                    `true`                     | When `true` the confirm button will be displayed, if `false` it will be hidden                                   |
-| <b>`markToday`</b>                 | boolean |                    `true`                     | When `true` today date will be marked(bordered), if `false` it will not be marked                                |
+| <b>`enableAnimations`</b>          | boolean |                    `true`                     | When `true` enables smooth animations for view transitions and element appearances, if `false` disables all animations |
 | <b>`mode`</b>                      | string  |                    `greg`                     | Calendar mode, either `ummAlQura` or `greg`                                                                      |
 | <b>`dir`</b>                       | string  |                     `ltr`                     | Layout direction, either `ltr` or `rtl`                                                                          |
 | <b>`locale`</b>                    | string  |                     `en`                      | The language of the calendar layout, either `ar` or `en`                                                         |
 | <b>`submitTextButton`</b>          | string  |                   `Confirm`                   | Confirm button text value                                                                                        |
-| <b>`todaysDateText`</b>            | string  |               `Todays\'s Date`                | Today's date text in `todaysDateSection`                                                                         |
-| <b>`ummAlQuraDateText`</b>         | string  |               `التاريخ الهجرى`                | Text next to checkbox to toggle date `todaysDateSection`                                                         |
-| <b>`yearSelectLabel`</b>           | string  |                    `Year`                     | Label of the year select option                                                                                  |
-| <b>`monthSelectLabel`</b>          | string  |                    `Month`                    | Label of the month select option                                                                                 |
 | <b>`futureValidationMessageEn`</b> | string  |   `Selected date cannot be in the future!`    | English future validation message if `futureValidation` is set to `true`                                         |
 | <b>`futureValidationMessageAr`</b> | string  | `التاريخ المحدد لا يمكن ان يكون في المستقبل!` | Arabic future validation message if `futureValidation` is set to `true`                                          |
 | <b>`pastDateValidationMessageEn`</b> | string  |   `Selected date cannot be in the past!`      | English past date validation message if `pastDateValidation` is set to `true`                                    |
@@ -317,19 +309,18 @@ export class MyComponent {
 
 ## Styles
 
-| Property                     |  Type  |      Default      | Description                                                          |
-| ---------------------------- | :----: | :---------------: | -------------------------------------------------------------------- |
-| <b>`backgroundColor`</b>     | string |     `#E3F6F5`     | Background of the calendar                                           |
-| <b>`primaryColor`</b>        | string |     `#272343`     | Color of the today's date, year and month texts                      |
-| <b>`secondaryColor`</b>      | string |     `#272343`     | Background of submit button and selected days in calendar            |
-| <b>`todaysDateBgColor`</b>   | string |     `#272343`     | Background of "today's date" date section                            |
-| <b>`todaysDateTextColor`</b> | string |      `#fff`       | Color of "today's date" date section text                            |
-| <b>`confirmBtnTextColor`</b> | string |      `#fff`       | Color of "Confirm" button text                                       |
-| <b>`disabledDayColor`</b>    | string |     `#C0C0C0`     | Disabled days text color                                             |
-| <b>`dayNameColor`</b>        | string |     `#0d7f91`     | Day names text color                                                 |
-| <b>`dayColor`</b>            | string |      `#000`       | Enabled days text color                                              |
-| <b>`fontFamily`</b>          | string | `Default-Regular` | Font family of the font used globally and pre defined within project |
-| <b>`borderRadius`</b>        | string |       `8px`       | Border radius of the each div and button in the calendar layout      |
+| Property                      |  Type  |      Default      | Description                                                          |
+| ----------------------------- | :----: | :---------------: | -------------------------------------------------------------------- |
+| <b>`backgroundColor`</b>      | string |     `#E3F6F5`     | Background of the calendar                                           |
+| <b>`primaryColor`</b>         | string |     `#272343`     | Color of the today's date, year and month texts                      |
+| <b>`secondaryColor`</b>       | string |     `#272343`     | Background of submit button and selected days in calendar            |
+| <b>`todaysDateTextColor`</b>  | string |      `#fff`       | Color of "today's date" date section text                            |
+| <b>`confirmBtnTextColor`</b>  | string |      `#fff`       | Color of "Confirm" button text                                       |
+| <b>`disabledDayColor`</b>     | string |     `#C0C0C0`     | Color for disabled dates (with 50% opacity automatically applied)    |
+| <b>`dayNameColor`</b>         | string |     `#0d7f91`     | Day names text color                                                 |
+| <b>`fontFamily`</b>           | string | `Default-Regular` | Font family of the font used globally and pre defined within project |
+| <b>`borderRadius`</b>         | string |       `8px`       | Border radius of the each div and button in the calendar layout      |
+| <b>`sliderToggleBackground`</b> | string |     `#d1d5db`     | Background color of the calendar mode toggle slider when inactive    |
 
 
 <br />

@@ -1,6 +1,6 @@
 {
   "name": "angular-hijri-gregorian-datepicker",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": ">=15.0.0",
