@@ -16,22 +16,41 @@ interface ThemeData {
     standalone: false
 })
 export class AppComponent {
-  toggle: boolean = false;
   selectedDate: DayInfo;
-  disabledDates: string[] = [];
-  showInputDemo: boolean = false;
-  inputValue: string = '';
-  currentThemeIndex: number = 0;
   themes: ThemeData[] = [];
   
-  mode: CalendarMode = CALENDAR_MODES.GREGORIAN;
+  // Control properties
+  selectedTheme: number = 0;
+  calendarMode: CalendarMode = CALENDAR_MODES.GREGORIAN;
+  locale: string = 'en';
+  canChangeMode: boolean = true;
+  multiple: boolean = false;
+  rangeSelection: boolean = false;
+  showConfirmButton: boolean = true;
+  enableAnimations: boolean = true;
+  showNavigationArrows: boolean = true;
+  isRequired: boolean = true;
+  hideMonthPicker: boolean = false;
+  hideYearPicker: boolean = false;
+  disableDayPicker: boolean = false;
+  pastDateValidation: boolean = false;
+  futureValidation: boolean = false;
+  submitButtonText: string = 'Confirm';
+  pastDateValidationMessageEn: string = 'Selected date cannot be in the past!';
+  pastDateValidationMessageAr: string = 'التاريخ المحدد لا يمكن ان يكون في الماضي!';
+  futureValidationMessageEn: string = 'Selected date cannot be in the future!';
+  futureValidationMessageAr: string = 'التاريخ المحدد لا يمكن ان يكون في المستقبل!';
+  disabledDatesInput: string = '';
+  disabledDates: string[] = [];
+  pastYearsLimit: number = 120;
+  futureYearsLimit: number = 10;
   
   // Make constants available to template
   CALENDAR_MODES = CALENDAR_MODES;
   
   constructor() {
-    this.generateDisabledDates();
     this.loadThemes();
+    this.generateSampleDisabledDates();
   }
 
   loadThemes(): void {
@@ -190,41 +209,14 @@ export class AppComponent {
   }
 
   get currentTheme(): ThemeData {
-    return this.themes[this.currentThemeIndex] || this.themes[0];
-  }
-  
-  get currentThemeName(): string {
-    return this.currentTheme?.name || 'Ocean Breeze';
+    return this.themes[this.selectedTheme] || this.themes[0];
   }
 
-  nextTheme(): void {
-    if (this.themes.length === 0) return;
-    this.currentThemeIndex = (this.currentThemeIndex + 1) % this.themes.length;
+  onThemeChange(): void {
+    // Theme change is handled by the getter
   }
 
-  previousTheme(): void {
-    if (this.themes.length === 0) return;
-    this.currentThemeIndex = this.currentThemeIndex === 0 ? this.themes.length - 1 : this.currentThemeIndex - 1;
-  }
-
-  selectTheme(index: number): void {
-    this.currentThemeIndex = index;
-  }
-
-  toggleInputDemo(): void {
-    this.showInputDemo = !this.showInputDemo;
-  }
-
-  onInputDateSubmit(eventData: any): void {
-    console.log('Input Demo - Date Selected: ', eventData);
-    if (!Array.isArray(eventData)) {
-      const dateStr = eventData?.gD || eventData?.uD || '';
-      this.inputValue = dateStr;
-      this.showInputDemo = false;
-    }
-  }
-
-  generateDisabledDates(): void {
+  generateSampleDisabledDates(): void {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
@@ -239,11 +231,27 @@ export class AppComponent {
       return `${day}/${month}/${year}`;
     };
 
-    this.disabledDates = [
+    const sampleDates = [
       formatDate(today),
       formatDate(yesterday), 
       formatDate(tomorrow)
     ];
+
+    this.disabledDatesInput = sampleDates.join(', ');
+    this.disabledDates = sampleDates;
+  }
+
+  updateDisabledDates(): void {
+    if (!this.disabledDatesInput.trim()) {
+      this.disabledDates = [];
+      return;
+    }
+
+    // Split by comma and clean up each date
+    this.disabledDates = this.disabledDatesInput
+      .split(',')
+      .map(date => date.trim())
+      .filter(date => date.length > 0);
   }
 
   onSubmit(ev: any) {
@@ -257,15 +265,11 @@ export class AppComponent {
     }
   }
 
-  onMonthChangeTest(ev: any) {
+  onMonthChange(ev: any) {
     console.log('Month Changed: ', ev);
   }
 
-  onYearChangeTest(ev: any) {
+  onYearChange(ev: any) {
     console.log('Year Changed ', ev);
-  }
-
-  toggleMode(): void {
-    this.mode = this.mode === CALENDAR_MODES.GREGORIAN ? CALENDAR_MODES.umAlQura : CALENDAR_MODES.GREGORIAN;
   }
 }
