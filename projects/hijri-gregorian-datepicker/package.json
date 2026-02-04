@@ -1,10 +1,10 @@
 {
   "name": "angular-hijri-gregorian-datepicker",
-  "version": "1.0.3",
+  "version": "2.1.0",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^15.2.9",
-    "@angular/core": "^15.2.9"
+    "@angular/common": ">=15.0.0",
+    "@angular/core": ">=15.0.0"
   },
   "dependencies": {
     "tslib": "^2.1.0"
@@ -42,6 +42,27 @@
     "angular datepicker",
     "ionic hijri datepicker",
     "gregorian datepicker",
-    "angular datepicker"
+    "angular datepicker",
+    "hijri datepicker",
+    "hijri gregorian datepicker",
+    "umm al qura calendar",
+    "angular hijri converter",
+    "hijri gregorian converter",
+    "date conversion hijri gregorian",
+    "convert gregorian to hijri",
+    "convert hijri to gregorian",
+    "angular hijri gregorian",
+    "custom datepicker angular",
+    "custom datepicker ionic",
+    "dual calendar picker",
+    "dual datepicker angular",
+    "calendar with umm al qura",
+    "islamic calendar angular",
+    "islamic calendar ionic",
+    "prayer calendar angular",
+    "date conversion calendar",
+    "ngx hijri datepicker",
+    "ngx calendar converter",
+    "hanafnafs"
   ]
 }

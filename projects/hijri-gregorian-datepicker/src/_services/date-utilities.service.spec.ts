@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HijriGregorianDatepickerService } from '../_services/hijri-gregorian-datepicker.service';
+import { DateUtilitiesService } from './date-utilities.service';
 
 describe('HijriGregorianDatepickerService', () => {
-  let service: HijriGregorianDatepickerService;
+  let service: DateUtilitiesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(HijriGregorianDatepickerService);
+    service = TestBed.inject(DateUtilitiesService);
   });
 
   it('should be created', () => {

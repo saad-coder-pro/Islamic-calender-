@@ -1,25 +1,43 @@
 # Angular Hijri Gregorian Calendar(Datepicker)
 
-* Robust and tested code angular hijri/gregorian calendar/datepicker component for Angular 7 - 12, 13, 14+ projects.
-* Ionic 3, 4, 5 + is supported, can be used in iOS and Android
-
-
 [![Build](https://img.shields.io/badge/build-passing-green.svg)](https://www.npmjs.com/package/angular-hijri-gregorian-datepicker)
 [![Dependencies](https://img.shields.io/badge/dependencies-uptodate-green.svg)](https://www.npmjs.com/package/angular-hijri-gregorian-datepicker)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://www.npmjs.com/package/angular-hijri-gregorian-datepicker)
 
-## Preview 
+- Most accurate Hijri, Gregorian calendar(date-picker) on NPM with 100% accuracy percentage.
+- Robust and tested code angular hijri/gregorian calendar/date-picker component for Angular 15 - 21+ projects.
+- Ionic 3 - 4, 5, 6 + is supported, can be used in iOS and Android.
+- `Zero` dependents package.
+- 10 different `themes` and `layouts` already built in, you can also customize your own as well.
+
+## Dependents
+
+Angular hijri gregorian with `Zero` dependents that supports conversion between Gregorian and Hijri calendars.
+
+<br />
+
+## Preview
 
 <p>
-  <img src="https://github.com/hanafnafs/angular-hijri-gregorian-datepicker/blob/master/src/assets/imgs/1.png" width="25%"/>
-  <img src="https://github.com/hanafnafs/angular-hijri-gregorian-datepicker/blob/master/src/assets/imgs/2.png" width="25%"/>
-  <img src="https://github.com/hanafnafs/angular-hijri-gregorian-datepicker/blob/master/src/assets/imgs/3.png" width="25%"/>
+  <img src="https://github.com/hanafnafs/angular-hijri-gregorian-datepicker/blob/master/src/assets/imgs/themes_en.gif" width="40%"/>
+  <img src="https://github.com/hanafnafs/angular-hijri-gregorian-datepicker/blob/master/src/assets/imgs/themes_ar.gif" width="40%"/>
 </p>
 
+## Background
+
+The Umm Al-Qura calendar is the lunar Hijri calendar officially adopted by Saudi Arabia for administrative purposes. It was originated from Umm Al-Qura newspaper, the official newspaper of government of Saudi Arabia. The newspaper is published weekly and its first issue was on Friday, 15 Jumada al-Ula 1343 AH (12 December 1924 CE). However, the calendar has been printed and distributed separately by the Saudi government since 1346 AH (1927 CE).
+
+The calendar is widely used in Saudi Arabia, especially by the public sector. Official documents, political letters, health care records, and education certificates, are just examples of many other documents that are dated by the Hijri calendar.
+
+However, the Gregorian calendar is the calendar used in most of the world, and it has been implemented as the default calendar in nearly every computer and database.
 
 ## Examples/Demo
 
-Online demo can be found [here](https://hanafnafs.github.io/angular-hijri-gregorian-datepicker/) 
+Online demo can be found:
+
+[Stackblitz](https://stackblitz.com/~/github.com/hanafnafs/angular-hijri-gregorian-datepicker/)
+
+[Github Pages](https://hanafnafs.github.io/angular-hijri-gregorian-datepicker/)
 
 <b> Star it to inspire us to build the best component! </b>
 
@@ -27,28 +45,32 @@ Online demo can be found [here](https://hanafnafs.github.io/angular-hijri-gregor
 
 ## Features
 
-* Can be used only as a calendar or a datepicker.
-* **RTL** and **LTR** support
-* Easy to switch between  **Gregorian** and **Hijri** calendars.
-* Ability to specify the default calendar type either **Gregorian** or **Hijri**.
-* Converting dates when changing type of calendar.
-* Ability to specify min and max value for **Gregorian** and **Hijri**.
-* Ability to make it required or readonly.
-* Very easy to customize.
-* Can select **Multiple** dates.
-* **Event listeners** for all datepicker events.
-* Can customize future and past years number.
-* **Responsive** desing for web and mobile.
+- Can be used as a calendar or a datepicker.
+- **RTL** and **LTR** support
+- Easy to switch between **Gregorian** and **Hijri** calendars.
+- Ability to specify the default calendar type either **Gregorian** or **Hijri**.
+- Converting dates when changing type of calendar.
+- Ability to specify min and max value for **Gregorian** and **Hijri**.
+- Ability to make it required or readonly.
+- Very easy to customize.
+- Can select **Multiple** dates.
+- **Event listeners** for all datepicker events.
+- Can customize future and past years number.
+- **Date range validation** with min/max date support.
+- **Past date validation** to prevent selection of past dates.
+- **Disabled specific dates** for blocking holidays or unavailable dates.
+- **Date range selection** mode for selecting start and end dates.
+- **Responsive** desing for web and mobile.
 
 <br />
 
 ## Supported platforms
 
-<b>Angular</b> 7, 8, 9, 10, 11, 12, 14 +<br />
-<b>Ionic</b> 3, 4, 5 +<br />
+<b>Angular</b> 15 - 21+<br />
+<b>Ionic</b> 3 - 4, 5, 6 +<br />
 Mobile browsers and WebViews on: <b>Android</b> and <b>iOS</b><br />
 Desktop browsers: <b>Chrome, Firefox, Safari, Edge v.79 +</b><br />
-Other browsers:  <b>Edge v.41 - 44</b> (without code hidden feature)
+Other browsers: <b>Edge v.41 - 44</b> (without code hidden feature)
 
 <br />
 
@@ -56,50 +78,81 @@ Other browsers:  <b>Edge v.41 - 44</b> (without code hidden feature)
 
     $ npm install angular-hijri-gregorian-datepicker
 
-
 <br />
 
 ## Usage
 
+### For Module-based Applications
+
 Import `HijriGregorianDatepickerModule` in your app module or page module:
 
 ```ts
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepicker';
 
 @NgModule({
   imports: [
-    // ...
+    FormsModule, // Required for ngModel binding
     HijriGregorianDatepickerModule
   ]
 })
+export class AppModule { }
+```
+
+### For Standalone Applications (Angular 15+)
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepicker';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [FormsModule, HijriGregorianDatepickerModule],
+  template: `<hijri-gregorian-datepicker></hijri-gregorian-datepicker>`
+})
+export class App {
+  name = 'Angular';
+}
+
+bootstrapApplication(App);
 ```
 
 ```html
 <hijri-gregorian-datepicker
   [canChangeMode]="true"
-  [todaysDateSection]="true"
-  [futureValidation]="false"
-  [disableYearPicker]="false"
-  [disableMonthPicker]="false"
+  [futureValidation]="true"
+  [pastDateValidation]="false"
+  [hideYearPicker]="false"
+  [hideMonthPicker]="false"
   [disableDayPicker]="false"
-  [multiple]="false"
-  [isRequired]="true"
+  [showNavigationArrows]="true"
+  [multiple]="true"
+  [isRequired]="false"
   [showConfirmButton]="true"
-  [mode]="'hijri'"
+  [enableAnimations]="true"
+  [mode]="'greg'"
   [dir]="'ltr'"
   [locale]="'en'"
   [submitTextButton]="'Confirm'"
-  [todaysDateText]="'Todays\'s Date'"
-  [hijriDateText]="'Hijri Date'"
-  [pastYearsLimit]="20"
+  [futureValidationMessageEn]="'Selected date cannot be in the future!'"
+  [futureValidationMessageAr]="
+    'التاريخ المحدد لا يمكن ان يكون في المستقبل!'
+    "
+  [pastDateValidationMessageEn]="'Selected date cannot be in the past!'"
+  [pastDateValidationMessageAr]="'التاريخ المحدد لا يمكن ان يكون في الماضي!'"
+  [pastYearsLimit]="90"
   [futureYearsLimit]="0"
+  [theme]="'Midnight Blue'"
   [styles]="stylesConfig"
-  (onSubmit)="onSubmitTest($event)"
-  (onDaySelect)="onChangeTest($event)"
+  (onSubmit)="onSubmit($event)"
+  (onDaySelect)="onChange($event)"
   (onMonthChange)="onMonthChangeTest($event)"
   (onYearChange)="onYearChangeTest($event)"
 ></hijri-gregorian-datepicker>
-
 ```
 
 Inside your component.ts:
@@ -121,50 +174,274 @@ Inside your component.ts:
     onYearChangeEvent(code: string) {
     }
 ```
+
+<br />
+
+## Advanced Features
+
+### Date Range Validation
+
+Restrict user selection to specific date ranges using `minDate` and `maxDate`:
+
+```html
+<hijri-gregorian-datepicker
+  [minDate]="'01/01/2020'"
+  [maxDate]="'31/12/2025'"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+### Disabled Specific Dates
+
+Block specific dates like holidays or maintenance periods:
+
+```html
+<hijri-gregorian-datepicker
+  [disabledDates]="['25/12/2024', '01/01/2025', '15/08/2024']"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+### Date Range Selection
+
+Enable range selection mode for booking periods or reporting ranges:
+
+```html
+<hijri-gregorian-datepicker
+  [rangeSelection]="true"
+  [multiple]="false"
+  [mode]="'greg'"
+  (onSubmit)="onRangeSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+```ts
+// Component method to handle range selection
+onRangeSubmit(dateRange: DayInfo[]) {
+  if (dateRange && dateRange.length === 2) {
+    const startDate = dateRange[0];
+    const endDate = dateRange[1];
+    console.log('Range selected:', startDate.gD, 'to', endDate.gD);
+  }
+}
+```
+
+### Initial Date Setting
+
+Set a specific date for the calendar to open to:
+
+```html
+<hijri-gregorian-datepicker
+  [initialDate]="'15/03/2025'"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+```ts
+// Component properties for dynamic initial date
+export class MyComponent {
+  appointmentDate = '20/05/2025';
+  
+  // Calendar will open to May 2025 showing the appointment date
+}
+```
+
+### Built-in Themes
+
+The datepicker comes with 10 beautiful built-in themes:
+
+```html
+<hijri-gregorian-datepicker
+  [theme]="'Dark Mode'"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+Available themes:
+- `Dark Mode` - Professional dark theme for modern applications
+- `Ocean Breeze` - Light blue oceanic theme
+- `Lavender Dreams` - Soft purple theme
+- `Sunset Glow` - Warm orange theme
+- `Midnight Blue` - Deep blue professional theme
+- `Forest Canopy` - Natural green theme
+- `Rosewood Elegance` - Elegant pink theme
+- `Icy Mint` - Cool cyan theme
+- `Golden Sand` - Warm yellow theme
+- `Steel Grey` - Modern grey theme
+- `Coral Reef` - Vibrant coral theme
+
+### Input Field Integration
+
+Easily integrate the datepicker with input fields:
+
+```html
+<div class="relative">
+  <input 
+    type="text" 
+    readonly
+    [(ngModel)]="selectedDateString"
+    (click)="showCalendar = true"
+    placeholder="Select a date"
+    class="form-control">
+    
+  <div *ngIf="showCalendar" class="calendar-dropdown">
+    <hijri-gregorian-datepicker
+      [showConfirmButton]="false"
+      [multiple]="false"
+      [rangeSelection]="false"
+      (onDaySelect)="onDateSelected($event)"
+      [theme]="'Dark Mode'">
+    </hijri-gregorian-datepicker>
+  </div>
+</div>
+```
+
+```ts
+onDateSelected(date: any) {
+  this.selectedDateString = date.gD; // Gregorian date
+  this.showCalendar = false; // Auto-close calendar
+}
+```
+
+### Business Use Cases
+
+#### Hotel Booking System
+```html
+<hijri-gregorian-datepicker
+  [rangeSelection]="true"
+  [minDate]="todayDate"
+  [disabledDates]="unavailableDates"
+  [futureValidation]="false"
+  [submitTextButton]="'Book Dates'"
+  (onSubmit)="bookHotel($event)">
+</hijri-gregorian-datepicker>
+```
+
+#### Age Verification
+```html
+<hijri-gregorian-datepicker
+  [maxDate]="eighteenYearsAgo"
+  [futureValidation]="true"
+  [submitTextButton]="'Confirm Age'"
+  (onSubmit)="verifyAge($event)">
+</hijri-gregorian-datepicker>
+```
+
+#### Future Event Scheduling
+```html
+<hijri-gregorian-datepicker
+  [pastDateValidation]="true"
+  [futureValidation]="false"
+  [pastDateValidationMessageEn]="'Please select a future date for the event!'"
+  [pastDateValidationMessageAr]="'يرجى اختيار تاريخ مستقبلي للحدث!'"
+  [submitTextButton]="'Schedule Event'"
+  (onSubmit)="scheduleEvent($event)">
+</hijri-gregorian-datepicker>
+```
+
+#### Project Timeline
+```html
+<hijri-gregorian-datepicker
+  [minDate]="projectStartDate"
+  [maxDate]="projectEndDate"
+  [disabledDates]="weekends"
+  [rangeSelection]="true"
+  (onSubmit)="setMilestone($event)">
+</hijri-gregorian-datepicker>
+```
+
 <br />
 
 ## @Inputs()
 
-| Property  | Type   | Default |  Description |
-|----------|:-------:|:-----:|----------|
-| <b>`canChangeMode`</b> | boolean | `true` | When `true` the user can toggle calendar modes, if `false` the user has only one calendar mode |
-| <b>`todaysDateSection`</b> | boolean | `true` | When `true` the section with current today date will be shown, if `false` it will be hidden |
-| <b>`futureValidation`</b> | boolean | `true` | When `true` the user cannot choose any future dates, if `false` user can select future dates |
-| <b>`disableYearPicker`</b> | boolean | `false` | When `true` the user cannot select different years, if `false` year select will be enabled  |
-| <b>`disableMonthPicker`</b> | boolean | `false` | When `true` the user cannot select different months, if `false` month select will be enabled |
-| <b>`disableDayPicker`</b> | boolean | `false` | When `true` the user cannot select days, if `false` days select will be enabled | 
-| <b>`multiple`</b> | boolean | `false` | When `true` the user can select multiple days, if `false` only one date can be selected | 
-| <b>`isRequired`</b> | boolean | `true` | When `true` the confirm button will be disabled until user selects a date, if `false` the button will be enabled | 
-| <b>`showConfirmButton`</b> | boolean | `true` | When `true` the confirm button will be displayed, if `false` it will be hidden | 
-| <b>`mode`</b> | string | `greg` | Calendar mode, either `hijri` or `greg` |
-| <b>`dir`</b> | string | `ltr` | Layout direction, either `ltr` or `rtl` |
-| <b>`locale`</b> | string | `en` | The language of the calendar layout, either `ar` or `en` |
-| <b>`submitTextButton`</b> | string | `Confirm` | Confirm button text value |
-| <b>`todaysDateText`</b> | string | `Todays\'s Date` | Today's date text in `todaysDateSection` |
-| <b>`hijriDateText`</b> | string | `Hijri Date` | Hijri date text(checkbox) |
-| <b>`pastYearsLimit`</b> | number | `90` | indicates for the past years number you want to allow user to select from |
-| <b>`futureYearsLimit`</b> | number | `0` | indicates for the future years number you want to allow user to select from |
-| <b>`styles`</b> | object | `0` | indicates for the future years number you want to allow user to select from |
+| Property                           |  Type   |                    Default                    | Description                                                                                                      |
+| ---------------------------------- | :-----: | :-------------------------------------------: | ---------------------------------------------------------------------------------------------------------------- |
+| <b>`canChangeMode`</b>             | boolean |                    `true`                     | When `true` the user can toggle calendar modes, if `false` the user has only one calendar mode                   |
+| <b>`futureValidation`</b>          | boolean |                    `true`                     | When `true` the user cannot choose any future dates, if `false` user can select future dates                     |
+| <b>`pastDateValidation`</b>       | boolean |                    `false`                    | When `true` the user cannot choose any past dates, if `false` user can select past dates                         |
+| <b>`hideYearPicker`</b>            | boolean |                    `false`                    | When `true` the year picker button will be hidden, if `false` year picker will be visible                        |
+| <b>`hideMonthPicker`</b>           | boolean |                    `false`                    | When `true` the month picker button will be hidden, if `false` month picker will be visible                      |
+| <b>`disableDayPicker`</b>          | boolean |                    `false`                    | When `true` the user cannot select days, if `false` days select will be enabled                                  |
+| <b>`showNavigationArrows`</b>      | boolean |                    `true`                     | When `true` the navigation arrows (previous/next month buttons) will be displayed, if `false` they will be hidden |
+| <b>`multiple`</b>                  | boolean |                    `false`                    | When `true` the user can select multiple days, if `false` only one date can be selected                          |
+| <b>`isRequired`</b>                | boolean |                    `true`                     | When `true` the confirm button will be disabled until user selects a date, if `false` the button will be enabled |
+| <b>`showConfirmButton`</b>         | boolean |                    `true`                     | When `true` the confirm button will be displayed, if `false` it will be hidden                                   |
+| <b>`enableAnimations`</b>          | boolean |                    `true`                     | When `true` enables smooth animations for view transitions and element appearances, if `false` disables all animations |
+| <b>`mode`</b>                      | string  |                    `greg`                     | Calendar mode, either `umAlQura` or `greg`                                                                       |
+| <b>`dir`</b>                       | string  |                     `ltr`                     | Layout direction, either `ltr` or `rtl`                                                                          |
+| <b>`locale`</b>                    | string  |                     `en`                      | The language of the calendar layout, either `ar` or `en`                                                         |
+| <b>`submitTextButton`</b>          | string  |                   `Confirm`                   | Confirm button text value                                                                                        |
+| <b>`futureValidationMessageEn`</b> | string  |   `Selected date cannot be in the future!`    | English future validation message if `futureValidation` is set to `true`                                         |
+| <b>`futureValidationMessageAr`</b> | string  | `التاريخ المحدد لا يمكن ان يكون في المستقبل!` | Arabic future validation message if `futureValidation` is set to `true`                                          |
+| <b>`pastDateValidationMessageEn`</b> | string  |   `Selected date cannot be in the past!`      | English past date validation message if `pastDateValidation` is set to `true`                                    |
+| <b>`pastDateValidationMessageAr`</b> | string  | `التاريخ المحدد لا يمكن ان يكون في الماضي!`  | Arabic past date validation message if `pastDateValidation` is set to `true`                                     |
+| <b>`pastYearsLimit`</b>            | number  |                     `90`                      | indicates for the past years number you want to allow user to select from                                        |
+| <b>`futureYearsLimit`</b>          | number  |                      `0`                      | indicates for the future years number you want to allow user to select from                                      |
+| <b>`minDate`</b>                   | string  |                   `undefined`                 | Minimum selectable date in 'dd/mm/yyyy' format. Dates before this will be disabled                               |
+| <b>`maxDate`</b>                   | string  |                   `undefined`                 | Maximum selectable date in 'dd/mm/yyyy' format. Dates after this will be disabled                                |
+| <b>`disabledDates`</b>             | string[] |                     `[]`                      | Array of specific dates to disable in 'dd/mm/yyyy' format (e.g., holidays, blackout dates)                      |
+| <b>`rangeSelection`</b>            | boolean |                    `false`                    | When `true` enables date range selection mode. User clicks start date, then end date to select a range            |
+| <b>`initialDate`</b>               | string  |                   `undefined`                 | Initial date to open calendar to in 'dd/mm/yyyy' format. Must be within minDate/maxDate range if specified       |
+| <b>`styles`</b>                    | object  |                     `{}`                      | Styles for the calendar look and feel                                                                            |
+| <b>`theme`</b>                     | string  |                     `Dark Mode`              | Different skins and themes for the calendar('Dark Mode', 'Ocean Breeze', 'Lavender Dreams', 'Sunset Glow', 'Midnight Blue', 'Forest Canopy', 'Rosewood Elegance', 'Icy Mint', 'Golden Sand', 'Steel Grey', 'Coral Reef'), and it has priority over styles
 
+<br />
+
+## Styles
+
+| Property                      |  Type  |      Default      | Description                                                          |
+| ----------------------------- | :----: | :---------------: | -------------------------------------------------------------------- |
+| <b>`backgroundColor`</b>      | string |     `#E3F6F5`     | Background of the calendar                                           |
+| <b>`primaryColor`</b>         | string |     `#272343`     | Color of the today's date, year and month texts                      |
+| <b>`secondaryColor`</b>       | string |     `#272343`     | Background of submit button and selected days in calendar            |
+| <b>`todaysDateTextColor`</b>  | string |      `#fff`       | Color of "today's date" date section text                            |
+| <b>`confirmBtnTextColor`</b>  | string |      `#fff`       | Color of "Confirm" button text                                       |
+| <b>`disabledDayColor`</b>     | string |     `#C0C0C0`     | Color for disabled dates (with 50% opacity automatically applied)    |
+| <b>`dayNameColor`</b>         | string |     `#0d7f91`     | Day names text color                                                 |
+| <b>`fontFamily`</b>           | string | `Default-Regular` | Font family of the font used globally and pre defined within project |
+| <b>`borderRadius`</b>         | string |       `8px`       | Border radius of the each div and button in the calendar layout      |
+| <b>`sliderToggleBackground`</b> | string |     `#d1d5db`     | Background color of the calendar mode toggle slider when inactive    |
+| <b>`rangeStartColor`</b>       | string |   `secondaryColor`  | Background color for the start date in range selection mode          |
+| <b>`rangeEndColor`</b>         | string |   `secondaryColor`  | Background color for the end date in range selection mode            |
+| <b>`rangeBetweenColor`</b>     | string |   `secondaryColor`  | Background color for dates between start and end in range selection  |
 
 
 <br />
 
 ## @Outputs()
 
-| Output  | Description        |
-|----------|--------------------|
-| `onSubmit` | Will be called every time when a user submits a selected date |
-| `onDaySelect` | Will be called every time when a user selects new date |
-| `onMonthChange` | Will be called every time the month value changes |
-| `onYearChange` | Will be called every time the year value changes |
-
+| Output          | Description                                                   |
+| --------------- | ------------------------------------------------------------- |
+| `onSubmit`      | Will be called every time when a user submits a selected date |
+| `onDaySelect`   | Will be called every time when a user selects new date        |
+| `onMonthChange` | Will be called every time the month value changes             |
+| `onYearChange`  | Will be called every time the year value changes              |
 
 <br />
 
-## Dependencies
+## Helper Functions
 
-Angular hijri gregorian with `Zero` dependents that supports coversion between Gregorian and Hijri calendars.
+import { DateUtilitiesService } from '../_services/date-utilities.service';
+
+```ts
+  constructor(private _dateUtils: DateUtilitiesService) {
+
+  }
+
+```
+
+| Output                         | Description                                                                                                                            |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| <b>`convertDate`</b>           | Converts dates from Gregorian to Umm Al Qura and vice versa                                                                            |
+| <b>`checkPastOrFuture`</b>     | Checks date whether it's future or past date('Future', 'Past', 'Today')                                                                |
+| <b>`formatDate`</b>            | Converts date from human-readable string representation(ex. Mon Sep 05 2023 15:30:45 GMT+0200) to separated "/" string(ex. 05/09/2023) |
+| <b>`parseDate`</b>             | The opposite of `formateDate` function                                                                                                 |
+| <b>`getGregorianMonthData`</b> | Generates an array of objects of Gregorian month passed to it                                                                          |
+| <b>`getUmAlQurraMonthData`</b> | Generates an array of objects of Umm Al Qura month passed to it                                                                        |
 
 <br />
 
@@ -178,4 +455,4 @@ Contributions are more than welcome!
 
 MIT License
 
-Copyright (c) 2022 Muhammad Hanafi
+Copyright (c) 2022 Muhammad Hanafi, Imad Khan
