@@ -5,13 +5,15 @@
       "backgroundColor": "#d0f0f6",
       "primaryColor": "#007c91",
       "secondaryColor": "#004d61",
-      "todaysDateBgColor": "#007c91",
       "todaysDateTextColor": "#d0f0f6",
       "confirmBtnTextColor": "#d0f0f6",
       "disabledDayColor": "#a0a0a0",
-      "dayColor": "#003344",
       "dayNameColor": "#007c91",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#b3d9e0",
+      "rangeStartColor": "#005c70",
+      "rangeEndColor": "#005c70",
+      "rangeBetweenColor": "#007c91"
     }
   },
   {
@@ -20,13 +22,15 @@
       "backgroundColor": "#f3e8ff",
       "primaryColor": "#9b5de5",
       "secondaryColor": "#5a189a",
-      "todaysDateBgColor": "#9b5de5",
       "todaysDateTextColor": "#f3e8ff",
       "confirmBtnTextColor": "#f3e8ff",
       "disabledDayColor": "#bdbdbd",
-      "dayColor": "#4a148c",
       "dayNameColor": "#9b5de5",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#d8c5ff",
+      "rangeStartColor": "#7c4ddb",
+      "rangeEndColor": "#7c4ddb",
+      "rangeBetweenColor": "#9b5de5"
     }
   },
   {
@@ -35,13 +39,15 @@
       "backgroundColor": "#ffe5b4",
       "primaryColor": "#ff6f00",
       "secondaryColor": "#e65100",
-      "todaysDateBgColor": "#ff6f00",
       "todaysDateTextColor": "#ffe5b4",
       "confirmBtnTextColor": "#ffe5b4",
       "disabledDayColor": "#a9a9a9",
-      "dayColor": "#3e2723",
       "dayNameColor": "#ff6f00",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#ffd280",
+      "rangeStartColor": "#cc5500",
+      "rangeEndColor": "#cc5500",
+      "rangeBetweenColor": "#ff6f00"
     }
   },
   {
@@ -50,13 +56,15 @@
       "backgroundColor": "#cfd8dc",
       "primaryColor": "#263238",
       "secondaryColor": "#37474f",
-      "todaysDateBgColor": "#263238",
       "todaysDateTextColor": "#cfd8dc",
       "confirmBtnTextColor": "#cfd8dc",
       "disabledDayColor": "#8e8e8e",
-      "dayColor": "#1c313a",
       "dayNameColor": "#263238",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#90a4ae",
+      "rangeStartColor": "#1f2a2e",
+      "rangeEndColor": "#1f2a2e",
+      "rangeBetweenColor": "#263238"
     }
   },
   {
@@ -65,13 +73,15 @@
       "backgroundColor": "#e0f2f1",
       "primaryColor": "#004d40",
       "secondaryColor": "#00695c",
-      "todaysDateBgColor": "#004d40",
       "todaysDateTextColor": "#e0f2f1",
       "confirmBtnTextColor": "#e0f2f1",
       "disabledDayColor": "#9e9e9e",
-      "dayColor": "#00251a",
       "dayNameColor": "#004d40",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#a7c7c4",
+      "rangeStartColor": "#003d33",
+      "rangeEndColor": "#003d33",
+      "rangeBetweenColor": "#004d40"
     }
   },
   {
@@ -80,13 +90,15 @@
       "backgroundColor": "#fce4ec",
       "primaryColor": "#ad1457",
       "secondaryColor": "#880e4f",
-      "todaysDateBgColor": "#ad1457",
       "todaysDateTextColor": "#fce4ec",
       "confirmBtnTextColor": "#fce4ec",
       "disabledDayColor": "#bdbdbd",
-      "dayColor": "#560027",
       "dayNameColor": "#ad1457",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#f8bbd9",
+      "rangeStartColor": "#7a0e3f",
+      "rangeEndColor": "#7a0e3f",
+      "rangeBetweenColor": "#ad1457"
     }
   },
   {
@@ -95,13 +107,15 @@
       "backgroundColor": "#e0f7fa",
       "primaryColor": "#00acc1",
       "secondaryColor": "#006064",
-      "todaysDateBgColor": "#00acc1",
       "todaysDateTextColor": "#e0f7fa",
       "confirmBtnTextColor": "#e0f7fa",
       "disabledDayColor": "#a7a7a7",
-      "dayColor": "#004d40",
       "dayNameColor": "#00acc1",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#b3e5fc",
+      "rangeStartColor": "#007a8a",
+      "rangeEndColor": "#007a8a",
+      "rangeBetweenColor": "#00acc1"
     }
   },
   {
@@ -110,13 +124,15 @@
       "backgroundColor": "#fff8e1",
       "primaryColor": "#fbc02d",
       "secondaryColor": "#f57f17",
-      "todaysDateBgColor": "#fbc02d",
       "todaysDateTextColor": "#fff8e1",
       "confirmBtnTextColor": "#fff8e1",
       "disabledDayColor": "#9e9e9e",
-      "dayColor": "#5d4037",
       "dayNameColor": "#fbc02d",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#fff59d",
+      "rangeStartColor": "#c19900",
+      "rangeEndColor": "#c19900",
+      "rangeBetweenColor": "#fbc02d"
     }
   },
   {
@@ -125,13 +141,15 @@
       "backgroundColor": "#eceff1",
       "primaryColor": "#607d8b",
       "secondaryColor": "#455a64",
-      "todaysDateBgColor": "#607d8b",
       "todaysDateTextColor": "#eceff1",
       "confirmBtnTextColor": "#eceff1",
       "disabledDayColor": "#a0a0a0",
-      "dayColor": "#263238",
       "dayNameColor": "#607d8b",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#cfd8dc",
+      "rangeStartColor": "#37474f",
+      "rangeEndColor": "#37474f",
+      "rangeBetweenColor": "#607d8b"
     }
   },
   {
@@ -140,13 +158,32 @@
       "backgroundColor": "#fff0f0",
       "primaryColor": "#ff4d4d",
       "secondaryColor": "#c62828",
-      "todaysDateBgColor": "#ff4d4d",
       "todaysDateTextColor": "#fff0f0",
       "confirmBtnTextColor": "#fff0f0",
       "disabledDayColor": "#b0b0b0",
-      "dayColor": "#4e342e",
       "dayNameColor": "#ff4d4d",
-      "borderRadius": "8px"
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#ffcccb",
+      "rangeStartColor": "#a21e1e",
+      "rangeEndColor": "#a21e1e",
+      "rangeBetweenColor": "#ff4d4d"
+    }
+  },
+  {
+    "name": "Dark Mode",
+    "stylesConfig": {
+      "backgroundColor": "#1a1a1a",
+      "primaryColor": "#ffffff",
+      "secondaryColor": "#007acc",
+      "todaysDateTextColor": "#ffffff",
+      "confirmBtnTextColor": "#ffffff",
+      "disabledDayColor": "#666666",
+      "dayNameColor": "#cccccc",
+      "borderRadius": "24px",
+      "sliderToggleBackground": "#333333",
+      "rangeStartColor": "#0066cc",
+      "rangeEndColor": "#0066cc",
+      "rangeBetweenColor": "#007acc"
     }
   }
 ]

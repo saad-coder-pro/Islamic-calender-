@@ -1,13 +1,15 @@
-export interface stylesConfig {
+export interface StylesConfig {
   backgroundColor?: string;
   primaryColor?: string;
   secondaryColor?: string;
-  todaysDateBgColor?: string;
   todaysDateTextColor?: string;
   confirmBtnTextColor?: string;
   disabledDayColor?: string;
   dayNameColor?: string;
-  dayColor?: string;
   fontFamily?: string;
   borderRadius?: string;
+  sliderToggleBackground?: string;
+  rangeStartColor?: string;
+  rangeEndColor?: string;
+  rangeBetweenColor?: string;
 }

@@ -1,0 +1,21 @@
+# Exclude documentation and demo files
+docs/
+src/
+
+# Exclude development files
+*.log
+*.tgz
+node_modules/
+.angular/
+coverage/
+
+# Exclude configuration files not needed in package
+karma.conf.js
+tsconfig.app.json
+tsconfig.spec.json
+angular.json
+.editorconfig
+
+# Exclude demo assets (but keep library assets)
+src/assets/
+!projects/

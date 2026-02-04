@@ -7,6 +7,15 @@
 # Only exists if Bazel was run
 /bazel-out
 
+# Build files in root (should only be in docs/)
+/*.js
+/*.css
+/*.html
+/*.map
+!karma.conf.js
+!postcss.config.js
+!tailwind.config.js
+
 # dependencies
 /node_modules
 
