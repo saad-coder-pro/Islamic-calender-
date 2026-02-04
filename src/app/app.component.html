@@ -1,16 +1,19 @@
-<div class="demo-container">
+<div class="min-h-screen bg-gray-900 flex font-sans">
   <!-- Controls Panel -->
-  <div class="controls-panel">
-    <div class="panel-header">
-      <h3>Configuration</h3>
-      <p>Customize your datepicker settings</p>
+  <div class="w-80 bg-gray-800 border-r border-gray-700 h-screen overflow-y-auto overflow-x-hidden flex-shrink-0">
+    <div class="p-5 border-b border-gray-700 bg-gray-800">
+      <h3 class="m-0 text-white text-lg font-semibold tracking-tight">Configuration</h3>
+      <p class="mt-1 mb-0 text-gray-300 text-sm">Customize your datepicker settings</p>
     </div>
-    <div class="panel-content">
+    <div class="p-5 box-border w-full">
       
       <!-- Theme Selection -->
-      <div class="control-group">
-        <label>Theme: <code>[styles]</code></label>
-        <select [(ngModel)]="selectedTheme" (change)="onThemeChange()" class="theme-select">
+      <div class="mb-6">
+        <label class="block font-medium text-white mb-2 text-sm leading-5">
+          Theme: <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[styles]</code>
+        </label>
+        <select [(ngModel)]="selectedTheme" (change)="onThemeChange()" 
+                class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 cursor-pointer transition-all duration-200 box-border focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
           <option *ngFor="let theme of themes; let i = index" [value]="i">
             {{ theme.name }}
           </option>
@@ -18,188 +21,214 @@
       </div>
 
       <!-- Calendar Mode -->
-      <div class="control-group">
-        <label>Calendar Mode: <code>[mode]</code></label>
-        <select [(ngModel)]="calendarMode" class="mode-select">
+      <div class="mb-6">
+        <label class="block font-medium text-white mb-2 text-sm leading-5">
+          Calendar Mode: <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[mode]</code>
+        </label>
+        <select [(ngModel)]="calendarMode" 
+                class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 cursor-pointer transition-all duration-200 box-border focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
           <option [value]="CALENDAR_MODES.umAlQura">Hijri (Um Al-Qura)</option>
           <option [value]="CALENDAR_MODES.GREGORIAN">Gregorian</option>
         </select>
       </div>
 
       <!-- Locale & Direction -->
-      <div class="control-group">
-        <label>Locale: <code>[locale]</code> & <code>[dir]</code></label>
-        <select [(ngModel)]="locale" class="locale-select">
+      <div class="mb-6">
+        <label class="block font-medium text-white mb-2 text-sm leading-5">
+          Locale: <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[locale]</code> & <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[dir]</code>
+        </label>
+        <select [(ngModel)]="locale" 
+                class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 cursor-pointer transition-all duration-200 box-border focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
           <option value="en">English (LTR)</option>
           <option value="ar">Arabic (RTL)</option>
         </select>
       </div>
 
       <!-- Boolean Options -->
-      <div class="control-group">
-        <h4>Features:</h4>
+      <div class="mb-6">
+        <h4 class="text-white m-0 mb-4 text-base font-semibold pb-2 border-b border-gray-600">Features:</h4>
         
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="canChangeMode">
-            <span>Can Change Mode <code>[canChangeMode]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="canChangeMode" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Can Change Mode <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[canChangeMode]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="multiple">
-            <span>Multiple Selection <code>[multiple]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="multiple" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Multiple Selection <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[multiple]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="rangeSelection">
-            <span>Range Selection <code>[rangeSelection]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="rangeSelection" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Range Selection <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[rangeSelection]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="showConfirmButton">
-            <span>Show Confirm Button <code>[showConfirmButton]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="showConfirmButton" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Show Confirm Button <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[showConfirmButton]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="enableAnimations">
-            <span>Enable Animations <code>[enableAnimations]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="enableAnimations" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Enable Animations <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[enableAnimations]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="showNavigationArrows">
-            <span>Show Navigation Arrows <code>[showNavigationArrows]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="showNavigationArrows" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Show Navigation Arrows <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[showNavigationArrows]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="isRequired">
-            <span>Required Field <code>[isRequired]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="isRequired" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Required Field <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[isRequired]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="hideMonthPicker">
-            <span>Hide Month Picker <code>[hideMonthPicker]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="hideMonthPicker" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Hide Month Picker <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[hideMonthPicker]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="hideYearPicker">
-            <span>Hide Year Picker <code>[hideYearPicker]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="hideYearPicker" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Hide Year Picker <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[hideYearPicker]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="disableDayPicker">
-            <span>Disable Day Picker <code>[disableDayPicker]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="disableDayPicker" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Disable Day Picker <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[disableDayPicker]</code></span>
           </label>
         </div>
       </div>
 
       <!-- Validation Options -->
-      <div class="control-group">
-        <h4>Date Validation:</h4>
+      <div class="mb-6">
+        <h4 class="text-white m-0 mb-4 text-base font-semibold pb-2 border-b border-gray-600">Date Validation:</h4>
         
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="pastDateValidation">
-            <span>Past Date Validation <code>[pastDateValidation]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="pastDateValidation" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Past Date Validation <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[pastDateValidation]</code></span>
           </label>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="futureValidation">
-            <span>Future Date Validation <code>[futureValidation]</code></span>
+        <div class="mb-3">
+          <label class="flex items-start cursor-pointer text-sm font-normal text-gray-300 py-2 transition-colors duration-200 hover:text-white">
+            <input type="checkbox" [(ngModel)]="futureValidation" class="w-4 h-4 mr-3 mt-0.5 cursor-pointer accent-blue-400 flex-shrink-0">
+            <span class="leading-5">Future Date Validation <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[futureValidation]</code></span>
           </label>
         </div>
       </div>
 
       <!-- Text Configuration -->
-      <div class="control-group">
-        <h4>Text & Messages:</h4>
+      <div class="mb-6">
+        <h4 class="text-white m-0 mb-4 text-base font-semibold pb-2 border-b border-gray-600">Text & Messages:</h4>
         
-        <div class="input-wrapper">
-          <label>Submit Button Text: <code>[submitTextButton]</code></label>
-          <input type="text" [(ngModel)]="submitButtonText" class="text-input" placeholder="Confirm">
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Submit Button Text: <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[submitTextButton]</code>
+          </label>
+          <input type="text" [(ngModel)]="submitButtonText" placeholder="Confirm"
+                 class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
         </div>
 
-        <div class="input-wrapper">
-          <label>Past Date Validation Message (EN): <code>[pastDateValidationMessageEn]</code></label>
-          <input type="text" [(ngModel)]="pastDateValidationMessageEn" class="text-input" placeholder="Selected date cannot be in the past!">
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Past Date Validation Message (EN): <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[pastDateValidationMessageEn]</code>
+          </label>
+          <input type="text" [(ngModel)]="pastDateValidationMessageEn" placeholder="Selected date cannot be in the past!"
+                 class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
         </div>
 
-        <div class="input-wrapper">
-          <label>Past Date Validation Message (AR): <code>[pastDateValidationMessageAr]</code></label>
-          <input type="text" [(ngModel)]="pastDateValidationMessageAr" class="text-input" placeholder="التاريخ المحدد لا يمكن ان يكون في الماضي!">
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Past Date Validation Message (AR): <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[pastDateValidationMessageAr]</code>
+          </label>
+          <input type="text" [(ngModel)]="pastDateValidationMessageAr" placeholder="التاريخ المحدد لا يمكن ان يكون في الماضي!"
+                 class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
         </div>
 
-        <div class="input-wrapper">
-          <label>Future Date Validation Message (EN): <code>[futureValidationMessageEn]</code></label>
-          <input type="text" [(ngModel)]="futureValidationMessageEn" class="text-input" placeholder="Selected date cannot be in the future!">
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Future Date Validation Message (EN): <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[futureValidationMessageEn]</code>
+          </label>
+          <input type="text" [(ngModel)]="futureValidationMessageEn" placeholder="Selected date cannot be in the future!"
+                 class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
         </div>
 
-        <div class="input-wrapper">
-          <label>Future Date Validation Message (AR): <code>[futureValidationMessageAr]</code></label>
-          <input type="text" [(ngModel)]="futureValidationMessageAr" class="text-input" placeholder="التاريخ المحدد لا يمكن ان يكون في المستقبل!">
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Future Date Validation Message (AR): <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[futureValidationMessageAr]</code>
+          </label>
+          <input type="text" [(ngModel)]="futureValidationMessageAr" placeholder="التاريخ المحدد لا يمكن ان يكون في المستقبل!"
+                 class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
         </div>
       </div>
 
       <!-- Date Configuration -->
-      <div class="control-group">
-        <h4>Date Configuration:</h4>
+      <div class="mb-6">
+        <h4 class="text-white m-0 mb-4 text-base font-semibold pb-2 border-b border-gray-600">Date Configuration:</h4>
         
-        <div class="input-wrapper">
-          <label>Disabled Dates: <code>[disabledDates]</code></label>
-          <textarea 
-            [(ngModel)]="disabledDatesInput" 
-            (input)="updateDisabledDates()"
-            placeholder="01/01/2024, 25/12/2024"
-            class="text-area"></textarea>
-          <small class="input-help">Enter dates in dd/mm/yyyy format, comma-separated</small>
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Disabled Dates: <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[disabledDates]</code>
+          </label>
+          <textarea [(ngModel)]="disabledDatesInput" (input)="updateDisabledDates()" placeholder="01/01/2024, 25/12/2024"
+                    class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 min-h-20 resize-y font-inherit focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500"></textarea>
+          <small class="block text-xs text-gray-400 mt-1 italic">Enter dates in dd/mm/yyyy format, comma-separated</small>
         </div>
       </div>
 
       <!-- Year Limits -->
-      <div class="control-group">
-        <h4>Year Limits:</h4>
+      <div class="mb-6">
+        <h4 class="text-white m-0 mb-4 text-base font-semibold pb-2 border-b border-gray-600">Year Limits:</h4>
         
-        <div class="input-wrapper">
-          <label>Past Years Limit: <code>[pastYearsLimit]</code></label>
-          <input type="number" [(ngModel)]="pastYearsLimit" min="0" max="200" class="number-input" placeholder="120">
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Past Years Limit: <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[pastYearsLimit]</code>
+          </label>
+          <input type="number" [(ngModel)]="pastYearsLimit" min="0" max="200" placeholder="120"
+                 class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
         </div>
 
-        <div class="input-wrapper">
-          <label>Future Years Limit: <code>[futureYearsLimit]</code></label>
-          <input type="number" [(ngModel)]="futureYearsLimit" min="0" max="200" class="number-input" placeholder="10">
+        <div class="mb-4">
+          <label class="block font-medium text-gray-300 mb-1.5 text-sm leading-5">
+            Future Years Limit: <code class="bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded text-xs font-mono ml-2 font-medium whitespace-nowrap">[futureYearsLimit]</code>
+          </label>
+          <input type="number" [(ngModel)]="futureYearsLimit" min="0" max="200" placeholder="10"
+                 class="w-full max-w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 transition-all duration-200 box-border placeholder:text-gray-500 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500">
         </div>
       </div>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div class="main-content">
-    <header class="demo-header">
-      <h1>Angular Hijri Gregorian Datepicker</h1>
-      <p>Professional datepicker component with comprehensive customization options</p>
+  <div class="flex-1 p-8">
+    <header class="mb-8 md:mb-6">
+      <h1 class="text-4xl font-bold text-white mb-2 tracking-tight md:text-3xl sm:text-2xl">Angular Hijri Gregorian Datepicker</h1>
+      <p class="text-gray-300 text-base m-0 md:text-sm">Professional datepicker component with comprehensive customization options</p>
     </header>
 
     <!-- Calendar Display -->
-    <div class="calendar-container">
+    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 flex flex-col items-center shadow-sm md:p-6 sm:p-4 sm:rounded-lg">
       <hijri-gregorian-datepicker 
         [canChangeMode]="canChangeMode"
         [futureValidation]="futureValidation"
@@ -232,9 +261,9 @@
       </hijri-gregorian-datepicker>
 
       <!-- Selected Date Display -->
-      <div class="selected-date-display" *ngIf="selectedDate">
-        <h4>Selected Date:</h4>
-        <pre>{{ selectedDate | json }}</pre>
+      <div class="bg-gray-700 border border-gray-600 rounded-xl p-6 mt-6 w-full max-w-xl" *ngIf="selectedDate">
+        <h4 class="m-0 mb-4 text-white text-center text-base font-semibold">Selected Date:</h4>
+        <pre class="bg-gray-900 p-4 rounded-lg border border-gray-600 overflow-x-auto text-sm text-gray-300 font-mono leading-6">{{ selectedDate | json }}</pre>
       </div>
     </div>
   </div>
