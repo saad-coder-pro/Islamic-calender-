@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://www.npmjs.com/package/angular-hijri-gregorian-datepicker)
 
 - Most accurate Hijri, Gregorian calendar(date-picker) on NPM with 100% accuracy percentage.
-- Robust and tested code angular hijri/gregorian calendar/date-picker component for Angular 10 - 16, 18+ projects.
+- Robust and tested code angular hijri/gregorian calendar/date-picker component for Angular 15 - 21+ projects.
 - Ionic 3 - 4, 5, 6 + is supported, can be used in iOS and Android.
 - `Zero` dependents package.
 - 10 different `themes` and `layouts` already built in, you can also customize your own as well.
@@ -66,7 +66,7 @@ Online demo can be found:
 
 ## Supported platforms
 
-<b>Angular</b> 10 - 16, 18 +<br />
+<b>Angular</b> 15 - 21+<br />
 <b>Ionic</b> 3 - 4, 5, 6 +<br />
 Mobile browsers and WebViews on: <b>Android</b> and <b>iOS</b><br />
 Desktop browsers: <b>Chrome, Firefox, Safari, Edge v.79 +</b><br />
@@ -82,17 +82,43 @@ Other browsers: <b>Edge v.41 - 44</b> (without code hidden feature)
 
 ## Usage
 
+### For Module-based Applications
+
 Import `HijriGregorianDatepickerModule` in your app module or page module:
 
 ```ts
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepicker';
 
 @NgModule({
   imports: [
-    // ...
+    FormsModule, // Required for ngModel binding
     HijriGregorianDatepickerModule
   ]
 })
+export class AppModule { }
+```
+
+### For Standalone Applications (Angular 15+)
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HijriGregorianDatepickerModule } from 'angular-hijri-gregorian-datepicker';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [FormsModule, HijriGregorianDatepickerModule],
+  template: `<hijri-gregorian-datepicker></hijri-gregorian-datepicker>`
+})
+export class App {
+  name = 'Angular';
+}
+
+bootstrapApplication(App);
 ```
 
 ```html
@@ -223,6 +249,64 @@ export class MyComponent {
 }
 ```
 
+### Built-in Themes
+
+The datepicker comes with 10 beautiful built-in themes:
+
+```html
+<hijri-gregorian-datepicker
+  [theme]="'Dark Mode'"
+  [mode]="'greg'"
+  (onSubmit)="onSubmit($event)">
+</hijri-gregorian-datepicker>
+```
+
+Available themes:
+- `Dark Mode` - Professional dark theme for modern applications
+- `Ocean Breeze` - Light blue oceanic theme
+- `Lavender Dreams` - Soft purple theme
+- `Sunset Glow` - Warm orange theme
+- `Midnight Blue` - Deep blue professional theme
+- `Forest Canopy` - Natural green theme
+- `Rosewood Elegance` - Elegant pink theme
+- `Icy Mint` - Cool cyan theme
+- `Golden Sand` - Warm yellow theme
+- `Steel Grey` - Modern grey theme
+- `Coral Reef` - Vibrant coral theme
+
+### Input Field Integration
+
+Easily integrate the datepicker with input fields:
+
+```html
+<div class="relative">
+  <input 
+    type="text" 
+    readonly
+    [(ngModel)]="selectedDateString"
+    (click)="showCalendar = true"
+    placeholder="Select a date"
+    class="form-control">
+    
+  <div *ngIf="showCalendar" class="calendar-dropdown">
+    <hijri-gregorian-datepicker
+      [showConfirmButton]="false"
+      [multiple]="false"
+      [rangeSelection]="false"
+      (onDaySelect)="onDateSelected($event)"
+      [theme]="'Dark Mode'">
+    </hijri-gregorian-datepicker>
+  </div>
+</div>
+```
+
+```ts
+onDateSelected(date: any) {
+  this.selectedDateString = date.gD; // Gregorian date
+  this.showCalendar = false; // Auto-close calendar
+}
+```
+
 ### Business Use Cases
 
 #### Hotel Booking System
@@ -287,7 +371,7 @@ export class MyComponent {
 | <b>`isRequired`</b>                | boolean |                    `true`                     | When `true` the confirm button will be disabled until user selects a date, if `false` the button will be enabled |
 | <b>`showConfirmButton`</b>         | boolean |                    `true`                     | When `true` the confirm button will be displayed, if `false` it will be hidden                                   |
 | <b>`enableAnimations`</b>          | boolean |                    `true`                     | When `true` enables smooth animations for view transitions and element appearances, if `false` disables all animations |
-| <b>`mode`</b>                      | string  |                    `greg`                     | Calendar mode, either `ummAlQura` or `greg`                                                                      |
+| <b>`mode`</b>                      | string  |                    `greg`                     | Calendar mode, either `umAlQura` or `greg`                                                                       |
 | <b>`dir`</b>                       | string  |                     `ltr`                     | Layout direction, either `ltr` or `rtl`                                                                          |
 | <b>`locale`</b>                    | string  |                     `en`                      | The language of the calendar layout, either `ar` or `en`                                                         |
 | <b>`submitTextButton`</b>          | string  |                   `Confirm`                   | Confirm button text value                                                                                        |
@@ -303,7 +387,7 @@ export class MyComponent {
 | <b>`rangeSelection`</b>            | boolean |                    `false`                    | When `true` enables date range selection mode. User clicks start date, then end date to select a range            |
 | <b>`initialDate`</b>               | string  |                   `undefined`                 | Initial date to open calendar to in 'dd/mm/yyyy' format. Must be within minDate/maxDate range if specified       |
 | <b>`styles`</b>                    | object  |                     `{}`                      | Styles for the calendar look and feel                                                                            |
-| <b>`theme`</b>                     | string  |                     `Midnight Blue`           | Different skins and themes for the calendar('Ocean Breeze', 'Lavender Dreams', 'Sunset Glow', 'Midnight Blue', 'Forest Canopy', 'Rosewood Elegance', 'Icy Mint', 'Golden Sand', 'Steel Grey', 'Coral Reef'), and it has priority over styles
+| <b>`theme`</b>                     | string  |                     `Dark Mode`              | Different skins and themes for the calendar('Dark Mode', 'Ocean Breeze', 'Lavender Dreams', 'Sunset Glow', 'Midnight Blue', 'Forest Canopy', 'Rosewood Elegance', 'Icy Mint', 'Golden Sand', 'Steel Grey', 'Coral Reef'), and it has priority over styles
 
 <br />
 
@@ -321,6 +405,9 @@ export class MyComponent {
 | <b>`fontFamily`</b>           | string | `Default-Regular` | Font family of the font used globally and pre defined within project |
 | <b>`borderRadius`</b>         | string |       `8px`       | Border radius of the each div and button in the calendar layout      |
 | <b>`sliderToggleBackground`</b> | string |     `#d1d5db`     | Background color of the calendar mode toggle slider when inactive    |
+| <b>`rangeStartColor`</b>       | string |   `secondaryColor`  | Background color for the start date in range selection mode          |
+| <b>`rangeEndColor`</b>         | string |   `secondaryColor`  | Background color for the end date in range selection mode            |
+| <b>`rangeBetweenColor`</b>     | string |   `secondaryColor`  | Background color for dates between start and end in range selection  |
 
 
 <br />
