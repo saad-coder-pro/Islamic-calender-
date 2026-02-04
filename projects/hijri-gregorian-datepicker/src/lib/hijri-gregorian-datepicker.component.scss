@@ -21,16 +21,19 @@
 .calendar-container {
   margin: auto;
   display: block;
-  max-width: 448px;
-  width: 100%;
+  width: 320px;
+  max-width: 320px;
 
   .calendar-card {
     background: #ebf0f1;
-    padding: 24px;
+    padding: 16px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     border: 1px solid #e5e7eb;
     transition: all 0.3s ease;
     margin: 16px 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 
     .header-section {
       display: flex;
@@ -191,19 +194,24 @@
     }
 
     .content-area {
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+
       .years-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 8px;
+        height: 220px;
 
         .year-item {
           background: none;
           border: none;
-          padding: 16px 8px;
-          border-radius: 12px;
-          font-size: 14px;
+          padding: 12px 6px;
+          border-radius: 8px;
+          font-size: 12px;
           transition: all 0.2s ease;
-          min-height: 56px;
+          min-height: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -218,17 +226,18 @@
       .months-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 8px;
+        height: 220px;
 
         .month-item {
           background: none;
           border: none;
-          padding: 16px 8px;
-          border-radius: 12px;
-          font-size: 15px;
+          padding: 12px 6px;
+          border-radius: 8px;
+          font-size: 13px;
           font-weight: 500;
           transition: all 0.2s ease;
-          min-height: 56px;
+          min-height: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -242,21 +251,23 @@
       .weekdays-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 4px;
-        margin-bottom: 16px;
+        gap: 3px;
+        margin-bottom: 12px;
+        height: 24px;
 
         .weekday-label {
           text-align: center;
-          font-size: 12px;
+          font-size: 10px;
           font-weight: 700;
-          padding: 8px 0;
+          padding: 6px 0;
         }
       }
 
       .days-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        gap: 8px;
+        gap: 4px;
+        // height: 184px;
 
         .day-container {
           aspect-ratio: 1;
@@ -265,12 +276,14 @@
             width: 100%;
             height: 100%;
             background: none;
-            font-size: 14px;
-            border-radius: 12px;
+            font-size: 12px;
+            border-radius: 6px;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: none;
+            overflow: hidden;
 
             &.selected {
               font-weight: 700;
