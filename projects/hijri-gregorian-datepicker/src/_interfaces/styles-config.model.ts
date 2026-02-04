@@ -9,4 +9,7 @@ export interface StylesConfig {
   fontFamily?: string;
   borderRadius?: string;
   sliderToggleBackground?: string;
+  rangeStartColor?: string;
+  rangeEndColor?: string;
+  rangeBetweenColor?: string;
 }

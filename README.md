@@ -321,6 +321,9 @@ export class MyComponent {
 | <b>`fontFamily`</b>           | string | `Default-Regular` | Font family of the font used globally and pre defined within project |
 | <b>`borderRadius`</b>         | string |       `8px`       | Border radius of the each div and button in the calendar layout      |
 | <b>`sliderToggleBackground`</b> | string |     `#d1d5db`     | Background color of the calendar mode toggle slider when inactive    |
+| <b>`rangeStartColor`</b>       | string |   `secondaryColor`  | Background color for the start date in range selection mode          |
+| <b>`rangeEndColor`</b>         | string |   `secondaryColor`  | Background color for the end date in range selection mode            |
+| <b>`rangeBetweenColor`</b>     | string |   `secondaryColor`  | Background color for dates between start and end in range selection  |
 
 
 <br />

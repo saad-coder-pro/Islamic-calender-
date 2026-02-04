@@ -299,7 +299,6 @@
             &.range-start,
             &.range-end,
             &.range-between {
-              background-color: #3d5156 !important;
               font-weight: 600 !important;
 
               &.range-start {
@@ -318,6 +317,7 @@
 
               &.range-between {
                 border-radius: 0 !important;
+                border-radius: 12px !important;
               }
 
               &.range-start.range-end {

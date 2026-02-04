@@ -205,8 +205,12 @@
                           [class.range-end]="day?.isRangeEnd == true"
                           [class.range-between]="day?.isInRange == true"
                           [ngStyle]="{
-                            'background-color': day?.selected == true ? styles.secondaryColor : '',
-                            color: isDateDisabled(day) ? styles.disabledDayColor : (day?.selected == true ? styles.todaysDateTextColor : styles.primaryColor),
+                            'background-color': day?.isRangeStart ? (styles.rangeStartColor || styles.secondaryColor) : 
+                                               day?.isRangeEnd ? (styles.rangeEndColor || styles.secondaryColor) : 
+                                               day?.isInRange ? (styles.rangeBetweenColor || styles.secondaryColor) :
+                                               day?.selected == true ? styles.secondaryColor : '',
+                            color: isDateDisabled(day) ? styles.disabledDayColor : 
+                                   (day?.isRangeStart || day?.isRangeEnd || day?.isInRange || day?.selected == true) ? styles.todaysDateTextColor : styles.primaryColor,
                             opacity: isDateDisabled(day) ? '0.5' : '1',
                             'pointer-events': isDateDisabled(day) ? 'none' : 'auto',
                             'border-color': checkHighlightedDate(day) ? styles.secondaryColor : 'transparent',
