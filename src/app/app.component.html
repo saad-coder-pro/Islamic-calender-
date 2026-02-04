@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-900 flex flex-col lg:flex-row font-sans">
   <!-- Controls Panel -->
-  <div class="w-full lg:w-80 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 h-auto lg:h-screen overflow-y-auto overflow-x-hidden flex-shrink-0">
+  <div class="w-full lg:w-80 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 lg:h-screen overflow-y-auto overflow-x-hidden flex-shrink-0">
     <div class="p-4 lg:p-5 border-b border-gray-700 bg-gray-800">
       <h3 class="m-0 text-white text-lg font-semibold tracking-tight">Configuration</h3>
       <p class="mt-1 mb-0 text-gray-300 text-sm">Customize your datepicker settings</p>
@@ -227,43 +227,141 @@
       <p class="text-gray-300 text-sm lg:text-base m-0">Professional datepicker component with comprehensive customization options</p>
     </header>
 
-    <!-- Calendar Display -->
-    <div class="bg-gray-800 rounded-xl p-4 lg:p-8 border border-gray-700 flex flex-col items-center shadow-sm">
-      <hijri-gregorian-datepicker 
-        [canChangeMode]="canChangeMode"
-        [futureValidation]="futureValidation"
-        [hideMonthPicker]="hideMonthPicker"
-        [hideYearPicker]="hideYearPicker"
-        [pastDateValidation]="pastDateValidation"
-        [pastDateValidationMessageEn]="pastDateValidationMessageEn"
-        [pastDateValidationMessageAr]="pastDateValidationMessageAr"
-        [futureValidationMessageEn]="futureValidationMessageEn"
-        [futureValidationMessageAr]="futureValidationMessageAr"
-        [disableDayPicker]="disableDayPicker"
-        [multiple]="multiple"
-        [isRequired]="isRequired"
-        [showConfirmButton]="showConfirmButton"
-        [mode]="calendarMode"
-        [dir]="locale === 'ar' ? 'rtl' : 'ltr'"
-        [locale]="locale"
-        [submitTextButton]="submitButtonText"
-        [pastYearsLimit]="pastYearsLimit"
-        [futureYearsLimit]="futureYearsLimit"
-        [rangeSelection]="rangeSelection"
-        [styles]="currentTheme?.stylesConfig"
-        [enableAnimations]="enableAnimations"
-        [showNavigationArrows]="showNavigationArrows"
-        [disabledDates]="disabledDates"
-        (onSubmit)="onSubmit($event)"
-        (onDaySelect)="onChange($event)"
-        (onMonthChange)="onMonthChange($event)"
-        (onYearChange)="onYearChange($event)">
-      </hijri-gregorian-datepicker>
+    <!-- Calendar Demo Container -->
+    <div class="bg-gray-800 rounded-xl p-4 lg:p-8 border border-gray-700">
+      
+      <!-- Segmented Control -->
+      <div class="flex justify-center mb-8">
+        <div class="bg-gray-700 p-1 rounded-lg flex">
+          <button 
+            (click)="activeDemo = 'interactive'"
+            [class.active]="activeDemo === 'interactive'"
+            class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+            [ngClass]="{
+              'bg-sky-500/50 text-white shadow-sm': activeDemo === 'interactive',
+              'text-gray-300 hover:text-white': activeDemo !== 'interactive'
+            }"
+          >
+            Interactive Calendar
+          </button>
+          <button 
+            (click)="activeDemo = 'input'"
+            [class.active]="activeDemo === 'input'"
+            class="px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+            [ngClass]="{
+              'bg-sky-500/50 text-white shadow-sm': activeDemo === 'input',
+              'text-gray-300 hover:text-white': activeDemo !== 'input'
+            }"
+          >
+            Input Field Demo
+          </button>
+        </div>
+      </div>
 
-      <!-- Selected Date Display -->
-      <div class="bg-gray-700 border border-gray-600 rounded-xl p-4 lg:p-6 mt-6 w-full max-w-xl" *ngIf="selectedDate">
-        <h4 class="m-0 mb-4 text-white text-center text-base font-semibold">Selected Date:</h4>
-        <pre class="bg-gray-900 p-3 lg:p-4 rounded-lg border border-gray-600 overflow-x-auto text-xs lg:text-sm text-gray-300 font-mono leading-5 lg:leading-6">{{ selectedDate | json }}</pre>
+      <!-- Interactive Calendar Demo -->
+      <div *ngIf="activeDemo === 'interactive'" class="flex flex-col items-center">
+        <h3 class="text-lg font-semibold text-white mb-2">Interactive Calendar Demo</h3>
+        <p class="text-gray-300 text-sm mb-6 text-center">Directly interact with the calendar component</p>
+        
+        <hijri-gregorian-datepicker 
+          [canChangeMode]="canChangeMode"
+          [futureValidation]="futureValidation"
+          [hideMonthPicker]="hideMonthPicker"
+          [hideYearPicker]="hideYearPicker"
+          [pastDateValidation]="pastDateValidation"
+          [pastDateValidationMessageEn]="pastDateValidationMessageEn"
+          [pastDateValidationMessageAr]="pastDateValidationMessageAr"
+          [futureValidationMessageEn]="futureValidationMessageEn"
+          [futureValidationMessageAr]="futureValidationMessageAr"
+          [disableDayPicker]="disableDayPicker"
+          [multiple]="multiple"
+          [isRequired]="isRequired"
+          [showConfirmButton]="showConfirmButton"
+          [mode]="calendarMode"
+          [dir]="locale === 'ar' ? 'rtl' : 'ltr'"
+          [locale]="locale"
+          [submitTextButton]="submitButtonText"
+          [pastYearsLimit]="pastYearsLimit"
+          [futureYearsLimit]="futureYearsLimit"
+          [rangeSelection]="rangeSelection"
+          [styles]="currentTheme?.stylesConfig"
+          [enableAnimations]="enableAnimations"
+          [showNavigationArrows]="showNavigationArrows"
+          [disabledDates]="disabledDates"
+          (onSubmit)="onSubmit($event)"
+          (onDaySelect)="onChange($event)"
+          (onMonthChange)="onMonthChange($event)"
+          (onYearChange)="onYearChange($event)">
+        </hijri-gregorian-datepicker>
+
+        <!-- Selected Date Display -->
+        <div class="bg-gray-700 border border-gray-600 rounded-xl p-4 lg:p-6 mt-6 w-full max-w-xl" *ngIf="selectedDate">
+          <h4 class="m-0 mb-4 text-white text-center text-base font-semibold">
+            {{ rangeSelection ? 'Selected Range:' : multiple ? 'Selected Dates:' : 'Selected Date:' }}
+          </h4>
+          <pre class="bg-gray-900 p-3 lg:p-4 rounded-lg border border-gray-600 overflow-x-auto text-xs lg:text-sm text-gray-300 font-mono leading-5 lg:leading-6">{{ selectedDate | json }}</pre>
+        </div>
+      </div>
+
+      <!-- Input Field Demo -->
+      <div *ngIf="activeDemo === 'input'" class="flex flex-col items-center">
+        <h3 class="text-lg font-semibold text-white mb-2">Input Field Demo</h3>
+        <p class="text-gray-300 text-sm mb-6 text-center">Click on the input field to open the calendar picker</p>
+        
+        <div class="max-w-md w-full">
+          <label class="block text-white font-medium mb-2 text-sm">Select Date:</label>
+          <div class="relative">
+            <input 
+              type="text" 
+              readonly
+              [(ngModel)]="inputFieldValue"
+              (click)="showInputCalendar = !showInputCalendar"
+              placeholder="Click to select date"
+              class="input-field w-full px-4 py-3 border border-gray-600 rounded-lg text-sm text-gray-200 bg-gray-700 cursor-pointer transition-all duration-200 focus:outline-none focus:border-blue-400 focus:ring-3 focus:ring-blue-400/20 hover:border-gray-500"
+            >
+            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            
+            <!-- Calendar Dropdown -->
+            <div 
+              *ngIf="showInputCalendar" 
+              class="input-calendar-dropdown absolute top-full left-0 mt-2 z-50"
+              (click)="$event.stopPropagation()"
+            >
+              <hijri-gregorian-datepicker 
+                [canChangeMode]="canChangeMode"
+                [futureValidation]="futureValidation"
+                [hideMonthPicker]="hideMonthPicker"
+                [hideYearPicker]="hideYearPicker"
+                [pastDateValidation]="pastDateValidation"
+                [pastDateValidationMessageEn]="pastDateValidationMessageEn"
+                [pastDateValidationMessageAr]="pastDateValidationMessageAr"
+                [futureValidationMessageEn]="futureValidationMessageEn"
+                [futureValidationMessageAr]="futureValidationMessageAr"
+                [disableDayPicker]="disableDayPicker"
+                [multiple]="false"
+                [isRequired]="false"
+                [showConfirmButton]="false"
+                [mode]="calendarMode"
+                [dir]="locale === 'ar' ? 'rtl' : 'ltr'"
+                [locale]="locale"
+                [submitTextButton]="'Select'"
+                [pastYearsLimit]="pastYearsLimit"
+                [futureYearsLimit]="futureYearsLimit"
+                [rangeSelection]="false"
+                [styles]="currentTheme?.stylesConfig"
+                [enableAnimations]="enableAnimations"
+                [showNavigationArrows]="showNavigationArrows"
+                [disabledDates]="disabledDates"
+                (onDaySelect)="onInputDateChange($event)"
+              >
+              </hijri-gregorian-datepicker>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

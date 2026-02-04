@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { DayInfo } from 'projects/hijri-gregorian-datepicker/src/_interfaces/calendar.model';
 import { StylesConfig } from 'projects/hijri-gregorian-datepicker/src/_interfaces/styles-config.model';
 import { CalendarMode, CALENDAR_MODES } from 'projects/hijri-gregorian-datepicker/src/_constants/calendar.constants';
@@ -44,6 +44,13 @@ export class AppComponent {
   disabledDates: string[] = [];
   pastYearsLimit: number = 120;
   futureYearsLimit: number = 10;
+  
+  // Input field demo properties
+  showInputCalendar: boolean = false;
+  inputFieldValue: string = '';
+  
+  // Demo toggle property
+  activeDemo: 'interactive' | 'input' = 'interactive';
   
   // Make constants available to template
   CALENDAR_MODES = CALENDAR_MODES;
@@ -256,11 +263,14 @@ export class AppComponent {
 
   onSubmit(ev: any) {
     console.log('On Submit ', ev);
+    // Update selectedDate with confirm button result (handles single, multiple, and range)
+    this.selectedDate = ev;
   }
 
   onChange(eventData: any) {
     console.log('On Change ', eventData);
-    if (!Array.isArray(eventData)) {
+    // Only update for single selection when not using confirm button
+    if (!this.showConfirmButton && !Array.isArray(eventData)) {
       this.selectedDate = eventData;
     }
   }
@@ -271,5 +281,45 @@ export class AppComponent {
 
   onYearChange(ev: any) {
     console.log('Year Changed ', ev);
+  }
+
+  onInputDateChange(eventData: any) {
+    console.log('Input Calendar - On Change ', eventData);
+    // Update input field with selected date and close calendar
+    if (eventData && !Array.isArray(eventData)) {
+      this.inputFieldValue = this.formatDateForInput(eventData);
+      this.showInputCalendar = false; // Auto-close calendar when date is selected
+    }
+  }
+
+  private formatDateForInput(dateData: any): string {
+    if (!dateData) return '';
+    
+    try {
+      // Try to format based on available date information
+      if (dateData.gD && this.calendarMode === 'greg') {
+        return dateData.gD; // Gregorian date
+      } else if (dateData.uD && this.calendarMode === 'umAlQura') {
+        return dateData.uD; // Hijri date
+      } else if (dateData.gD) {
+        return dateData.gD; // Fallback to Gregorian
+      }
+      return JSON.stringify(dateData); // Fallback to JSON if structure unknown
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Selected date';
+    }
+  }
+
+  // Close calendar when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    const calendarElement = document.querySelector('.input-calendar-dropdown');
+    const inputElement = document.querySelector('.input-field');
+    
+    if (!calendarElement?.contains(target) && !inputElement?.contains(target)) {
+      this.showInputCalendar = false;
+    }
   }
 }

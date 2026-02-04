@@ -113,12 +113,12 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
 
   /// Check if future validation message should be displayed
   showFutureValidationMessage(): boolean {
-    return this.futureValidationActive;
+    return this.futureValidation && this.futureValidationActive;
   }
 
   /// Check if past date validation message should be displayed  
   showPastDateValidationMessage(): boolean {
-    return this.pastDateValidationActive;
+    return this.pastDateValidation && this.pastDateValidationActive;
   }
 
   ngOnInit(): void {
@@ -859,6 +859,12 @@ export class HijriGregorianDatepickerComponent implements OnInit, OnChanges {
            this.checkMaxDateValidation(day) || 
            this.checkDisabledDate(day) ||
            (this.futureValidation && this.checkFutureValidation(day) === true) ||
+           (this.pastDateValidation && this.checkPastDateValidation(day) === true);
+  }
+
+  /// Check if date is disabled specifically due to validation (past/future)
+  isValidationDisabled(day: DayInfo): boolean {
+    return (this.futureValidation && this.checkFutureValidation(day) === true) ||
            (this.pastDateValidation && this.checkPastDateValidation(day) === true);
   }
 

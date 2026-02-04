@@ -212,7 +212,7 @@
                             color: isDateDisabled(day) ? styles.disabledDayColor : 
                                    (day?.isRangeStart || day?.isRangeEnd || day?.isInRange || day?.selected == true) ? styles.todaysDateTextColor : styles.primaryColor,
                             opacity: isDateDisabled(day) ? '0.5' : '1',
-                            'pointer-events': isDateDisabled(day) ? 'none' : 'auto',
+                            'pointer-events': (isDateDisabled(day) && !isValidationDisabled(day)) ? 'none' : 'auto',
                             'border-color': checkHighlightedDate(day) ? styles.secondaryColor : 'transparent',
                             'font-family': styles.fontFamily
                           }">
