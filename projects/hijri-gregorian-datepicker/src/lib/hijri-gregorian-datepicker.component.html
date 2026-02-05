@@ -40,7 +40,9 @@
                   [disabled]="!canNavigatePrevious()"
                   [ngStyle]="{ color: styles.primaryColor, opacity: canNavigatePrevious() ? 1 : 0.3 }" 
                   type="button">
-            <span class="material-icon">chevron_left</span>
+            <svg class="material-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
           </button>
         }
         
@@ -56,7 +58,9 @@
                       'font-family': styles.fontFamily
                     }">
               {{ getCurrentMonthLabel() }}
-              <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
+              <svg class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+              </svg>
             </button>
           }
           @if (!hideYearPicker) {
@@ -70,7 +74,9 @@
                       'font-family': styles.fontFamily
                     }">
               {{ getCurrentYearLabel() }}
-              <span class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }">expand_more</span>
+              <svg class="dropdown-icon" [ngStyle]="{ color: styles.primaryColor }" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+              </svg>
             </button>
           }
         </div>
@@ -84,7 +90,9 @@
                   [disabled]="!canNavigateNext()"
                   [ngStyle]="{ color: styles.primaryColor, opacity: canNavigateNext() ? 1 : 0.3 }" 
                   type="button">
-            <span class="material-icon">chevron_right</span>
+            <svg class="material-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
           </button>
         }
       </div>
@@ -99,7 +107,9 @@
                 (click)="navigateYears('previous')" 
                 [ngStyle]="{ color: styles.primaryColor }" 
                 type="button">
-          <span class="material-icon">chevron_left</span>
+          <svg class="material-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
         </button>
         
         <div class="year-range-display">
@@ -119,7 +129,9 @@
                 (click)="navigateYears('next')" 
                 [ngStyle]="{ color: styles.primaryColor }" 
                 type="button">
-          <span class="material-icon">chevron_right</span>
+          <svg class="material-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
         </button>
       </div>
     }
