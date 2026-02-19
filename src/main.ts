@@ -10,4 +10,5 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()], })
   .catch(err => console.error(err));
+const date = new Date();
 date.setDate(date.getDate() - 1);
